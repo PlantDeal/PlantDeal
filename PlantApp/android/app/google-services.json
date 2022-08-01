@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "549973702824",
+    "project_id": "pocketplant-99661",
+    "storage_bucket": "pocketplant-99661.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:549973702824:android:1701f7559b792cd3a06a9d",
+        "android_client_info": {
+          "package_name": "com.plantapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "549973702824-608a9242vo1tk1sp0mu0jk6f9a0u20jd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBf9agDHbfpXiGTxGwYJwwmoKFVf9rbaPc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "549973702824-608a9242vo1tk1sp0mu0jk6f9a0u20jd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

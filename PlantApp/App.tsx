@@ -1,116 +1,165 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * Generated with the TypeScript template
- * https://github.com/react-native-community/react-native-template-typescript
- *
- * @format
- */
-
-import React, {type PropsWithChildren} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
   View,
+  Text,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+  SafeAreaView,
 } from 'react-native';
+import auth from '@react-native-firebase/auth';
+import {RFPercentage} from 'react-native-responsive-fontsize';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+function App() {
+  const [email, onChangeEmail] = React.useState('');
+  const [password, onChangePassword] = React.useState('');
 
-const Section: React.FC<
-  PropsWithChildren<{
-    title: string;
-  }>
-> = ({children, title}) => {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-};
+  const SignUp = () => {
+    auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then(() => {
+        console.log('User account created & signed in!');
+      })
+      .catch(error => {
+        if (error.code === 'auth/email-already-in-use') {
+          Alert.alert('이미 가입한 이메일 입니다.');
+        }
 
-const App = () => {
-  const isDarkMode = useColorScheme() === 'dark';
+        if (error.code === 'auth/invalid-email') {
+          Alert.alert('이메일 형식이 아닙니다.');
+        }
+        if (error.code === 'auth/weak-password') {
+          Alert.alert('비밀번호 형식이 올바르지 않습니다');
+        }
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+        console.error(error);
+      });
+  };
+  const SignIn = () => {
+    auth()
+      .signInWithEmailAndPassword(email, password)
+      .then(() => {
+        Alert.alert('로그인 성공');
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
+  const SignOut = () => {
+    auth()
+      .signOut()
+      .then(() => {
+        Alert.alert('로그아웃 성공');
+        console.log('User signed out!');
+      });
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
+    <SafeAreaView style={{flex: 1, padding: '3%'}}>
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <Text
           style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
+            fontSize: RFPercentage(6),
+            color: 'black',
+            fontWeight: 'bold',
           }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
+          POCKET
+        </Text>
+        <Text
+          style={{
+            fontSize: RFPercentage(6),
+            color: 'black',
+            fontWeight: 'bold',
+          }}>
+          PLANT
+        </Text>
+      </View>
+      <View style={{flex: 2}}>
+        <View>
+          <TextInput
+            style={styles.input}
+            onChangeText={onChangeEmail}
+            value={email}
+            placeholder="이메일"
+            autoComplete="off"
+            autoCapitalize="none"
+          />
+          <TextInput
+            style={styles.input}
+            onChangeText={onChangePassword}
+            value={password}
+            placeholder="비밀번호"
+            autoComplete="off"
+            autoCapitalize="none"
+            secureTextEntry={true}
+          />
+          <TouchableOpacity onPress={SignUp} style={styles.loginbox}>
+            <Text style={{color: 'white'}}>회원가입</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={SignIn} style={styles.googlebox}>
+            <Text>구글로 시작하기</Text>
+          </TouchableOpacity>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'row',
+              justifyContent: 'center',
+              marginBottom: '1%',
+            }}>
+            <TouchableOpacity style={styles.signup} onPress={SignIn}>
+              <Text style={{fontSize: RFPercentage(1.5)}}>회원가입</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.signup} onPress={SignIn}>
+              <Text style={{fontSize: RFPercentage(1.5)}}>아이디 찾기</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.signup} onPress={SignIn}>
+              <Text style={{fontSize: RFPercentage(1.5)}}>비밀번호 찾기</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </ScrollView>
+      </View>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  input: {
+    height: '15%',
+    width: '100%',
+    borderWidth: 1,
+    borderRadius: 15,
+    marginBottom: '3%',
+    paddingLeft: 25,
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
+  loginbox: {
+    height: '15%',
+    width: '100%',
+    borderWidth: 1,
+    borderRadius: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: '10%',
+    marginBottom: '3%',
+    backgroundColor: '#5F7464',
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
+  googlebox: {
+    height: '15%',
+    width: '100%',
+    borderWidth: 1,
+    borderRadius: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: '5%',
   },
-  highlight: {
-    fontWeight: '700',
+  verticalline: {
+    width: '0.4%',
+    backgroundColor: 'gray',
+  },
+  signup: {
+    marginLeft: '3%',
+    marginRight: '3%',
   },
 });
 
