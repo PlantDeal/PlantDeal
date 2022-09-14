@@ -12,10 +12,6 @@ target 'PlantApp' do
   # Flags change depending on the env values.
   flags = get_default_flags()
 
-  pod 'Firebase', :modular_headers => true
-  pod 'FirebaseCore', :modular_headers => true
-  pod 'GoogleUtilities', :modular_headers => true
-  $RNFirebaseAsStaticFramework = true
 
   use_react_native!(
     :path => config[:reactNativePath],
@@ -33,7 +29,6 @@ target 'PlantApp' do
     # Pods for testing
   end
   
-  use_flipper!()
 
   post_install do |installer|
     react_native_post_install(installer)

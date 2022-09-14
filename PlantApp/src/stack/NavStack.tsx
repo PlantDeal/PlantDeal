@@ -91,7 +91,7 @@ function NavChatting() {
   );
 }
 
-function NavProfile() {
+function NavProfile({navigation, route}: any) {
   return (
     <ProfileStack.Navigator
       screenOptions={{

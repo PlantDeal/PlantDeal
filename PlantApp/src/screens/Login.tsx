@@ -12,8 +12,8 @@ import auth from '@react-native-firebase/auth';
 
 
 function LoginScreen({navigation} : {navigation: any}) {  
-  const [email, onChangeEmail] = React.useState('');
-  const [password, onChangePassword] = React.useState('');
+  const [email, onChangeEmail] = useState('');
+  const [password, onChangePassword] = useState('');
   const [loginColor, onChangeLoginColor] = useState('#BDE3CE');
 
   
@@ -49,15 +49,11 @@ function LoginScreen({navigation} : {navigation: any}) {
       });
   };
 
-  const test = () => {
-    navigation.navigate('NavHome');
-  }
-
   return (
     <SafeAreaView style={{flex: 1, alignItems: 'center', backgroundColor:'#FFFFFF'}}>
       <View style={{flex:0.5}}></View>
       <View style={{flex: 1.6, justifyContent: 'center',width:335}}>
-          <Text style={{fontSize: 28 ,fontFamily:'NotoSansKR-Bold',color:'#000000'}}>로그인</Text>
+          <Text style={{fontSize: 28 ,fontFamily:'NotoSansKR-Bold',includeFontPadding:false,color:'#000000'}}>로그인</Text>
       </View>
       <View style={{flex: 3.2, justifyContent: 'center'}}>
         <Text style={styles.id_text}>아이디</Text>
@@ -101,7 +97,7 @@ function LoginScreen({navigation} : {navigation: any}) {
                 backgroundColor: loginColor}}>
           <Text style={{color: 'white', fontSize:16, fontFamily:'NotoSansKR-Bold'}}>로그인</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={test} style={styles.googlebox}>
+        <TouchableOpacity style={styles.googlebox}>
           <Text style={{color: 'white', fontSize:16, fontFamily:'NotoSansKR-Bold'}}>페이스북으로 로그인</Text>
         </TouchableOpacity>
       </View>
@@ -142,6 +138,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginBottom:10,
     fontFamily:'NotoSansKR-Regular',
+    includeFontPadding:false,
     color:'#000000'
   },
   loginbox: {

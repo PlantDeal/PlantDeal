@@ -23,7 +23,7 @@ export default function HomeHeaderBar({navigation}: any) {
               style={{
                 color: 'black',
                 fontSize: 20,
-                fontFamily: 'NanumGothic',
+                //fontFamily: 'NanumGothic',
                 fontWeight: Platform.OS === 'ios' ? '900' : '900',
               }}>
               종로구
