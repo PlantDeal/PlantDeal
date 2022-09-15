@@ -49,6 +49,10 @@ function LoginScreen({navigation} : {navigation: any}) {
       });
   };
 
+  const test = () => {
+    navigation.navigate('NavHome');
+  }
+
   return (
     <SafeAreaView style={{flex: 1, alignItems: 'center', backgroundColor:'#FFFFFF'}}>
       <View style={{flex:0.5}}></View>
@@ -97,7 +101,7 @@ function LoginScreen({navigation} : {navigation: any}) {
                 backgroundColor: loginColor}}>
           <Text style={{color: 'white', fontSize:16, fontFamily:'NotoSansKR-Bold'}}>로그인</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.googlebox}>
+        <TouchableOpacity onPress={test} style={styles.googlebox}>
           <Text style={{color: 'white', fontSize:16, fontFamily:'NotoSansKR-Bold'}}>페이스북으로 로그인</Text>
         </TouchableOpacity>
       </View>

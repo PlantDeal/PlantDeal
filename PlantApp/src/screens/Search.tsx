@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text} from 'react-native';
 
-function SearchScreen() {
+function SearchScreen({navigation}: any) {
   return (
     <View
       style={{

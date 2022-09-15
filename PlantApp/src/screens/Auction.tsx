@@ -1,18 +1,31 @@
 import React from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, SafeAreaView, StyleSheet} from 'react-native';
+import BottomTab from '../components/BottomTab';
 
-function AuctionScreen() {
+
+function AuctionScreen({navigation}: any) {
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#FFFFFF',
-      }}>
-      <Text>Content!</Text>
-    </View>
+    <SafeAreaView style={styles.SafeAreaView}>
+      <View
+        style={{
+          flex: 17,
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: '#FFFFFF',
+        }}>
+        <Text>Auction</Text>
+      </View>
+      <BottomTab style={{flex: 1}} navigation={navigation} />
+    </SafeAreaView>
   );
 }
 
+const styles = StyleSheet.create({
+  SafeAreaView: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+  },
+});
+
 export default AuctionScreen;
+

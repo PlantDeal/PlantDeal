@@ -1,86 +1,74 @@
 import React from 'react';
-import {
-  View,
-  TouchableOpacity,
-  Image,
-  StyleSheet,
-  Platform,
-  Text,
-} from 'react-native';
+import {View, Image, StyleSheet, Text, Pressable} from 'react-native';
 
 export default function HomeHeaderBar({navigation}: any) {
   return (
     <View style={styles.headerBarView}>
       <View style={styles.leftBtnView}>
-        <TouchableOpacity>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Text
-              style={{
-                color: 'black',
-                fontSize: 20,
-                //fontFamily: 'NanumGothic',
-                fontWeight: Platform.OS === 'ios' ? '900' : '900',
-              }}>
-              종로구
-            </Text>
-            <Image source={require('../assets/Location.png')}></Image>
+        <Pressable>
+          <View style={styles.leftImageView}>
+            <Image source={require('../assets/Search.png')} />
           </View>
-        </TouchableOpacity>
+        </Pressable>
+      </View>
+      <View style={styles.centerBtnView}>
+        <Pressable
+          style={{flexDirection: 'row'}}
+          onPress={() => navigation.navigate('지역 설정하기')}>
+          <View>
+            <Text style={styles.locationTitle}>수영구</Text>
+          </View>
+          <View style={styles.locationDownArrow}>
+            <Image source={require('../assets/DownArrow.png')} />
+          </View>
+        </Pressable>
       </View>
       <View style={styles.rightBtnView}>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.push('SearchScreen');
-            navigation.setOptions({});
-          }}>
-          <View>
-            <Image
-              key={1}
-              style={{marginLeft: 20}}
-              source={require('../assets/search.jpg')}
-            />
+        <Pressable>
+          <View style={styles.rightImageView}>
+            <Image source={require('../assets/Alarm.png')} />
           </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          key={2}
-          onPress={() => navigation.push('CategoryScreen')}>
-          <View>
-            <Image
-              key={1}
-              style={{marginLeft: 20, marginRight: 20}}
-              source={require('../assets/category.jpg')}
-            />
-          </View>
-        </TouchableOpacity>
+        </Pressable>
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  locationDownArrow: {
+    alignContent: 'center',
+    justifyContent: 'center',
+    marginLeft: 5,
+  },
+  locationTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#000000',
+  },
+  leftImageView: {},
+  rightImageView: {},
   headerBarView: {
     height: '6%',
     flexDirection: 'row',
     width: '100%',
-    borderBottomWidth: 1,
+    borderBottomWidth: 0,
     borderBottomColor: '#C3C3C3',
   },
   leftBtnView: {
     flex: 1,
     width: '50%',
     justifyContent: 'center',
-    alignItems: 'baseline',
-    paddingLeft: '5%',
+    alignItems: 'center',
+  },
+  centerBtnView: {
+    flex: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   rightBtnView: {
-    flexDirection: 'row',
+    flex: 1,
     width: '50%',
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
     alignItems: 'center',
   },
 });

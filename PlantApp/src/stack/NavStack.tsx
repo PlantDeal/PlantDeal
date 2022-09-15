@@ -1,6 +1,6 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
+
 
 import HomeScreen from '../screens/Home';
 import AuctionScreen from '../screens/Auction';
@@ -9,6 +9,7 @@ import ProfileScreen from '../screens/Profile';
 import SearchScreen from '../screens/Search';
 import CategoryScreen from '../screens/Category';
 import LoginScreen from '../screens/Login';
+import LocationScreen from '../screens/Location';
 
 const LoginStack = createNativeStackNavigator();
 const HomeStack = createNativeStackNavigator();
@@ -16,21 +17,19 @@ const AuctionStack = createNativeStackNavigator();
 const ChattingStack = createNativeStackNavigator();
 const ProfileStack = createNativeStackNavigator();
 
-
-function NavLogin(){
-    return(
-        <LoginStack.Navigator>
-            <LoginStack.Screen
-                name = "LoginScreen"
-                component={LoginScreen}
-                options={{headerShown: false}}
-            />
-        </LoginStack.Navigator>
-
-    )
+function NavLogin({navigation}: any) {
+  return (
+    <LoginStack.Navigator>
+      <LoginStack.Screen
+        name="LoginScreen"
+        component={LoginScreen}
+        options={{headerShown: false}}
+      />
+    </LoginStack.Navigator>
+  );
 }
 
-function NavHome({navigation, route}: any) {
+function NavHome({navigation}: any) {
   return (
     <HomeStack.Navigator
       screenOptions={{
@@ -50,6 +49,11 @@ function NavHome({navigation, route}: any) {
       <HomeStack.Screen
         name="CategoryScreen"
         component={CategoryScreen}
+        options={{headerShown: false}}
+      />
+      <HomeStack.Screen
+        name="지역 설정하기"
+        component={LocationScreen}
         options={{headerShown: false}}
       />
     </HomeStack.Navigator>

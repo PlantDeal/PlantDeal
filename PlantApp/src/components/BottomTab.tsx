@@ -64,9 +64,11 @@ const styles = StyleSheet.create({
     paddingRight: '6%',
     paddingTop: Platform.OS === 'ios' ? '4%' : '4%',
     paddingBottom: '5%',
-    borderTopWidth: 1,
-    borderTopColor: '#C3C3C3',
+    borderTopWidth: 0,
+    borderTopColor: '#FFFFFF',
+    backgroundColor: '#FFFFFF',
   },
   tab: {},
   iconImage: {},
 });
+

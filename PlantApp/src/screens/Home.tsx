@@ -5,11 +5,9 @@ import BottomTab from '../components/BottomTab';
 import HomeHeaderBar from '../components/HomeHeaderBar';
 import SelectDropdown from 'react-native-select-dropdown';
 import firestore from '@react-native-firebase/firestore';
-import storage from '@react-native-firebase/storage';
-import { utils } from '@react-native-firebase/app';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker'
 
-function HomeScreen(navigation: any) {
+
+function HomeScreen({navigation}: any) {
   const categories = ["나무", "공기정화", "허브"]
   const[City,setCity] = useState("서울");
   const[Town,setTown] = useState("강남");
