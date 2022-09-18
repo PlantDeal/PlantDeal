@@ -1,7 +1,6 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
-
 import HomeScreen from '../screens/Home';
 import AuctionScreen from '../screens/Auction';
 import ChattingScreen from '../screens/Chatting';
@@ -10,6 +9,7 @@ import SearchScreen from '../screens/Search';
 import CategoryScreen from '../screens/Category';
 import LoginScreen from '../screens/Login';
 import LocationScreen from '../screens/Location';
+import SearchLocationScreen from '../screens/SearchLocation';
 
 const LoginStack = createNativeStackNavigator();
 const HomeStack = createNativeStackNavigator();
@@ -54,6 +54,11 @@ function NavHome({navigation}: any) {
       <HomeStack.Screen
         name="지역 설정하기"
         component={LocationScreen}
+        options={{headerShown: false}}
+      />
+      <HomeStack.Screen
+        name="지역 검색하기"
+        component={SearchLocationScreen}
         options={{headerShown: false}}
       />
     </HomeStack.Navigator>

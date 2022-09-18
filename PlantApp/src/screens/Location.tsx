@@ -4,7 +4,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 
 function LocationScreen({navigation}: any) {
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: '#FFFFFF'}}>
       <View style={styles.headerBarView}>
         <View style={styles.headerBarLeftView}>
           <Pressable onPress={() => navigation.goBack()}>
@@ -20,11 +20,13 @@ function LocationScreen({navigation}: any) {
         <Pressable style={styles.locationBox}>
           <Text style={styles.locationText}>수영구</Text>
         </Pressable>
-        <Pressable style={styles.addBtn}>
+        <Pressable
+          style={styles.addBtn}
+          onPress={() => navigation.navigate('지역 검색하기')}>
           <Text style={styles.addBtnText}>+</Text>
         </Pressable>
         <View>
-          <Text style={{fontSize: 14, color: '#8E8E93'}}>
+          <Text style={{fontSize: 12, color: '#8E8E93'}}>
             지역은 최대 2곳까지 설정가능합니다.
           </Text>
         </View>
@@ -44,7 +46,7 @@ const styles = StyleSheet.create({
     height: 40,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#C6C6C6',
+    backgroundColor: '#F4F4F4',
     borderRadius: 8,
     marginBottom: 24,
   },
