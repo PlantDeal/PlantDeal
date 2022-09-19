@@ -42,7 +42,7 @@ function NavHome({navigation}: any) {
         options={{headerShown: false}}
       />
       <HomeStack.Screen
-        name="SearchScreen"
+        name="검색"
         component={SearchScreen}
         options={{headerShown: false}}
       />
