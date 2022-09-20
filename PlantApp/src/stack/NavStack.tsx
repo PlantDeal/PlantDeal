@@ -9,6 +9,9 @@ import ProfileScreen from '../screens/Profile';
 import SearchScreen from '../screens/Search';
 import CategoryScreen from '../screens/Category';
 import LoginScreen from '../screens/Login';
+import RegistScreen from '../screens/Regist';
+import RegistInfoScreen from '../screens/RegistInfo';
+import AdressScreen from '../screens/Adress';
 import LocationScreen from '../screens/Location';
 
 const LoginStack = createNativeStackNavigator();
@@ -25,6 +28,18 @@ function NavLogin({navigation}: any) {
         component={LoginScreen}
         options={{headerShown: false}}
       />
+      <LoginStack.Screen
+        name="RegistScreen"
+        component={RegistScreen}
+        options={{headerShown: false}}/>
+      <LoginStack.Screen
+        name="RegistInfoScreen"
+        component={RegistInfoScreen}
+        options={{headerShown: false}}/>
+      <LoginStack.Screen
+        name="AdressScreen"
+        component={AdressScreen}
+        options={{headerShown: false}}/>
     </LoginStack.Navigator>
   );
 }
