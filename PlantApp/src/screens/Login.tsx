@@ -9,6 +9,7 @@ import {
   SafeAreaView,
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
+import { firebase } from '@react-native-firebase/firestore';
 
 
 function LoginScreen({navigation} : {navigation: any}) {  
@@ -25,10 +26,13 @@ function LoginScreen({navigation} : {navigation: any}) {
     else{
       onChangeLoginColor('#BDE3CE')
     }
-  })
+  },[email,password]);
 
-  const SignIn = () => {
-    auth()
+  
+
+
+  const SignIn = async() => {
+    await auth()
       .signInWithEmailAndPassword(email, password)
       .then(() => {
         Alert.alert('로그인 성공');
@@ -46,6 +50,14 @@ function LoginScreen({navigation} : {navigation: any}) {
         if(error.code === 'auth/invalid-email'){
           Alert.alert('아이디가 이메일 형식이 아닙니다.')
         }
+      });
+  };
+
+  const SignOut = () => {
+    auth()
+      .signOut()
+      .then(() => {
+        Alert.alert('로그아웃 성공');
       });
   };
 
@@ -98,6 +110,7 @@ function LoginScreen({navigation} : {navigation: any}) {
                 justifyContent: 'center',
                 alignItems: 'center',
                 marginBottom: 10,
+                borderRadius:6,
                 backgroundColor: loginColor}}>
           <Text style={{color: 'white', fontSize:16, fontFamily:'NotoSansKR-Bold'}}>로그인</Text>
         </TouchableOpacity>
@@ -111,7 +124,7 @@ function LoginScreen({navigation} : {navigation: any}) {
             <Text style={{fontFamily:'NotoSansKR-Medium',fontSize:12,color:'#8E8E93'}}>아이디 찾기</Text>
           </TouchableOpacity>
           <View style={styles.vertical_line}></View>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={SignOut}>
             <Text style={{fontFamily:'NotoSansKR-Medium',fontSize:12,color:'#8E8E93'}}>비밀번호 찾기</Text>
           </TouchableOpacity>
         </View>
@@ -119,7 +132,7 @@ function LoginScreen({navigation} : {navigation: any}) {
       <View style={{flex: 0.6, justifyContent: 'center'}}>
         <View style={{flexDirection: 'row'}}>
           <Text style={{marginRight:5, fontFamily:'NotoSansKR-Medium',color:'#8E8E93'}}>혹시 아직 회원이 아니신가요?</Text>
-          <TouchableOpacity style={{marginLeft:5}}>
+          <TouchableOpacity style={{marginLeft:5}} onPress={ ()=> navigation.navigate("RegistScreen")}>
             <Text style= {{color:'#16D66F',fontFamily:'NotoSansKR-Medium'}}>회원가입</Text>
           </TouchableOpacity>
         </View>
@@ -160,6 +173,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 10,
     backgroundColor: '#1B91FF',
+    borderRadius:6,
   },
   verticalline: {
     width: '0.4%',
