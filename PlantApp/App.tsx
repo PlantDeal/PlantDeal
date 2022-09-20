@@ -10,16 +10,21 @@ import {
   NavLogin
 } from './src/stack/NavStack';
 import RNBootSplash from "react-native-bootsplash";
+import { LogBox } from 'react-native';
 
 const Stack = createNativeStackNavigator();
 
+LogBox.ignoreLogs(['Did not receive response to shouldStartLoad in time, defaulting to YES']);
+
 export default function App() {
+  
+
   const [initializing, setInitializing] = useState(true);
   const [user,setUser] = useState('');
 
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    return subscriber; // unsubscribe on unmount
+    return subscriber; 
   });
 
   function onAuthStateChanged(user: any) {
