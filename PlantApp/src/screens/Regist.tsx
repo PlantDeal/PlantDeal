@@ -1,6 +1,5 @@
 import React, {useState,useEffect} from 'react';
 import {View, Text, SafeAreaView, StyleSheet, TouchableOpacity, Image, TextInput} from 'react-native';
-import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 
 
@@ -10,29 +9,53 @@ function RegistScreen({navigation}: any) {
   const [passwordcheck, onChangePasswordCheck] = useState('');
   const [underlinecolorid,onChangeUnderlineColorId] = useState('#8E8E93');
   const [underlinecolorpw,onChangeUnderlineColorPw] = useState('#8E8E93');
+  const [underlinecolorpwcheck,onChangeUnderlineColorPwCheck] = useState('#8E8E93');
   const [mentionid,onchangeMentionId] = useState('');
   const [mentionpw,onchangeMentionPw] = useState('');
   const [loginColor, onChangeLoginColor] = useState('#BDE3CE');
 
+  const emailcheck = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i
+  const pwcheck = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,15}/
+
   useEffect(() => {
-    if(password === '' && passwordcheck === ''){
-      onChangeUnderlineColorPw('#8E8E93')
+    if(passwordcheck === ''){
+      onChangeUnderlineColorPwCheck('#8E8E93')
       onchangeMentionPw('')
     }
     else if(password !== passwordcheck){
-      onChangeUnderlineColorPw('#DA1E28')
+      onChangeUnderlineColorPwCheck('#DA1E28')
       onchangeMentionPw('비밀번호가 일치하지 않습니다.')
     }
     else{
-      onChangeUnderlineColorPw('#16D66F')
+      onChangeUnderlineColorPwCheck('#16D66F')
       onchangeMentionPw('비밀번호가 일치합니다')
     }
-  },[password,passwordcheck]);
+  },[passwordcheck]);
+
+  useEffect(()=> {
+    if(password === ''){
+      onChangeUnderlineColorPw('#8E8E93')
+    }
+    else if(pwcheck.test(password)){
+      onChangeUnderlineColorPw('#16D66F')
+    }
+    else{
+      onChangeUnderlineColorPw('#DA1E28')
+    }
+  },[password])
 
   useEffect(() => {
     if(email === ''){
       onChangeUnderlineColorId('#8E8E93')
       onchangeMentionId('')
+    }
+    else if(emailcheck.test(email)){
+      onChangeUnderlineColorId('#8E8E93')
+      onchangeMentionId('')
+    }
+    else{
+      onChangeUnderlineColorId('#DA1E28')
+      onchangeMentionId('이메일 형식이 아닙니다.')
     }
   },[email])
 
@@ -62,6 +85,7 @@ function RegistScreen({navigation}: any) {
       });
     })
   }
+  
   function goInfo(){
     navigation.navigate('RegistInfoScreen')
   }
@@ -146,7 +170,7 @@ function RegistScreen({navigation}: any) {
                   fontFamily:'NotoSansKR-Regular',
                   includeFontPadding:false,
                   borderBottomWidth:1,
-                  borderBottomColor:underlinecolorpw,
+                  borderBottomColor:underlinecolorpwcheck,
                   paddingLeft:0}}
           onChangeText={onChangePasswordCheck}
           value={passwordcheck}
@@ -157,7 +181,7 @@ function RegistScreen({navigation}: any) {
           secureTextEntry={true}
           clearButtonMode='always'
         />
-        <Text style={{color:underlinecolorpw, fontSize:14,fontFamily:'NotoSansKR-Regular', includeFontPadding:false}}>{mentionpw}</Text>
+        <Text style={{color:underlinecolorpwcheck, fontSize:14,fontFamily:'NotoSansKR-Regular', includeFontPadding:false}}>{mentionpw}</Text>
       </View>
       <View style={{flex: 3}}></View>
       <View style={{flex:1, justifyContent:'center'}}>
