@@ -1,9 +1,11 @@
-import React from 'react';
+import React, {useState,useEffect} from 'react';
 import {View, Text, SafeAreaView, StyleSheet} from 'react-native';
 import BottomTab from '../components/BottomTab';
+import auth from '@react-native-firebase/auth';
 
 
 function AuctionScreen({navigation}: any) {
+  
   return (
     <SafeAreaView style={styles.SafeAreaView}>
       <View

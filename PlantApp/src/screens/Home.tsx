@@ -100,6 +100,7 @@ const styles = StyleSheet.create({
     borderRadius: 999,
     borderColor: '#C6C6C6',
     width:335,
+    height: 42,
   },
   sellbox: {
     height: 48,
@@ -110,13 +111,13 @@ const styles = StyleSheet.create({
     borderRadius:6
   },
   flatbox: {
-    height: 110,
+    height: 116,
     width:335,
     justifyContent:'center'
   },
   imagebox: {
-    height: 66,
-    width: 66,
+    height: 72,
+    width: 72,
   }
 })
 

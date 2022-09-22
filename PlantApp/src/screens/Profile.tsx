@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -7,15 +7,29 @@ import {
   ScrollView,
   Image,
   Pressable,
+  TouchableOpacity,
 } from 'react-native';
 import BottomTab from '../components/BottomTab';
 import ProfileHeaderBar from '../components/ProfileHeaderBar';
+import auth from '@react-native-firebase/auth';
+import { firebase } from '@react-native-firebase/firestore';
 
-function ProfileScreen({navigation}: any) {
+function ProfileScreen({navigation,user,initializing}: any) {
+
+  
+
+  const test2 = async() => {
+    const token = await firebase.auth().currentUser;
+    console.log(token)
+    
+  }
+
+
   return (
     <SafeAreaView style={styles.SafeAreaView}>
       <ProfileHeaderBar headerTitle={'마이페이지'} navigation={navigation} />
       <View style={styles.bodyView}>
+        <TouchableOpacity onPress={test2}><Text>눌러</Text></TouchableOpacity>
         <ScrollView style={{width: '100%'}}>
           <View style={styles.profileView}>
             <Pressable>

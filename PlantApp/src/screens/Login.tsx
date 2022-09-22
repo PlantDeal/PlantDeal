@@ -9,7 +9,7 @@ import {
   SafeAreaView,
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
-import { firebase } from '@react-native-firebase/firestore';
+
 
 
 function LoginScreen({navigation} : {navigation: any}) {  

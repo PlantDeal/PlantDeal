@@ -1,6 +1,8 @@
 import React, {useState,useEffect} from 'react';
-import {View, Text, SafeAreaView, StyleSheet, TouchableOpacity, Image, TextInput} from 'react-native';
+import {View, Text, SafeAreaView, StyleSheet, TouchableOpacity, Image, TextInput, Alert} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
+
 
 
 function RegistScreen({navigation}: any) {
@@ -86,8 +88,25 @@ function RegistScreen({navigation}: any) {
     })
   }
   
-  function goInfo(){
-    navigation.navigate('RegistInfoScreen')
+  async function Signup(){
+    await auth()
+    .createUserWithEmailAndPassword(email, password)
+    .then(() => {
+      navigation.navigate('RegistInfoScreen',{id:email})
+    })
+    .catch(error => {
+      if (error.code === 'auth/email-already-in-use') {
+        Alert.alert('이미 가입한 이메일 입니다.');
+      }
+
+      if (error.code === 'auth/invalid-email') {
+        Alert.alert('이메일 형식이 아닙니다.');
+      }
+      if (error.code === 'auth/weak-password') {
+        Alert.alert('비밀번호 형식이 올바르지 않습니다');
+      }
+    })
+    
   }
 
   
@@ -189,7 +208,7 @@ function RegistScreen({navigation}: any) {
           disabled ={
             underlinecolorid === '#16D66F' && underlinecolorpw === '#16D66F' ? false : true
           }
-          onPress={goInfo} 
+          onPress={Signup} 
           style={{height: 48,
                   width: 335,
                   justifyContent: 'center',
@@ -197,8 +216,8 @@ function RegistScreen({navigation}: any) {
                   marginBottom: 10,
                   borderRadius:6,
                   backgroundColor: loginColor}}>
-            <Text style={{color: 'white', fontSize:16, fontFamily:'NotoSansKR-Bold',includeFontPadding:false}}>다음</Text>
-          </TouchableOpacity>
+          <Text style={{color: 'white', fontSize:16, fontFamily:'NotoSansKR-Bold',includeFontPadding:false}}>다음</Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
