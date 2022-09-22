@@ -87,7 +87,8 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 14,
-    cololr: '#000000',
+    color: '#000000',
+    fontWeight: '400',
   },
   headerBarTitleText: {
     fontSize: 16,
