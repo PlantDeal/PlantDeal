@@ -3,7 +3,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import HomeScreen from '../screens/Home';
 import AuctionScreen from '../screens/Auction';
-import ChattingScreen from '../screens/Chatting';
+import ChattingListScreen from '../screens/ChattingList';
 import ProfileScreen from '../screens/Profile';
 import SearchScreen from '../screens/Search';
 import CategoryScreen from '../screens/Category';
@@ -90,8 +90,8 @@ function NavChatting() {
         animation: 'slide_from_right',
       }}>
       <ChattingStack.Screen
-        name="ChattingScreen"
-        component={ChattingScreen}
+        name="ChattingListScreen"
+        component={ChattingListScreen}
         options={{
           headerShown: false,
         }}
