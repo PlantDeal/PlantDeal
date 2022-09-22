@@ -5,17 +5,62 @@ import BottomTab from '../components/BottomTab';
 
 const DATA = [
   {
-    id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
+    id: '1',
     name: '김현우',
     post: '안녕하세요. 구매 문의 드립니다.',
   },
   {
-    id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
+    id: '2',
     name: '최지인',
     post: '네!',
   },
   {
-    id: '58694a0f-3da1-471f-bd96-145571e29d72',
+    id: '3',
+    name: '김걸휘',
+    post: '궁금해서 연락드립니다.',
+  },
+  {
+    id: '4',
+    name: '김현우',
+    post: '안녕하세요. 구매 문의 드립니다.',
+  },
+  {
+    id: '5',
+    name: '최지인',
+    post: '네!',
+  },
+  {
+    id: '6',
+    name: '김걸휘',
+    post: '궁금해서 연락드립니다.',
+  },
+  {
+    id: '7',
+    name: '김현우',
+    post: '안녕하세요. 구매 문의 드립니다.',
+  },
+  {
+    id: '8',
+    name: '최지인',
+    post: '네!',
+  },
+  {
+    id: '9',
+    name: '김걸휘',
+    post: '궁금해서 연락드립니다.',
+  },
+  {
+    id: '10',
+    name: '김현우',
+    post: '안녕하세요. 구매 문의 드립니다.',
+  },
+  {
+    id: '11',
+    name: '최지인',
+    post: '네!',
+  },
+  {
+    id: '12',
     name: '김걸휘',
     post: '궁금해서 연락드립니다.',
   },
@@ -41,7 +86,7 @@ const Item = ({name, post}: any) => (
   </Pressable>
 );
 
-function ChattingScreen({navigation}: any) {
+function ChattingListScreen({navigation}: any) {
   const renderItem = ({item}: any) => (
     <Item name={item.name} post={item.post} />
   );
@@ -124,4 +169,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ChattingScreen;
+export default ChattingListScreen;
