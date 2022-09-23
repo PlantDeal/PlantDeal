@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, Text, StyleSheet, Image, FlatList, Pressable} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import BottomTab from '../components/BottomTab';
 
@@ -66,29 +67,33 @@ const DATA = [
   },
 ];
 
-const Item = ({name, post}: any) => (
-  <Pressable style={styles.item}>
-    <View style={{flex: 1}}>
-      <Image source={require('../assets/TempProfileImage.png')} />
-    </View>
-    <View style={{flex: 4, justifyContent: 'space-between'}}>
-      <Text style={styles.name}>{name}</Text>
-      <Text style={styles.post}>{post}</Text>
-    </View>
-    <View style={{flex: 1, justifyContent: 'space-between'}}>
-      <View>
-        <Text style={styles.time}>오후 12:21</Text>
+function Item({name, post, navigation}: any) {
+  return (
+    <Pressable
+      style={styles.item}
+      onPress={() => navigation.navigate('ChattingScreen')}>
+      <View style={{flex: 1}}>
+        <Image source={require('../assets/TempProfileImage.png')} />
       </View>
-      <View style={{alignItems: 'center'}}>
-        <Image source={require('../assets/ChattingAlarm.png')} />
+      <View style={{flex: 4, justifyContent: 'space-between'}}>
+        <Text style={styles.name}>{name}</Text>
+        <Text style={styles.post}>{post}</Text>
       </View>
-    </View>
-  </Pressable>
-);
+      <View style={{flex: 1, justifyContent: 'space-between'}}>
+        <View>
+          <Text style={styles.time}>오후 12:21</Text>
+        </View>
+        <View style={{alignItems: 'center'}}>
+          <Image source={require('../assets/ChattingAlarm.png')} />
+        </View>
+      </View>
+    </Pressable>
+  );
+}
 
 function ChattingListScreen({navigation}: any) {
   const renderItem = ({item}: any) => (
-    <Item name={item.name} post={item.post} />
+    <Item name={item.name} post={item.post} navigation={navigation} />
   );
   return (
     <SafeAreaView style={styles.safeAreaView}>
@@ -104,9 +109,8 @@ function ChattingListScreen({navigation}: any) {
       <View style={styles.bodyView}>
         <FlatList
           data={DATA}
-          renderItem={renderItem}
-          keyExtractor={item => item.id}
           showsVerticalScrollIndicator={false}
+          renderItem={renderItem}
         />
       </View>
       <BottomTab style={styles.bottomTab} navigation={navigation} />
