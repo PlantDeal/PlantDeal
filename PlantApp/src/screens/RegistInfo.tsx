@@ -129,7 +129,7 @@ function RegistInfoScreen({navigation,route}: any) {
 
   return (
     <SafeAreaView style={styles.SafeAreaView}>
-      <View style={{flex: 0.7, flexDirection:'row'}}>
+      <View style={{flex: 0.7, flexDirection:'row',borderBottomColor:'#F4F4F4',borderBottomWidth:1}}>
         <View style={{flex: 2.0}}>
           <TouchableOpacity
             style={styles.btnView}

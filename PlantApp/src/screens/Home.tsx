@@ -8,12 +8,13 @@ import firestore from '@react-native-firebase/firestore';
 
 
 function HomeScreen({navigation}: any) {
-  const categories = ["나무", "공기정화", "허브"]
-  const[City,setCity] = useState("서울");
-  const[Town,setTown] = useState("강남");
-  const[Village,setVillage] = useState("개포1");
-  const[Category,setCategory] = useState("관엽식물");
+  const categories = ["공기정화식물", "다육식물", "허브식물", "선인장", "희귀식물", "기타"]
+  const [City,setCity] = useState("서울");
+  const [Town,setTown] = useState("강남");
+  const [Village,setVillage] = useState("개포1");
+  const [Category,setCategory] = useState("관엽식물");
   const [Data,setData] = useState<any>(null);
+  const [categorycolor,setCategoryColor] = useState('#C6C6C6')
 
   const read = () => {
     firestore()
@@ -39,18 +40,32 @@ function HomeScreen({navigation}: any) {
   
 
   return (
-    <SafeAreaView style={{flex: 1,alignItems:'center'}}>
+    <SafeAreaView style={styles.SafeAreaView}>
       <HomeHeaderBar style={{flex: 1}} navigation={navigation}/>
       <View style={{flex:1,justifyContent:'center'}}>
         <SelectDropdown
         data = {categories}
         onSelect={(selectedItem, index) => {
+          setCategoryColor('#16D66F')
+          setCategory(selectedItem)
           console.log(selectedItem, index)
         }}
         defaultButtonText="카테고리"
-        buttonStyle={styles.category}
-        buttonTextStyle={{fontSize:14, fontFamily:'NotoSansKR-Regular', color:'#000000'}}
-        rowTextStyle={{fontSize:14, fontFamily:'NotoSansKR-Regular', color:'#000000'}}
+        buttonStyle={{borderWidth:1,
+                      borderRadius: 999,
+                      borderColor: categorycolor,
+                      width:335,
+                      height: 42,
+                      backgroundColor:'#FFFFFF'}}
+        buttonTextStyle={{fontSize:14, fontFamily:'NotoSansKR-Regular', includeFontPadding:false,color:'#000000',textAlign:'left',alignItems:'center'}}
+        rowTextStyle={{fontSize:14, fontFamily:'NotoSansKR-Regular', includeFontPadding:false,color:'#000000',textAlign:'left'}}
+        renderDropdownIcon={isOpend => {
+          return <Image  style={{tintColor:categorycolor}} source={isOpend ? require('../assets/uparrow.png') : require('../assets/categoryarrow.png')} />
+        }}
+        dropdownIconPosition = {'right'}
+        dropdownStyle={{backgroundColor:'#FFFFFF'}}
+        rowStyle={{borderBottomColor:'#FFFFFF'}}
+        dropdownOverlayColor={'(0,0,0)'}//배경 회색 지우기
         buttonTextAfterSelection={(selectedItem, index) => {
           return selectedItem
         }}
@@ -83,7 +98,7 @@ function HomeScreen({navigation}: any) {
           />
       </View>
       <View style = {{flex:1}}>
-        <TouchableOpacity onPress={read} style={styles.sellbox}>
+        <TouchableOpacity onPress={() => navigation.navigate('RegistSellScreen')} style={styles.sellbox}>
           <Text style={{color: 'white', fontSize:16, fontFamily:'NotoSansKR-Bold'}}>판매등록</Text>
         </TouchableOpacity>
       </View>
@@ -95,6 +110,11 @@ function HomeScreen({navigation}: any) {
 }
 
 const styles = StyleSheet.create({
+  SafeAreaView: {
+    flex: 1,
+    alignItems:'center',
+    backgroundColor: '#FFFFFF',
+  },
   category:{
     borderWidth:1,
     borderRadius: 999,

@@ -13,6 +13,7 @@ import RegistScreen from '../screens/Regist';
 import RegistInfoScreen from '../screens/RegistInfo';
 import CompleteRegistScreen from '../screens/CompleteRegist';
 import LocationScreen from '../screens/Location';
+import RegistSellScreen from '../screens/RegistSell';
 
 const LoginStack = createNativeStackNavigator();
 const HomeStack = createNativeStackNavigator();
@@ -70,6 +71,11 @@ function NavHome({navigation}: any) {
       <HomeStack.Screen
         name="지역 설정하기"
         component={LocationScreen}
+        options={{headerShown: false}}
+      />
+      <HomeStack.Screen
+        name="RegistSellScreen"
+        component={RegistSellScreen}
         options={{headerShown: false}}
       />
     </HomeStack.Navigator>
