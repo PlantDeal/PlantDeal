@@ -1,9 +1,9 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
-
 import HomeScreen from '../screens/Home';
 import AuctionScreen from '../screens/Auction';
+import ChattingListScreen from '../screens/ChattingList';
 import ChattingScreen from '../screens/Chatting';
 import ProfileScreen from '../screens/Profile';
 import SearchScreen from '../screens/Search';
@@ -14,6 +14,7 @@ import RegistInfoScreen from '../screens/RegistInfo';
 import CompleteRegistScreen from '../screens/CompleteRegist';
 import LocationScreen from '../screens/Location';
 import RegistSellScreen from '../screens/RegistSell';
+import SearchLocationScreen from '../screens/SearchLocation';
 
 const LoginStack = createNativeStackNavigator();
 const HomeStack = createNativeStackNavigator();
@@ -59,7 +60,7 @@ function NavHome({navigation}: any) {
         options={{headerShown: false}}
       />
       <HomeStack.Screen
-        name="SearchScreen"
+        name="검색"
         component={SearchScreen}
         options={{headerShown: false}}
       />
@@ -76,6 +77,11 @@ function NavHome({navigation}: any) {
       <HomeStack.Screen
         name="RegistSellScreen"
         component={RegistSellScreen}
+        options={{headerShown: false}}
+      />
+      <HomeStack.Screen
+        name="지역 검색하기"
+        component={SearchLocationScreen}
         options={{headerShown: false}}
       />
     </HomeStack.Navigator>
@@ -106,6 +112,13 @@ function NavChatting() {
         headerShown: true,
         animation: 'slide_from_right',
       }}>
+      <ChattingStack.Screen
+        name="ChattingListScreen"
+        component={ChattingListScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
       <ChattingStack.Screen
         name="ChattingScreen"
         component={ChattingScreen}

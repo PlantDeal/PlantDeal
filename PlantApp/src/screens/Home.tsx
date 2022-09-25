@@ -1,11 +1,18 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, FlatList, Image, Platform} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  FlatList,
+  Image,
+  Platform,
+} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import BottomTab from '../components/BottomTab';
 import HomeHeaderBar from '../components/HomeHeaderBar';
 import SelectDropdown from 'react-native-select-dropdown';
 import firestore from '@react-native-firebase/firestore';
-
 
 function HomeScreen({navigation}: any) {
   const categories = ["공기정화식물", "다육식물", "허브식물", "선인장", "희귀식물", "기타"]
@@ -16,28 +23,26 @@ function HomeScreen({navigation}: any) {
   const [Data,setData] = useState<any>(null);
   const [categorycolor,setCategoryColor] = useState('#C6C6C6')
 
+
   const read = () => {
     firestore()
-    .collection("sell")
-    .doc(City)
-    .collection(Town)
-    .doc(Village)
-    .collection(Category)
-    .onSnapshot(querySnapshot => {
-      const data: { key: string; }[] = [];
-      querySnapshot.forEach(documentSnapshot => {
-        data.push({
+      .collection('sell')
+      .doc(City)
+      .collection(Town)
+      .doc(Village)
+      .collection(Category)
+      .onSnapshot(querySnapshot => {
+        const data: {key: string}[] = [];
+        querySnapshot.forEach(documentSnapshot => {
+          data.push({
             ...documentSnapshot.data(),
-            key: documentSnapshot.id
+            key: documentSnapshot.id,
+          });
         });
+        setData(data);
+        console.log(data);
       });
-      setData(data);
-      console.log(data);
-    });
-  }
-
-  
-  
+  };
 
   return (
     <SafeAreaView style={styles.SafeAreaView}>
@@ -73,39 +78,77 @@ function HomeScreen({navigation}: any) {
           return item
         }}></SelectDropdown>
       </View>
-      <View style={{flex:8}}>
+      <View style={{flex: 8}}>
         <FlatList
           data={Data}
-          renderItem={({ item }) => (
-              <View style={styles.flatbox}>
-                <TouchableOpacity style={styles.flatbox}>
-                  <View style={{flexDirection:'row'}}>
-                    <View style={{marginLeft:12,marginRight:6}}>
-                      <Image style={styles.imagebox} source={{uri: item.image}} />
-                    </View>
-                    <View style={{marginLeft:6,marginRight:6,height:62, width:197}}>
-                      <Text style={{fontSize:18, fontFamily:'NotoSansKR-Bold',includeFontPadding:false,color:'#000000',marginBottom:2}}>{item.name}</Text>
-                      <Text style={{fontSize:14, fontFamily:'NotoSansKR-Medium', includeFontPadding:false,color:'#16D66F',marginTop:2}}>{item.price}원</Text>
-                      <Text style={{fontSize:12, fontFamily:'NotoSansKR-Medium', includeFontPadding:false,color:'#C6C6C6'}}>{item.time}</Text>
-                    </View>
-                    <View style={{marginLeft:6, alignItems:'center',justifyContent:'center'}}>
-                      <Image style={{height:24,width:24}} source={require('../assets/Arrow.png')}/>
-                    </View>
+          renderItem={({item}) => (
+            <View style={styles.flatbox}>
+              <TouchableOpacity style={styles.flatbox}>
+                <View style={{flexDirection: 'row'}}>
+                  <View style={{marginLeft: 12, marginRight: 6}}>
+                    <Image style={styles.imagebox} source={{uri: item.image}} />
                   </View>
-                </TouchableOpacity>
-              </View>
+                  <View
+                    style={{
+                      marginLeft: 6,
+                      marginRight: 6,
+                      height: 62,
+                      width: 197,
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: 18,
+                        fontFamily: 'NotoSansKR-Bold',
+                        includeFontPadding: false,
+                        color: '#000000',
+                        marginBottom: 2,
+                      }}>
+                      {item.name}
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 14,
+                        fontFamily: 'NotoSansKR-Medium',
+                        includeFontPadding: false,
+                        color: '#16D66F',
+                        marginTop: 2,
+                      }}>
+                      {item.price}원
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        fontFamily: 'NotoSansKR-Medium',
+                        includeFontPadding: false,
+                        color: '#C6C6C6',
+                      }}>
+                      {item.time}
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      marginLeft: 6,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                    <Image
+                      style={{height: 24, width: 24}}
+                      source={require('../assets/Arrow.png')}
+                    />
+                  </View>
+                </View>
+              </TouchableOpacity>
+            </View>
           )}
-          />
+        />
       </View>
       <View style = {{flex:1}}>
         <TouchableOpacity onPress={() => navigation.navigate('RegistSellScreen')} style={styles.sellbox}>
           <Text style={{color: 'white', fontSize:16, fontFamily:'NotoSansKR-Bold'}}>판매등록</Text>
         </TouchableOpacity>
       </View>
-    <BottomTab style={{flex: 1}} navigation={navigation}/>
-
+      <BottomTab style={{flex: 1}} navigation={navigation} />
     </SafeAreaView>
-    
   );
 }
 
@@ -128,7 +171,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#16D66F',
-    borderRadius:6
+    borderRadius: 6,
   },
   flatbox: {
     height: 116,

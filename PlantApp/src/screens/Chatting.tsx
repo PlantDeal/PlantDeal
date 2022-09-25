@@ -1,17 +1,12 @@
 import React from 'react';
-import {View, Text} from 'react-native';
+import {View} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 function ChattingScreen() {
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#FFFFFF',
-      }}>
-      <Text>Content!</Text>
-    </View>
+    <SafeAreaView>
+      <View></View>
+    </SafeAreaView>
   );
 }
 
