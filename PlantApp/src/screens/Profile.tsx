@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -13,23 +13,30 @@ import BottomTab from '../components/BottomTab';
 import ProfileHeaderBar from '../components/ProfileHeaderBar';
 import auth from '@react-native-firebase/auth';
 import { firebase } from '@react-native-firebase/firestore';
+import { FirebaseStorageTypes } from '@react-native-firebase/storage';
+import firestore from '@react-native-firebase/firestore'
 
-function ProfileScreen({navigation,user,initializing}: any) {
+function ProfileScreen({navigation}: any) {
+  const [name,setName] = useState<any>('')
+  const token:any = firebase.auth().currentUser;
 
-  
+  useEffect(()=> {
+    firestore().
+    collection('user')
+    .doc(token?.email)
+    .get()
+    .then(documentSnapshot => {
+     const Name = documentSnapshot.get('name')
+     setName(Name)
+    });
+  },[])
 
-  const test2 = async() => {
-    const token = await firebase.auth().currentUser;
-    console.log(token)
-    
-  }
 
 
   return (
     <SafeAreaView style={styles.SafeAreaView}>
       <ProfileHeaderBar headerTitle={'마이페이지'} navigation={navigation} />
       <View style={styles.bodyView}>
-        <TouchableOpacity onPress={test2}><Text>눌러</Text></TouchableOpacity>
         <ScrollView style={{width: '100%'}}>
           <View style={styles.profileView}>
             <Pressable>
@@ -37,7 +44,7 @@ function ProfileScreen({navigation,user,initializing}: any) {
             </Pressable>
             <View style={{marginTop: 15, marginBottom: 15}}>
               <View style={{alignItems: 'center'}}>
-                <Text style={styles.profileMyName}>김현우</Text>
+                <Text style={styles.profileMyName}>{name}</Text>
               </View>
               <View style={{flexDirection: 'row'}}>
                 <Pressable>
