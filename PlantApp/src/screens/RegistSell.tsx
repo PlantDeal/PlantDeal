@@ -1,11 +1,13 @@
-import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, ScrollView, Image, TextInput,Platform} from 'react-native';
+import React, {useEffect, useReducer, useState} from 'react';
+import {View, Text, StyleSheet, TouchableOpacity, ScrollView, Image, TextInput,Platform, Alert} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import BottomTab from '../components/BottomTab';
 import SelectDropdown from 'react-native-select-dropdown';
 import {Asset, launchImageLibrary} from 'react-native-image-picker';
 import storage from '@react-native-firebase/storage';
 import { utils } from '@react-native-firebase/app';
+import firestore from '@react-native-firebase/firestore'
+import { firebase } from '@react-native-firebase/firestore';
 
 
 function RegistSellScreen({navigation}: any) {
@@ -41,6 +43,8 @@ function RegistSellScreen({navigation}: any) {
   const [pricecolor,setPriceColor] = useState('#8E8E93')
   const [registcolor,setRegistColor] = useState('#BDE3CE')
   const [Asset,setAsset] = useState<any>([])
+  const [down,setDown] = useState<any>([])
+  const token:any = firebase.auth().currentUser;
 
   useEffect(()=>{
     if(name === ''){
@@ -95,9 +99,8 @@ function RegistSellScreen({navigation}: any) {
 	      }
 	      if(res.assets){
 	        res.assets.map(data => {
-          setAsset((Asset:any) => {return [...Asset,data]})
-          setAss((ass:any) => {return [...ass,data?.uri]})
-          setReference((reference:any) => {return [...reference,data?.fileName]})
+            setAsset((Asset:any) => {return [...Asset,data]})
+            setAss((ass:any) => {return [...ass,data?.uri]})
           });
           setIsShow(false)
 	      }
@@ -143,9 +146,12 @@ function RegistSellScreen({navigation}: any) {
     setSunlightGoodBorder('#16D66F')
     setSunlightGoodText('#FFFFFF')
   }
-  const upload = () =>{
-    Asset.map(async (data:any) => {
+  const upload = async() =>{
+    await Asset.map(async (data:any) => {
       const refer = storage().ref(`${data.fileName}`)
+      setReference((reference: any) => {
+        return [...reference, refer];
+      })
       if (Platform.OS === "android"){
         await refer.putString(data.base64,'base64',{
           contentType: data.type
@@ -159,7 +165,51 @@ function RegistSellScreen({navigation}: any) {
         console.log('upload')
       }
     })
+  }
 
+  useEffect(()=> {
+    setTimeout(()=> {
+      download();
+    },5000)
+  },[reference])
+
+  function download(){
+    reference.map(async (data:any, idx:Number)=> {
+      const url = await data?.getDownloadURL()
+      setDown((down:any) => {return [...down,url]})
+      if(reference.length - 1 === idx){
+        console.log(down)
+      }
+    })
+  }
+
+  useEffect(()=> {
+    if(reference.length !== 0 && reference.length === down.length){
+      regist()
+    }
+  },[down])
+
+  async function regist(){
+    await firestore()
+    .collection('user')
+    .doc(token?.email)
+    .collection('판매내역')
+    .doc('1')
+    .set({
+      name : name,
+      Category : Category,
+      title : title,
+      explane : explanation,
+      image : down,
+      watering: watering,
+      amount : amount,
+      sunlight: sunlight,
+      price: price
+    })
+    .then(() => {
+      navigation.navigate('NavProfile')
+    })
+    
   }
 
   
