@@ -22,7 +22,7 @@ function RegistSellScreen({navigation}: any) {
   const [ass,setAss] = useState<any>([])
   const [reference,setReference] = useState<any>([])
   const [isShow,setIsShow] = useState(true)
-  const emptyImage = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15']
+  const emptyImage = ['1','2','3','4','5','6','7','8','9','10']
   const waterings = ['1일','3일','5일','1주','2주','3주','1개월']
   const [watering,setWatering] = useState('');
   const [wateringcolor,setWateringColor] = useState('#F4F4F4')
@@ -91,7 +91,7 @@ function RegistSellScreen({navigation}: any) {
       maxWidth:60,
       maxHeight:60,
       includeBase64: Platform.OS === 'android',
-      selectionLimit: 15
+      selectionLimit: 10
       },// 여기까지 option
       (res) => {
 	      if(res.didCancel) {
@@ -495,6 +495,10 @@ function RegistSellScreen({navigation}: any) {
       </View>
       <View style = {{flex:1, justifyContent:'center'}}>
         <TouchableOpacity 
+          disabled={
+            underlinecolorname === '#16D66F' && underlinecolortitle === '#16D66F' 
+    && wateringcolor === '#16D66F' && amountcolor !== '#16d66F' && sunlight !== '' && pricecolor === '#16D66F' ? false : true
+          }
           style={{height: 48,
           width: 335,
           justifyContent: 'center',
