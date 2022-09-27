@@ -71,7 +71,7 @@ function Item({name, post, navigation}: any) {
   return (
     <Pressable
       style={styles.item}
-      onPress={() => navigation.navigate('ChattingScreen')}>
+      onPress={() => navigation.navigate('ChattingScreen', {name: {name}})}>
       <View style={{flex: 1}}>
         <Image source={require('../assets/TempProfileImage.png')} />
       </View>
