@@ -15,6 +15,7 @@ import CompleteRegistScreen from '../screens/CompleteRegist';
 import LocationScreen from '../screens/Location';
 import RegistSellScreen from '../screens/RegistSell';
 import SearchLocationScreen from '../screens/SearchLocation';
+import SetLocationScreen from '../screens/SetLocation';
 
 const LoginStack = createNativeStackNavigator();
 const HomeStack = createNativeStackNavigator();
@@ -43,6 +44,11 @@ function NavLogin({navigation}: any) {
         name="CompleteRegistScreen"
         component={CompleteRegistScreen}
         options={{headerShown: false}}/>
+      <LoginStack.Screen
+        name="SetLocationScreen"
+        component={SetLocationScreen}
+        options={{headerShown: false}}
+      />
     </LoginStack.Navigator>
   );
 }

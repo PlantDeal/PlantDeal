@@ -9,6 +9,8 @@ import {
   SafeAreaView,
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
+import { FirebaseStorageTypes } from '@react-native-firebase/storage';
+import firestore from '@react-native-firebase/firestore'
 
 
 
@@ -34,9 +36,8 @@ function LoginScreen({navigation} : {navigation: any}) {
   const SignIn = async() => {
     await auth()
       .signInWithEmailAndPassword(email, password)
-      .then(() => {
-        Alert.alert('로그인 성공');
-        navigation.navigate('NavHome');
+      .then(async () => {
+        await logIn()
       })
       .catch(error => {
         if (error.code === 'auth/user-not-found') {
@@ -61,7 +62,23 @@ function LoginScreen({navigation} : {navigation: any}) {
       });
   };
 
-  const test = () => {
+  const logIn = async() => {
+    await firestore()
+    .collection('user')
+    .doc(email)
+    .get()
+    .then(documentSnapshot => {
+      const location = documentSnapshot.get('location')
+      if(location === ''){
+        navigation.navigate('SetLocationScreen');
+      }
+      else{
+        navigation.navigate('NavHome');
+      }
+    }); 
+  }
+
+  function test() {
     navigation.navigate('NavHome');
   }
 
@@ -96,7 +113,7 @@ function LoginScreen({navigation} : {navigation: any}) {
           clearButtonMode='always'
         />
         <View>
-          <Text style={{fontSize: 14, marginBottom:10}}>테스트</Text>
+          <Text style={{fontSize: 14, marginBottom:10,color:'red'}}>테스트</Text>
         </View>
       </View>
       <View style={{flex: 2.1, justifyContent: 'center'}}>
