@@ -177,9 +177,6 @@ function RegistSellScreen({navigation}: any) {
     reference.map(async (data:any, idx:Number)=> {
       const url = await data?.getDownloadURL()
       setDown((down:any) => {return [...down,url]})
-      if(reference.length - 1 === idx){
-        console.log(down)
-      }
     })
   }
 
@@ -509,7 +506,7 @@ function RegistSellScreen({navigation}: any) {
           <Text style={{color: 'white', fontSize:16, fontFamily:'NotoSansKR-Bold'}}>등록하기</Text>
         </TouchableOpacity>
       </View>
-      <BottomTab style={{flex: 1}} navigation={navigation}/>
+      
 
     </SafeAreaView>
     
