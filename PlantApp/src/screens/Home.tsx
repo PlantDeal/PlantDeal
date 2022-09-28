@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import {
   View,
   Text,
@@ -13,6 +13,7 @@ import BottomTab from '../components/BottomTab';
 import HomeHeaderBar from '../components/HomeHeaderBar';
 import SelectDropdown from 'react-native-select-dropdown';
 import firestore from '@react-native-firebase/firestore';
+import { firebase } from '@react-native-firebase/firestore';
 
 function HomeScreen({navigation}: any) {
   const categories = ["공기정화식물", "다육식물", "허브식물", "선인장", "희귀식물", "기타"]
@@ -22,6 +23,22 @@ function HomeScreen({navigation}: any) {
   const [Category,setCategory] = useState("관엽식물");
   const [Data,setData] = useState<any>(null);
   const [categorycolor,setCategoryColor] = useState('#C6C6C6')
+  const [location,SetLocation] = useState<any>([])
+
+  const token:any = firebase.auth().currentUser;
+  
+  useEffect(()=> {
+    firestore().
+    collection('user')
+    .doc(token?.email)
+    .get()
+    .then(documentSnapshot => {
+     const Location = documentSnapshot.get('location')
+     SetLocation(Location)
+    });
+  },[])
+
+  
 
 
   const read = () => {
@@ -46,7 +63,7 @@ function HomeScreen({navigation}: any) {
 
   return (
     <SafeAreaView style={styles.SafeAreaView}>
-      <HomeHeaderBar style={{flex: 1}} navigation={navigation}/>
+      <HomeHeaderBar style={{flex: 1}} navigation={navigation} route={location}/>
       <View style={{flex:1,justifyContent:'center'}}>
         <SelectDropdown
         data = {categories}
