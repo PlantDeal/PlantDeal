@@ -1,73 +1,12 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet, Image, FlatList, Pressable} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import BottomTab from '../components/BottomTab';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {firebase} from '@react-native-firebase/auth';
 
-const DATA = [
-  {
-    id: '1',
-    name: '김현우',
-    post: '안녕하세요. 구매 문의 드립니다.',
-  },
-  {
-    id: '2',
-    name: '최지인',
-    post: '네!',
-  },
-  {
-    id: '3',
-    name: '김걸휘',
-    post: '궁금해서 연락드립니다.',
-  },
-  {
-    id: '4',
-    name: '김현우',
-    post: '안녕하세요. 구매 문의 드립니다.',
-  },
-  {
-    id: '5',
-    name: '최지인',
-    post: '네!',
-  },
-  {
-    id: '6',
-    name: '김걸휘',
-    post: '궁금해서 연락드립니다.',
-  },
-  {
-    id: '7',
-    name: '김현우',
-    post: '안녕하세요. 구매 문의 드립니다.',
-  },
-  {
-    id: '8',
-    name: '최지인',
-    post: '네!',
-  },
-  {
-    id: '9',
-    name: '김걸휘',
-    post: '궁금해서 연락드립니다.',
-  },
-  {
-    id: '10',
-    name: '김현우',
-    post: '안녕하세요. 구매 문의 드립니다.',
-  },
-  {
-    id: '11',
-    name: '최지인',
-    post: '네!',
-  },
-  {
-    id: '12',
-    name: '김걸휘',
-    post: '궁금해서 연락드립니다.',
-  },
-];
-
-function Item({name, post, navigation}: any) {
+function Item({from, post, navigation}: any) {
   return (
     <Pressable
       style={styles.item}
@@ -76,7 +15,7 @@ function Item({name, post, navigation}: any) {
         <Image source={require('../assets/TempProfileImage.png')} />
       </View>
       <View style={{flex: 4, justifyContent: 'space-between'}}>
-        <Text style={styles.name}>{name}</Text>
+        <Text style={styles.name}>{from}</Text>
         <Text style={styles.post}>{post}</Text>
       </View>
       <View style={{flex: 1, justifyContent: 'space-between'}}>
@@ -92,9 +31,51 @@ function Item({name, post, navigation}: any) {
 }
 
 function ChattingListScreen({navigation}: any) {
-  const renderItem = ({item}: any) => (
-    <Item name={item.name} post={item.post} navigation={navigation} />
-  );
+  const [email, setEmail] = useState('');
+  const [chattingList, setChattingList] = useState<any>([]);
+  const [loadOrNot, setLoadOrNot] = useState(false);
+  const getUserEmail = async () => {
+    try {
+      const email = (await AsyncStorage.getItem('userEmail')) || 'empty';
+      setEmail(email);
+      if (email !== null) {
+        console.log('✅ get user email :', email);
+      }
+    } catch (e) {
+      console.log('no value**');
+    }
+  };
+
+  const getChattingList = async () => {
+    try {
+      if (email !== 'empty') {
+        const db = firebase.firestore();
+        db.collection('user')
+          .doc(email)
+          .collection('messages')
+          .orderBy('createdAt')
+          .onSnapshot(d => {
+            setChattingList(
+              d.docs.map(doc => ({id: doc.id, chatting: doc.data().from})),
+            );
+            if (chattingList !== undefined) {
+              setLoadOrNot(true);
+            }
+          });
+      }
+    } catch {}
+  };
+
+  useEffect(() => {
+    getUserEmail();
+  }, []);
+
+  useEffect(() => {
+    getChattingList();
+  }, [loadOrNot]);
+
+  const renderItem = ({item}: any) => <Item from={item.chatting} />;
+
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <View style={styles.headerBar}>
@@ -108,7 +89,7 @@ function ChattingListScreen({navigation}: any) {
       </View>
       <View style={styles.bodyView}>
         <FlatList
-          data={DATA}
+          data={chattingList}
           showsVerticalScrollIndicator={false}
           renderItem={renderItem}
         />

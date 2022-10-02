@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -8,48 +8,47 @@ import {
   Alert,
   SafeAreaView,
 } from 'react-native';
-import auth from '@react-native-firebase/auth';
-import { FirebaseStorageTypes } from '@react-native-firebase/storage';
-import firestore from '@react-native-firebase/firestore'
+import auth, {firebase} from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
-
-function LoginScreen({navigation} : {navigation: any}) {  
+function LoginScreen({navigation}: {navigation: any}) {
   const [email, onChangeEmail] = useState('');
   const [password, onChangePassword] = useState('');
   const [loginColor, onChangeLoginColor] = useState('#BDE3CE');
 
-  
-
   useEffect(() => {
-    if(email.indexOf('@') !== -1  && password.length > 5){
-      onChangeLoginColor('#16D66F')
+    if (email.indexOf('@') !== -1 && password.length > 5) {
+      onChangeLoginColor('#16D66F');
+    } else {
+      onChangeLoginColor('#BDE3CE');
     }
-    else{
-      onChangeLoginColor('#BDE3CE')
-    }
-  },[email,password]);
+  }, [email, password]);
 
-  
-
-
-  const SignIn = async() => {
+  const SignIn = async () => {
     await auth()
       .signInWithEmailAndPassword(email, password)
       .then(async () => {
-        await logIn()
+        await logIn();
+        const userEmail = await loadUserEmail();
+        const userInfo = (await loadUserInfo()) || {};
+        const userName = userInfo.name;
+        const userAddress = userInfo.address;
+        await AsyncStorage.setItem('userEmail', userEmail); // local storage에 유저이메일 저장
+        await AsyncStorage.setItem('userName', userName); // local storage에 유저이메일 저장
+        await AsyncStorage.setItem('userAddress', userAddress); // local storage에 유저이메일 저장
       })
       .catch(error => {
         if (error.code === 'auth/user-not-found') {
-          Alert.alert('아이디가 존재하지 않습니다.')
+          Alert.alert('아이디가 존재하지 않습니다.');
         }
 
         if (error.code === 'auth/wrong-password') {
-          Alert.alert('비밀번호가 다릅니다.')
+          Alert.alert('비밀번호가 다릅니다.');
         }
 
-        if(error.code === 'auth/invalid-email'){
-          Alert.alert('아이디가 이메일 형식이 아닙니다.')
+        if (error.code === 'auth/invalid-email') {
+          Alert.alert('아이디가 이메일 형식이 아닙니다.');
         }
       });
   };
@@ -62,31 +61,59 @@ function LoginScreen({navigation} : {navigation: any}) {
       });
   };
 
-  const logIn = async() => {
+  const logIn = async () => {
     await firestore()
-    .collection('user')
-    .doc(email)
-    .get()
-    .then(documentSnapshot => {
-      const location = documentSnapshot.get('location')
-      if(location === ''){
-        navigation.navigate('SetLocationScreen');
-      }
-      else{
-        navigation.navigate('NavHome');
-      }
-    }); 
-  }
+      .collection('user')
+      .doc(email)
+      .get()
+      .then(documentSnapshot => {
+        const location = documentSnapshot.get('location');
+        if (location === '') {
+          navigation.navigate('SetLocationScreen');
+        } else {
+          navigation.navigate('NavHome');
+        }
+      });
+  };
+
+  const loadUserEmail = async () => {
+    const currentUser = firebase.auth().currentUser;
+    const userEmail = currentUser?.email || 'emptyEmail';
+    return userEmail;
+  };
+
+  const loadUserInfo = async () => {
+    const currentUser = firebase.auth().currentUser;
+    const userEmail = currentUser?.email || 'emptyEmail';
+    const userData = await firebase
+      .firestore()
+      .collection('user')
+      .doc(userEmail)
+      .get()
+      .then(data => {
+        return data.data();
+      });
+    return userData;
+  };
 
   function test() {
     navigation.navigate('NavHome');
   }
 
   return (
-    <SafeAreaView style={{flex: 1, alignItems: 'center', backgroundColor:'#FFFFFF'}}>
-      <View style={{flex:0.5}}></View>
-      <View style={{flex: 1.6, justifyContent: 'center',width:335}}>
-          <Text style={{fontSize: 28 ,fontFamily:'NotoSansKR-Bold',includeFontPadding:false,color:'#000000'}}>로그인</Text>
+    <SafeAreaView
+      style={{flex: 1, alignItems: 'center', backgroundColor: '#FFFFFF'}}>
+      <View style={{flex: 0.5}}></View>
+      <View style={{flex: 1.6, justifyContent: 'center', width: 335}}>
+        <Text
+          style={{
+            fontSize: 28,
+            fontFamily: 'NotoSansKR-Bold',
+            includeFontPadding: false,
+            color: '#000000',
+          }}>
+          로그인
+        </Text>
       </View>
       <View style={{flex: 3.2, justifyContent: 'center'}}>
         <Text style={styles.id_text}>아이디</Text>
@@ -98,7 +125,7 @@ function LoginScreen({navigation} : {navigation: any}) {
           placeholderTextColor="#8E8E93"
           autoComplete="off"
           autoCapitalize="none"
-          clearButtonMode='always'
+          clearButtonMode="always"
         />
         <Text style={styles.id_text}>비밀번호</Text>
         <TextInput
@@ -110,54 +137,97 @@ function LoginScreen({navigation} : {navigation: any}) {
           autoComplete="off"
           autoCapitalize="none"
           secureTextEntry={true}
-          clearButtonMode='always'
+          clearButtonMode="always"
         />
         <View>
-          <Text style={{fontSize: 14, marginBottom:10,color:'red'}}>테스트</Text>
+          <Text style={{fontSize: 14, marginBottom: 10, color: 'red'}}>
+            테스트
+          </Text>
         </View>
       </View>
       <View style={{flex: 2.1, justifyContent: 'center'}}>
-        <TouchableOpacity 
-        disabled ={
-          email.indexOf('@') !== -1  && password.length > 5 ? false : true
-        }
-        onPress={SignIn} 
-        style={{height: 48,
-                width: 335,
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginBottom: 10,
-                borderRadius:6,
-                backgroundColor: loginColor}}>
-          <Text style={{color: 'white', fontSize:16, fontFamily:'NotoSansKR-Bold'}}>로그인</Text>
+        <TouchableOpacity
+          disabled={
+            email.indexOf('@') !== -1 && password.length > 5 ? false : true
+          }
+          onPress={SignIn}
+          style={{
+            height: 48,
+            width: 335,
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginBottom: 10,
+            borderRadius: 6,
+            backgroundColor: loginColor,
+          }}>
+          <Text
+            style={{
+              color: 'white',
+              fontSize: 16,
+              fontFamily: 'NotoSansKR-Bold',
+            }}>
+            로그인
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={test} style={styles.googlebox}>
-          <Text style={{color: 'white', fontSize:16, fontFamily:'NotoSansKR-Bold'}}>페이스북으로 로그인</Text>
+          <Text
+            style={{
+              color: 'white',
+              fontSize: 16,
+              fontFamily: 'NotoSansKR-Bold',
+            }}>
+            페이스북으로 로그인
+          </Text>
         </TouchableOpacity>
       </View>
-      <View style={{flex: 0.7, justifyContent:'center'}}>
+      <View style={{flex: 0.7, justifyContent: 'center'}}>
         <View style={{flexDirection: 'row'}}>
           <TouchableOpacity>
-            <Text style={{fontFamily:'NotoSansKR-Medium',fontSize:12,color:'#8E8E93'}}>아이디 찾기</Text>
+            <Text
+              style={{
+                fontFamily: 'NotoSansKR-Medium',
+                fontSize: 12,
+                color: '#8E8E93',
+              }}>
+              아이디 찾기
+            </Text>
           </TouchableOpacity>
           <View style={styles.vertical_line}></View>
           <TouchableOpacity onPress={SignOut}>
-            <Text style={{fontFamily:'NotoSansKR-Medium',fontSize:12,color:'#8E8E93'}}>비밀번호 찾기</Text>
+            <Text
+              style={{
+                fontFamily: 'NotoSansKR-Medium',
+                fontSize: 12,
+                color: '#8E8E93',
+              }}>
+              비밀번호 찾기
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
       <View style={{flex: 0.6, justifyContent: 'center'}}>
         <View style={{flexDirection: 'row'}}>
-          <Text style={{marginRight:5, fontFamily:'NotoSansKR-Medium',color:'#8E8E93'}}>혹시 아직 회원이 아니신가요?</Text>
-          <TouchableOpacity style={{marginLeft:5}} onPress={ ()=> navigation.navigate("RegistScreen")}>
-            <Text style= {{color:'#16D66F',fontFamily:'NotoSansKR-Medium'}}>회원가입</Text>
+          <Text
+            style={{
+              marginRight: 5,
+              fontFamily: 'NotoSansKR-Medium',
+              color: '#8E8E93',
+            }}>
+            혹시 아직 회원이 아니신가요?
+          </Text>
+          <TouchableOpacity
+            style={{marginLeft: 5}}
+            onPress={() => navigation.navigate('RegistScreen')}>
+            <Text style={{color: '#16D66F', fontFamily: 'NotoSansKR-Medium'}}>
+              회원가입
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
       <View style={{flex: 1.2}}></View>
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   input: {
@@ -166,14 +236,14 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     paddingLeft: 20,
     fontSize: 16,
-    backgroundColor: '#F4F4F4'
+    backgroundColor: '#F4F4F4',
   },
   id_text: {
     fontSize: 14,
-    marginBottom:10,
-    fontFamily:'NotoSansKR-Regular',
-    includeFontPadding:false,
-    color:'#000000'
+    marginBottom: 10,
+    fontFamily: 'NotoSansKR-Regular',
+    includeFontPadding: false,
+    color: '#000000',
   },
   loginbox: {
     height: 48,
@@ -181,7 +251,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 10,
-    backgroundColor: '#16D66F'
+    backgroundColor: '#16D66F',
   },
   googlebox: {
     height: 48,
@@ -190,7 +260,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 10,
     backgroundColor: '#1B91FF',
-    borderRadius:6,
+    borderRadius: 6,
   },
   verticalline: {
     width: '0.4%',
@@ -202,8 +272,8 @@ const styles = StyleSheet.create({
   },
   vertical_line: {
     borderLeftWidth: 2,
-    marginLeft: 10, 
-    marginRight: 10, 
+    marginLeft: 10,
+    marginRight: 10,
     borderColor: '#D9D9D9',
   },
 });
