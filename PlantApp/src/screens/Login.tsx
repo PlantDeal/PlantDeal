@@ -34,9 +34,11 @@ function LoginScreen({navigation}: {navigation: any}) {
         const userInfo = (await loadUserInfo()) || {};
         const userName = userInfo.name;
         const userAddress = userInfo.address;
+        const userNickname = userInfo.nickname;
         await AsyncStorage.setItem('userEmail', userEmail); // local storage에 유저이메일 저장
-        await AsyncStorage.setItem('userName', userName); // local storage에 유저이메일 저장
-        await AsyncStorage.setItem('userAddress', userAddress); // local storage에 유저이메일 저장
+        await AsyncStorage.setItem('userName', userName);
+        await AsyncStorage.setItem('userAddress', userAddress);
+        await AsyncStorage.setItem('userNickname', userNickname);
       })
       .catch(error => {
         if (error.code === 'auth/user-not-found') {

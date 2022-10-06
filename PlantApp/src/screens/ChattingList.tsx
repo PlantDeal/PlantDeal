@@ -1,12 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet, Image, FlatList, Pressable} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import BottomTab from '../components/BottomTab';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {firebase} from '@react-native-firebase/auth';
+import {firebase} from '@react-native-firebase/analytics';
 
-function Item({from, post, navigation}: any) {
+function Item({owner, reciever, recentMessage, updatedAt, navigation}: any) {
   return (
     <Pressable
       style={styles.item}
@@ -15,8 +14,8 @@ function Item({from, post, navigation}: any) {
         <Image source={require('../assets/TempProfileImage.png')} />
       </View>
       <View style={{flex: 4, justifyContent: 'space-between'}}>
-        <Text style={styles.name}>{from}</Text>
-        <Text style={styles.post}>{post}</Text>
+        <Text style={styles.name}>{}</Text>
+        <Text style={styles.post}>{}</Text>
       </View>
       <View style={{flex: 1, justifyContent: 'space-between'}}>
         <View>
@@ -31,15 +30,21 @@ function Item({from, post, navigation}: any) {
 }
 
 function ChattingListScreen({navigation}: any) {
-  const [email, setEmail] = useState('');
+  const [userEmail, setEmail] = useState('');
+  const [userNickname, setUserNickname] = useState('');
   const [chattingList, setChattingList] = useState<any>([]);
   const [loadOrNot, setLoadOrNot] = useState(false);
-  const getUserEmail = async () => {
+
+  const getUserInfo = async () => {
     try {
-      const email = (await AsyncStorage.getItem('userEmail')) || 'empty';
-      setEmail(email);
-      if (email !== null) {
+      const email = (await AsyncStorage.getItem('userEmail')) || 'empty email';
+      const nickname =
+        (await AsyncStorage.getItem('userNickname')) || 'empty nickname';
+      setEmail(userEmail);
+      setUserNickname(nickname);
+      if (email !== null && nickname) {
         console.log('✅ get user email :', email);
+        console.log('✅ get user nickName:', nickname);
       }
     } catch (e) {
       console.log('no value**');
@@ -48,33 +53,45 @@ function ChattingListScreen({navigation}: any) {
 
   const getChattingList = async () => {
     try {
-      if (email !== 'empty') {
-        const db = firebase.firestore();
-        db.collection('user')
-          .doc(email)
-          .collection('messages')
-          .orderBy('createdAt')
-          .onSnapshot(d => {
-            setChattingList(
-              d.docs.map(doc => ({id: doc.id, chatting: doc.data().from})),
-            );
-            if (chattingList !== undefined) {
-              setLoadOrNot(true);
-            }
-          });
+      const db = firebase.firestore();
+      const chattingRef = db.collection('chatting').orderBy('updatedAt');
+      chattingRef.onSnapshot(data => {
+        setChattingList(
+          data.docs.map(doc => ({
+            id: doc.id,
+            chatting: doc.data(),
+          })),
+        );
+      });
+      if (chattingList[0] === undefined) {
+        console.log(
+          '--- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ',
+        );
+        console.log('❌ chatting list load faild');
+      } else {
+        console.log('✅ load completed! : ', chattingList);
       }
-    } catch {}
+    } catch {
+      console.log('ERROR: getChattingList');
+    }
   };
 
   useEffect(() => {
-    getUserEmail();
+    getUserInfo();
   }, []);
 
   useEffect(() => {
     getChattingList();
-  }, [loadOrNot]);
+  }, []);
 
-  const renderItem = ({item}: any) => <Item from={item.chatting} />;
+  const renderItem = ({item}: any) => (
+    <Item
+      owner={item.chatting.owner}
+      reciever={item.chatting.reciever}
+      recentMessage={item.chatting.recentMessage}
+      updatedAt={item.chatting.updatedAt}
+    />
+  );
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
