@@ -12,6 +12,10 @@ import {
 import RNBootSplash from "react-native-bootsplash";
 import { LogBox } from 'react-native';
 
+
+
+
+
 const Stack = createNativeStackNavigator();
 
 LogBox.ignoreLogs(['Did not receive response to shouldStartLoad in time, defaulting to YES']);
@@ -33,36 +37,36 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer onReady={() => RNBootSplash.hide()}>
-      <Stack.Navigator
-        initialRouteName="NavLogin"
-        screenOptions={{animation: 'none', gestureEnabled: false}}>
-        <Stack.Screen
-          options={{headerShown: false}}
-          name="NavLogin"
-          component={NavLogin}
-        />
-        <Stack.Screen
-          options={{headerShown: false}}
-          name="NavHome"
-          component={NavHome}
-        />
-        <Stack.Screen
-          options={{headerShown: false}}
-          name="NavAuction"
-          component={NavAuction}
-        />
-        <Stack.Screen
-          options={{headerShown: false}}
-          name="NavChatting"
-          component={NavChatting}
-        />
-        <Stack.Screen
-          options={{headerShown: false}}
-          name="NavProfile"
-          component={NavProfile}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+      <NavigationContainer onReady={() => RNBootSplash.hide()}>
+        <Stack.Navigator
+          initialRouteName="NavLogin"
+          screenOptions={{animation: 'none', gestureEnabled: false}}>
+          <Stack.Screen
+            options={{headerShown: false}}
+            name="NavLogin"
+            component={NavLogin}
+          />
+          <Stack.Screen
+            options={{headerShown: false}}
+            name="NavHome"
+            component={NavHome}
+          />
+          <Stack.Screen
+            options={{headerShown: false}}
+            name="NavAuction"
+            component={NavAuction}
+          />
+          <Stack.Screen
+            options={{headerShown: false}}
+            name="NavChatting"
+            component={NavChatting}
+          />
+          <Stack.Screen
+            options={{headerShown: false}}
+            name="NavProfile"
+            component={NavProfile}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
   );
 }

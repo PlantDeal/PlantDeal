@@ -10,9 +10,13 @@ import firestore from '@react-native-firebase/firestore'
 import { firebase } from '@react-native-firebase/firestore';
 
 
-function DetailScreen({navigation}: any) {
-  const Width = Dimensions.get('window').width;
 
+function DetailScreen({navigation,route}: any) {
+  const Width = Dimensions.get('window').width;
+  const token:any = firebase.auth().currentUser;
+  const {amount, explane,image,name,price,sunlight,title,watering,category,town,village} = route.params;
+
+  console.log(image.length)
 
   return (
     <SafeAreaView style={styles.SafeAreaView}>
@@ -35,11 +39,18 @@ function DetailScreen({navigation}: any) {
       </View>
       <View style={{flex:7.3,justifyContent:'center'}}>
         <ScrollView>
-            <View style ={{height:220, width:Width, backgroundColor:'red'}}>
-
+            <View style ={{height:220, width:Width}}>
+              <ScrollView horizontal={true} pagingEnabled={true} showsHorizontalScrollIndicator={false}>
+                {image.map((data:any) => <Image key={data} style={{height:220,width:Width}} source={{uri: data}} resizeMode="stretch"/>)}
+              </ScrollView>
             </View>
-            <View style ={{height:100, width:Width, backgroundColor:'blue'}}>
-
+            <View style ={{height:100, width:Width, backgroundColor:'#FFFFFF'}}>
+              <Text style={{fontSize: 24,
+                        fontFamily: 'NotoSansKR-Bold',
+                        includeFontPadding: false,
+                        color: '#000000',
+                        }}>{title}</Text>
+              <Text>{category} {town}구 {village}동</Text>
             </View>
             <View style ={{height:160, width:Width, backgroundColor:'yellow'}}>
 

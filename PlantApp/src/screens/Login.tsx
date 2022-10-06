@@ -11,10 +11,13 @@ import {
 import auth from '@react-native-firebase/auth';
 import { FirebaseStorageTypes } from '@react-native-firebase/storage';
 import firestore from '@react-native-firebase/firestore'
+import { useDispatch } from 'react-redux';
+import { login } from '../redux/user';
 
 
 
 function LoginScreen({navigation} : {navigation: any}) {  
+  const dispatch = useDispatch()
   const [email, onChangeEmail] = useState('');
   const [password, onChangePassword] = useState('');
   const [loginColor, onChangeLoginColor] = useState('#BDE3CE');
@@ -68,6 +71,9 @@ function LoginScreen({navigation} : {navigation: any}) {
     .doc(email)
     .get()
     .then(documentSnapshot => {
+      dispatch(login({name: documentSnapshot.get('name'), nickname:documentSnapshot.get('nickname'),birth:documentSnapshot.get('birth'),
+      gender:documentSnapshot.get('gender'),address:documentSnapshot.get('address'),
+      subaddress:documentSnapshot.get('subaddress')}))
       const location = documentSnapshot.get('location')
       if(location === ''){
         navigation.navigate('SetLocationScreen');
@@ -112,9 +118,6 @@ function LoginScreen({navigation} : {navigation: any}) {
           secureTextEntry={true}
           clearButtonMode='always'
         />
-        <View>
-          <Text style={{fontSize: 14, marginBottom:10,color:'red'}}>테스트</Text>
-        </View>
       </View>
       <View style={{flex: 2.1, justifyContent: 'center'}}>
         <TouchableOpacity 

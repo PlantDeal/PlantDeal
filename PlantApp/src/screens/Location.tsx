@@ -1,8 +1,13 @@
-import React from 'react';
+import React, {useEffect,useState} from 'react';
 import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
+
 function LocationScreen({navigation}: any) {
+  
+  
+
+
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#FFFFFF'}}>
       <View style={styles.headerBarView}>

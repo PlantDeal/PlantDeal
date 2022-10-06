@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useEffect,useState} from 'react';
 import {
   Image,
   Pressable,
@@ -6,15 +6,56 @@ import {
   Text,
   TextInput,
   View,
+  ScrollView
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import firestore from '@react-native-firebase/firestore'
 
 function SearchLocationScreen({navigation}: any) {
+  const [city,setCity] = useState('');
+  const [town,setTown] = useState<any>([])
+  const [isShow,setIsShow] = useState(true)
+
+  console.log(town)
+  
+  function test(){
+    
+  }
+
+  const test2 = () =>{
+    if(town === undefined){
+      return null
+    }
+    else{
+      return town.map((data:any) => <Text key={data} style={styles.resultText}>{city}시 {data}</Text>)
+    }
+  }
+
+  useEffect(() => {
+    if(town !== undefined){
+      test2()
+    }
+    else{
+      
+    }
+  },[town])
+
+  useEffect(()=> {
+    firestore()
+    .collection('sell')
+    .doc(city)
+    .get()
+    .then(data => {
+      setTown(data.get('location'))
+    })
+  },[city])
+  
+
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#FFFFFF'}}>
       <View style={styles.headerBarView}>
         <View style={styles.headerBarLeftView}>
-          <Pressable onPress={() => navigation.goBack()}>
+          <Pressable onPress={() => test()}>
             <Image source={require('../assets/BackBtn.png')}></Image>
           </Pressable>
         </View>
@@ -29,6 +70,8 @@ function SearchLocationScreen({navigation}: any) {
             <TextInput
               style={styles.textInput}
               placeholder="주소를 입력하세요. (동,읍,면)"
+              onChangeText={setCity}
+              value={city}
             />
           </View>
           <View style={styles.searchImageView}>
@@ -36,15 +79,9 @@ function SearchLocationScreen({navigation}: any) {
           </View>
         </View>
         <View style={styles.searchResultView}>
-          <View style={styles.resultTextView}>
-            <Text style={styles.resultText}> 부산 광역시 수영구 수영로</Text>
-          </View>
-          <View style={styles.resultTextView}>
-            <Text style={styles.resultText}> 부산 광역시 수영구 수영로</Text>
-          </View>
-          <View style={styles.resultTextView}>
-            <Text style={styles.resultText}> 부산 광역시 수영구 수영로</Text>
-          </View>
+          <ScrollView style={styles.resultTextView}>
+            {test2()}
+          </ScrollView>
         </View>
       </View>
     </SafeAreaView>
@@ -53,8 +90,8 @@ function SearchLocationScreen({navigation}: any) {
 
 const styles = StyleSheet.create({
   resultTextView: {
-    justifyContent: 'center',
-    height: 38,
+    width:335,
+    height: 560,
   },
   resultText: {
     fontSize: 14,

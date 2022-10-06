@@ -15,11 +15,14 @@ import auth from '@react-native-firebase/auth';
 import { firebase } from '@react-native-firebase/firestore';
 import { FirebaseStorageTypes } from '@react-native-firebase/storage';
 import firestore from '@react-native-firebase/firestore'
+import { useSelector } from 'react-redux'
 
 function ProfileScreen({navigation}: any) {
   const [name,setName] = useState<any>('')
   const token:any = firebase.auth().currentUser;
+  //const user = useSelector((state:any) => state.user.value)
 
+  
   useEffect(()=> {
     firestore().
     collection('user')
@@ -30,6 +33,8 @@ function ProfileScreen({navigation}: any) {
      setName(Name)
     });
   },[])
+
+  //console.log(user.name)
 
 
 

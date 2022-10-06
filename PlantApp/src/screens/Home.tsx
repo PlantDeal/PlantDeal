@@ -16,11 +16,11 @@ import firestore from '@react-native-firebase/firestore';
 import { firebase } from '@react-native-firebase/firestore';
 
 function HomeScreen({navigation}: any) {
-  const categories = ["공기정화식물", "다육식물", "허브식물", "선인장", "희귀식물", "기타"]
-  const [City,setCity] = useState("서울");
-  const [Town,setTown] = useState("강남");
-  const [Village,setVillage] = useState("개포1");
-  const [Category,setCategory] = useState("관엽식물");
+  const categories = ["공기정화식물", "다육식물", "허브식물", "선인장", "희귀식물", "기타","관엽식물"]
+  const [City,setCity] = useState("");
+  const [Town,setTown] = useState("");
+  const [Village,setVillage] = useState("");
+  const [Category,setCategory] = useState("");
   const [Data,setData] = useState<any>(null);
   const [categorycolor,setCategoryColor] = useState('#C6C6C6')
   const [location,SetLocation] = useState<any>([])
@@ -38,11 +38,16 @@ function HomeScreen({navigation}: any) {
     });
   },[])
 
+  useEffect(() => {
+    setVillage(location[location.length-1])
+    setTown(location[location.length-2])
+    setCity(location[location.length-3])
+  },[location])
+
   
 
-
   const read = () => {
-    firestore()
+     firestore()
       .collection('sell')
       .doc(City)
       .collection(Town)
@@ -60,6 +65,18 @@ function HomeScreen({navigation}: any) {
         console.log(data);
       });
   };
+
+  useEffect(()=> {
+    if(City !== "" && Town !== "" && Village !== "" && Category !== ""){
+      read()
+    }
+      
+    
+  },[Category,Village,City,Town])
+
+  // function test(){
+  //   read()
+  // }
 
   return (
     <SafeAreaView style={styles.SafeAreaView}>
@@ -100,10 +117,22 @@ function HomeScreen({navigation}: any) {
           data={Data}
           renderItem={({item}) => (
             <View style={styles.flatbox}>
-              <TouchableOpacity style={styles.flatbox}>
+              <TouchableOpacity style={styles.flatbox} 
+              onPress={()=> {navigation.navigate('DetailScreen',
+              {image:item.image,
+              name:item.name,
+              price:item.price,
+              amount:item.amount,
+              sunlight:item.sunlight,
+              title:item.title,
+              watering:item.watering,
+              explane:item.explane,
+              category:Category,
+              town:Town,
+              village:Village})}}>
                 <View style={{flexDirection: 'row'}}>
                   <View style={{marginLeft: 12, marginRight: 6}}>
-                    <Image style={styles.imagebox} source={{uri: item.image}} />
+                    <Image style={styles.imagebox} source={{uri: item.image[0]}} />
                   </View>
                   <View
                     style={{
@@ -160,7 +189,7 @@ function HomeScreen({navigation}: any) {
         />
       </View>
       <View style = {{flex:1}}>
-        <TouchableOpacity onPress={() => navigation.navigate('RegistSellScreen')} style={styles.sellbox}>
+        <TouchableOpacity  style={styles.sellbox} onPress={()=>navigation.navigate('RegistSellScreen',{City:City, Town:Town, Village:Village})}>
           <Text style={{color: 'white', fontSize:16, fontFamily:'NotoSansKR-Bold'}}>판매등록</Text>
         </TouchableOpacity>
       </View>

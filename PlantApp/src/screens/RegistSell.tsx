@@ -10,7 +10,7 @@ import firestore from '@react-native-firebase/firestore'
 import { firebase } from '@react-native-firebase/firestore';
 
 
-function RegistSellScreen({navigation}: any) {
+function RegistSellScreen({navigation,route}: any) {
   const [name,onChangeName] = useState('')
   const [underlinecolorname,setunderlineColorName] = useState('#8E8E93')
   const categories = ["공기정화식물", "다육식물", "허브식물", "선인장", "희귀식물", "기타"]
@@ -44,7 +44,11 @@ function RegistSellScreen({navigation}: any) {
   const [registcolor,setRegistColor] = useState('#BDE3CE')
   const [Asset,setAsset] = useState<any>([])
   const [down,setDown] = useState<any>([])
+
   const token:any = firebase.auth().currentUser;
+
+  const {City, Town, Village} = route.params;
+
 
   useEffect(()=>{
     if(name === ''){
@@ -186,6 +190,8 @@ function RegistSellScreen({navigation}: any) {
     }
   },[down])
 
+  
+
   async function regist(){
     await firestore()
     .collection('user')
@@ -204,7 +210,28 @@ function RegistSellScreen({navigation}: any) {
       price: price
     })
     .then(() => {
-      navigation.navigate('NavProfile')
+      firestore()
+      .collection('sell')
+      .doc(City)
+      .collection(Town)
+      .doc(Village)
+      .collection(Category)
+      .doc('2')
+      .set({
+        name : name,
+        Category : Category,
+        title : title,
+        explane : explanation,
+        image : down,
+        watering: watering,
+        amount : amount,
+        sunlight: sunlight,
+        price: price,
+        
+      })
+      .then(() => {
+        navigation.navigate('HomeScreen')
+      })
     })
     
   }

@@ -1,5 +1,7 @@
-import React from 'react';
+import React, {useEffect,useState} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import firestore from '@react-native-firebase/firestore';
+import { firebase } from '@react-native-firebase/firestore';
 
 import HomeScreen from '../screens/Home';
 import AuctionScreen from '../screens/Auction';
@@ -16,6 +18,7 @@ import LocationScreen from '../screens/Location';
 import RegistSellScreen from '../screens/RegistSell';
 import SearchLocationScreen from '../screens/SearchLocation';
 import SetLocationScreen from '../screens/SetLocation';
+import DetailScreen from '../screens/Detail';
 
 const LoginStack = createNativeStackNavigator();
 const HomeStack = createNativeStackNavigator();
@@ -54,6 +57,7 @@ function NavLogin({navigation}: any) {
 }
 
 function NavHome({navigation}: any) {
+  
   return (
     <HomeStack.Navigator
       screenOptions={{
@@ -63,7 +67,8 @@ function NavHome({navigation}: any) {
       <HomeStack.Screen
         name="HomeScreen"
         component={HomeScreen}
-        options={{headerShown: false}}
+        options={{headerShown: false}
+        }
       />
       <HomeStack.Screen
         name="검색"
@@ -88,6 +93,11 @@ function NavHome({navigation}: any) {
       <HomeStack.Screen
         name="지역 검색하기"
         component={SearchLocationScreen}
+        options={{headerShown: false}}
+      />
+      <HomeStack.Screen
+        name="DetailScreen"
+        component={DetailScreen}
         options={{headerShown: false}}
       />
     </HomeStack.Navigator>
