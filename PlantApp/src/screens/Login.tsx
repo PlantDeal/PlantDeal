@@ -112,9 +112,6 @@ function LoginScreen({navigation} : {navigation: any}) {
           secureTextEntry={true}
           clearButtonMode='always'
         />
-        <View>
-          <Text style={{fontSize: 14, marginBottom:10,color:'red'}}>테스트</Text>
-        </View>
       </View>
       <View style={{flex: 2.1, justifyContent: 'center'}}>
         <TouchableOpacity 
