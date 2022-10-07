@@ -15,26 +15,28 @@ import auth from '@react-native-firebase/auth';
 import { firebase } from '@react-native-firebase/firestore';
 import { FirebaseStorageTypes } from '@react-native-firebase/storage';
 import firestore from '@react-native-firebase/firestore'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function ProfileScreen({navigation}: any) {
   const [name,setName] = useState<any>('')
-  const token:any = firebase.auth().currentUser;
+  
 
-  useEffect(()=> {
-    firestore().
-    collection('user')
-    .doc(token?.email)
-    .get()
-    .then(documentSnapshot => {
-     const Name = documentSnapshot.get('name')
-     setName(Name)
-    });
+  useEffect(() => {
+    load();
+    
   },[])
+
+  async function load(){
+    setName(await AsyncStorage.getItem('name'))
+    
+  }
+  
 
 
 
   return (
     <SafeAreaView style={styles.SafeAreaView}>
+      
       <ProfileHeaderBar headerTitle={'마이페이지'} navigation={navigation} />
       <View style={styles.bodyView}>
         <ScrollView style={{width: '100%'}}>

@@ -9,9 +9,8 @@ import {
   SafeAreaView,
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
-import { FirebaseStorageTypes } from '@react-native-firebase/storage';
 import firestore from '@react-native-firebase/firestore'
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 function LoginScreen({navigation} : {navigation: any}) {  
@@ -67,14 +66,23 @@ function LoginScreen({navigation} : {navigation: any}) {
     .collection('user')
     .doc(email)
     .get()
-    .then(documentSnapshot => {
-      const location = documentSnapshot.get('location')
-      if(location === ''){
-        navigation.navigate('SetLocationScreen');
-      }
-      else{
-        navigation.navigate('NavHome');
-      }
+    .then(async documentSnapshot => {
+      await AsyncStorage.setItem('name',documentSnapshot.get('name'))
+      await AsyncStorage.setItem('nickname',documentSnapshot.get('nickname'))
+      await AsyncStorage.setItem('birth',documentSnapshot.get('birth'))
+      await AsyncStorage.setItem('gender',documentSnapshot.get('gender'))
+      await AsyncStorage.setItem('address',documentSnapshot.get('address'))
+      await AsyncStorage.setItem('subaddress',documentSnapshot.get('subaddress'))
+      .then(() => {
+        const location = documentSnapshot.get('location')
+        if(location === ''){
+          navigation.navigate('SetLocationScreen');
+        }
+        else{
+          navigation.navigate('NavHome');
+        }
+      })
+      
     }); 
   }
 

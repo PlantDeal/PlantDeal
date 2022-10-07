@@ -16,6 +16,7 @@ import LocationScreen from '../screens/Location';
 import RegistSellScreen from '../screens/RegistSell';
 import SearchLocationScreen from '../screens/SearchLocation';
 import SetLocationScreen from '../screens/SetLocation';
+import DetailScreen from '../screens/Detail';
 
 const LoginStack = createNativeStackNavigator();
 const HomeStack = createNativeStackNavigator();
@@ -88,6 +89,11 @@ function NavHome({navigation}: any) {
       <HomeStack.Screen
         name="지역 검색하기"
         component={SearchLocationScreen}
+        options={{headerShown: false}}
+      />
+      <HomeStack.Screen
+        name="DetailScreen"
+        component={DetailScreen}
         options={{headerShown: false}}
       />
     </HomeStack.Navigator>
