@@ -67,6 +67,7 @@ function LoginScreen({navigation} : {navigation: any}) {
     .doc(email)
     .get()
     .then(async documentSnapshot => {
+      await AsyncStorage.setItem('id',email)
       await AsyncStorage.setItem('name',documentSnapshot.get('name'))
       await AsyncStorage.setItem('nickname',documentSnapshot.get('nickname'))
       await AsyncStorage.setItem('birth',documentSnapshot.get('birth'))
