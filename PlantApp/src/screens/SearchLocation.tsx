@@ -1,20 +1,62 @@
-import React from 'react';
+import React,{useEffect, useState} from 'react';
 import {
   Image,
   Pressable,
   StyleSheet,
   Text,
   TextInput,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import { AutocompleteDropdown } from 'react-native-autocomplete-dropdown';
+import Feather from 'react-native-vector-icons/Feather';
+Feather.loadFont()
+import firestore from '@react-native-firebase/firestore';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { firebase } from '@react-native-firebase/firestore';
 
-function SearchLocationScreen({navigation}: any) {
+
+
+
+
+
+function SearchLocationScreen({navigation,route}: any) {
+  const [test2,setTest] = useState<any>([{id:"" , title:"" }]);
+  const token:any = firebase.auth().currentUser;
+  
+  const{ location } = route.params;
+
+  
+  async function test(item:any){
+    var str = item?.title;
+    var words = str?.split(' ')
+    if(str !== undefined){
+      var city = words[0].slice(0,-1)
+      var town = words[1].slice(0,-1)
+      var village = words[2].slice(0,-1)
+      await firestore()
+      .collection('user')
+      .doc(token?.email)
+      .update({
+        location: [city,town,village]
+      })
+      .then(() => {
+        navigation.navigate('HomeScreen')
+      })
+    }
+    else{
+      
+    }
+  }
+
+  
+
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#FFFFFF'}}>
       <View style={styles.headerBarView}>
         <View style={styles.headerBarLeftView}>
-          <Pressable onPress={() => navigation.goBack()}>
+          <Pressable onPress={() => navigation.pop()}>
             <Image source={require('../assets/BackBtn.png')}></Image>
           </Pressable>
         </View>
@@ -25,26 +67,22 @@ function SearchLocationScreen({navigation}: any) {
       </View>
       <View style={styles.bodyView}>
         <View style={styles.searchView}>
-          <View style={styles.textInputView}>
-            <TextInput
-              style={styles.textInput}
-              placeholder="주소를 입력하세요. (동,읍,면)"
-            />
-          </View>
-          <View style={styles.searchImageView}>
-            <Image source={require('../assets/Search.png')} />
-          </View>
+          <AutocompleteDropdown
+            containerStyle={styles.textInput}
+            rightButtonsContainerStyle={styles.searchImageView}
+            showClear={false}
+            clearOnFocus={false}
+            emptyResultText={"검색된 정보가 없습니다"}
+            // ChevronIconComponent={<Image source={require('../assets/Search.png')}></Image>}
+            dataSet={location}
+            onSelectItem={async(item:any) => {
+              test(item)
+            }} />
+          
+          
         </View>
         <View style={styles.searchResultView}>
-          <View style={styles.resultTextView}>
-            <Text style={styles.resultText}> 부산 광역시 수영구 수영로</Text>
-          </View>
-          <View style={styles.resultTextView}>
-            <Text style={styles.resultText}> 부산 광역시 수영구 수영로</Text>
-          </View>
-          <View style={styles.resultTextView}>
-            <Text style={styles.resultText}> 부산 광역시 수영구 수영로</Text>
-          </View>
+          
         </View>
       </View>
     </SafeAreaView>

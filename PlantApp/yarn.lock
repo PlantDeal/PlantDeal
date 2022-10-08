@@ -2161,7 +2161,23 @@
   "resolved" "https://registry.npmjs.org/@types/prop-types/-/prop-types-15.7.5.tgz"
   "version" "15.7.5"
 
-"@types/react-native@^0.69.3":
+"@types/react-native-autocomplete-input@^5.1.0":
+  "integrity" "sha512-ICXh3AM5aM2z9yFMg0jX5K+rVfFx+l8WxBt7R73Jmyeqe6/7+ynoC/uEuQiqWnMqG1+WirvEoKdxlcB1RwzPVQ=="
+  "resolved" "https://registry.npmjs.org/@types/react-native-autocomplete-input/-/react-native-autocomplete-input-5.1.0.tgz"
+  "version" "5.1.0"
+  dependencies:
+    "@types/react" "*"
+    "@types/react-native" "*"
+
+"@types/react-native-vector-icons@^6.4.12":
+  "integrity" "sha512-gSXtv3NMOsRwSXJ/gvGebm7CNjHbkeFKCse9h/Pvi+x2yjCLOkJR1FBfec06DhaFJpsK7Y8WRQpwOS0eLqx5Rg=="
+  "resolved" "https://registry.npmjs.org/@types/react-native-vector-icons/-/react-native-vector-icons-6.4.12.tgz"
+  "version" "6.4.12"
+  dependencies:
+    "@types/react" "*"
+    "@types/react-native" "*"
+
+"@types/react-native@*", "@types/react-native@^0.69.3":
   "integrity" "sha512-K6ebyJYZiMZ0JsIfnX5/RbPxYuGt9ajH0kQk6An7upp9vrnU1T9Xg1cIWhnfYojAhqNxEo3okIcH0lR8+qzrmg=="
   "resolved" "https://registry.npmjs.org/@types/react-native/-/react-native-0.69.4.tgz"
   "version" "0.69.4"
@@ -5713,7 +5729,7 @@
   dependencies:
     "p-locate" "^5.0.0"
 
-"lodash.debounce@^4.0.8":
+"lodash.debounce@*", "lodash.debounce@^4.0.8":
   "integrity" "sha512-FT1yDzDYEoYWhnSGnpE/4Kj1fLZkDFyqRb7fNt6FdYOSxlUWAtp42Eh6Wb0rGIv/m9Bgo7x4GhQbm5Ys4SG5ow=="
   "resolved" "https://registry.npmjs.org/lodash.debounce/-/lodash.debounce-4.0.8.tgz"
   "version" "4.0.8"
@@ -6837,7 +6853,7 @@
     "kleur" "^3.0.3"
     "sisteransi" "^1.0.5"
 
-"prop-types@^15.7.2", "prop-types@^15.8.1":
+"prop-types@*", "prop-types@^15.7.2", "prop-types@^15.8.1":
   "integrity" "sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg=="
   "resolved" "https://registry.npmjs.org/prop-types/-/prop-types-15.8.1.tgz"
   "version" "15.8.1"
@@ -6930,6 +6946,16 @@
   "resolved" "https://registry.npmjs.org/react-is/-/react-is-17.0.2.tgz"
   "version" "17.0.2"
 
+"react-native-autocomplete-dropdown@^2.0.7":
+  "integrity" "sha512-MktabrfeAE0oJ+WgxtIkesHxtbYbZwbdyR7MTJ9roFPNmAyOqrcRWzZowmOblXM0Ljv6zlg5b7n7waSM+4iATw=="
+  "resolved" "https://registry.npmjs.org/react-native-autocomplete-dropdown/-/react-native-autocomplete-dropdown-2.0.7.tgz"
+  "version" "2.0.7"
+  dependencies:
+    "lodash.debounce" "*"
+    "prop-types" "*"
+    "react-native-size-matters" "^0.3.0 || ^0.4.0"
+    "react-native-vector-icons" ">=7.0.0"
+
 "react-native-bootsplash@^4.3.2":
   "integrity" "sha512-HzXl6AKk4sRjEtV+1C7q4gSXP5kYMhpzGaB4DllZNObdZ8oVH8Ac7Y9ShKZ8wLQLJaG/TtzyGHKIDaNi0oNGJA=="
   "resolved" "https://registry.npmjs.org/react-native-bootsplash/-/react-native-bootsplash-4.3.2.tgz"
@@ -6998,7 +7024,12 @@
   "resolved" "https://registry.npmjs.org/react-native-select-dropdown/-/react-native-select-dropdown-2.0.4.tgz"
   "version" "2.0.4"
 
-"react-native-vector-icons@*":
+"react-native-size-matters@^0.3.0 || ^0.4.0":
+  "integrity" "sha512-8/C0htHrFWeUm9N8JegmadovUfgTWkGBkDPZ1N3YkXtDWb+98Ya2gThiKcu445r8c7YhcrBfnHz/mYsXIusaOQ=="
+  "resolved" "https://registry.npmjs.org/react-native-size-matters/-/react-native-size-matters-0.4.0.tgz"
+  "version" "0.4.0"
+
+"react-native-vector-icons@*", "react-native-vector-icons@^9.2.0", "react-native-vector-icons@>=7.0.0":
   "integrity" "sha512-wKYLaFuQST/chH3AJRjmOLoLy3JEs1JR6zMNgTaemFpNoXs0ztRnTxcxFD9xhX7cJe1/zoN5BpQYe7kL0m5yyA=="
   "resolved" "https://registry.npmjs.org/react-native-vector-icons/-/react-native-vector-icons-9.2.0.tgz"
   "version" "9.2.0"
@@ -7014,7 +7045,7 @@
     "escape-string-regexp" "2.0.0"
     "invariant" "2.2.4"
 
-"react-native@*", "react-native@^0.0.0-0 || 0.60 - 0.70 || 1000.0.0", "react-native@>=0.42.0", "react-native@>=0.65.0", "react-native@0.69.3":
+"react-native@*", "react-native@^0.0.0-0 || 0.60 - 0.70 || 1000.0.0", "react-native@>=0.40.0", "react-native@>=0.42.0", "react-native@>=0.65.0", "react-native@0.69.3":
   "integrity" "sha512-SyGkcoEUa/BkO+wKVnv4OsnLSNfUM5zLNXS3iT/3eXjKX91/FKBH/nfR9BE1c60X5LQe/P5QYqr6WPX3TRSQkA=="
   "resolved" "https://registry.npmjs.org/react-native/-/react-native-0.69.3.tgz"
   "version" "0.69.3"

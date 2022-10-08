@@ -15,8 +15,9 @@ import SelectDropdown from 'react-native-select-dropdown';
 import firestore from '@react-native-firebase/firestore';
 import { firebase } from '@react-native-firebase/firestore';
 
+
 function HomeScreen({navigation}: any) {
-  const categories = ["공기정화식물", "다육식물", "허브식물", "선인장", "희귀식물", "기타","관엽식물"]
+  const categories = ["공기정화식물", "다육식물", "허브식물", "선인장", "희귀식물", "기타"]
   const [City,setCity] = useState("");
   const [Town,setTown] = useState("");
   const [Village,setVillage] = useState("");
@@ -36,7 +37,7 @@ function HomeScreen({navigation}: any) {
      const Location = documentSnapshot.get('location')
      SetLocation(Location)
     });
-  },[])
+  })
 
   useEffect(() => {
     setVillage(location[location.length-1])
@@ -53,7 +54,7 @@ function HomeScreen({navigation}: any) {
       .collection(Town)
       .doc(Village)
       .collection(Category)
-      .onSnapshot(querySnapshot => {
+      .onSnapshot(async querySnapshot => {
         const data: {key: string}[] = [];
         querySnapshot.forEach(documentSnapshot => {
           data.push({
@@ -62,7 +63,6 @@ function HomeScreen({navigation}: any) {
           });
         });
         setData(data);
-        console.log(data);
       });
   };
 

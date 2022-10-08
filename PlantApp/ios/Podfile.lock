@@ -1166,6 +1166,8 @@ PODS:
   - RNScreens (3.17.0):
     - React-Core
     - React-RCTImage
+  - RNVectorIcons (9.2.0):
+    - React-Core
   - SocketRocket (0.6.0)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
@@ -1238,6 +1240,7 @@ DEPENDENCIES:
   - "RNFBFirestore (from `../node_modules/@react-native-firebase/firestore`)"
   - "RNFBStorage (from `../node_modules/@react-native-firebase/storage`)"
   - RNScreens (from `../node_modules/react-native-screens`)
+  - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -1363,6 +1366,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/storage"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  RNVectorIcons:
+    :path: "../node_modules/react-native-vector-icons"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -1442,6 +1447,7 @@ SPEC CHECKSUMS:
   RNFBFirestore: 70f47946084f6ce68c827c4a770613e0adb46da3
   RNFBStorage: 814adb8c5bf4ff86a0b0641d750a64d6d48d9a75
   RNScreens: 0df01424e9e0ed7827200d6ed1087ddd06c493f9
+  RNVectorIcons: fcc2f6cb32f5735b586e66d14103a74ce6ad61f8
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
   Yoga: 44c64131616253fa83366295acdbce3d14926041
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a

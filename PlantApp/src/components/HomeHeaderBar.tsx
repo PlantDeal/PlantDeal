@@ -14,7 +14,7 @@ export default function HomeHeaderBar({navigation,route}: any) {
       <View style={styles.centerBtnView}>
         <Pressable
           style={{flexDirection: 'row'}}
-          onPress={() => navigation.navigate('지역 설정하기')}>
+          onPress={() => navigation.navigate('지역 설정하기',{city:route[route.length-3],town:route[route.length-2],village:route[route.length-1]})}>
           <View>
             <Text style={styles.locationTitle}>{route[route.length-1]}</Text>
           </View>
