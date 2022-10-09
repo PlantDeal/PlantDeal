@@ -36,214 +36,124 @@ function ProfileScreen({navigation}: any) {
 
   return (
     <SafeAreaView style={styles.SafeAreaView}>
-      
-      <ProfileHeaderBar headerTitle={'마이페이지'} navigation={navigation} />
-      <View style={styles.bodyView}>
-        <ScrollView style={{width: '100%'}}>
-          <View style={styles.profileView}>
-            <Pressable>
-              <Image source={require('../assets/TempProfileImage.png')} />
-            </Pressable>
-            <View style={{marginTop: 15, marginBottom: 15}}>
-              <View style={{alignItems: 'center'}}>
-                <Text style={styles.profileMyName}>{name}</Text>
+      <ProfileHeaderBar style={{flex: 0.5}} headerTitle={'마이페이지'} navigation={navigation}/>
+      <View style={{flex:8.5}}>
+        <View style={{flex:0.5 ,backgroundColor:'#FFFFFF',flexDirection:'row',justifyContent:'flex-end',alignItems:'center'}}>
+          <TouchableOpacity>
+            <Text style={{fontFamily:'NotoSansKR-Regular', 
+                          includeFontPadding:false,
+                          color:'#C6C6C6',
+                          fontSize:12,marginRight:5}}>프로필 편집</Text>
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <Text style={{fontFamily:'NotoSansKR-Regular', 
+                          includeFontPadding:false,
+                          color:'#C6C6C6',
+                          fontSize:12,marginLeft:5,marginRight:10}}>로그아웃</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={{flex:2.4,alignItems:'center',justifyContent:'center'}}>
+          <TouchableOpacity style={{marginBottom:4}}>
+            <Image style={{width:96,height:96}} source={require('../assets/TempProfileImage.png')} />
+          </TouchableOpacity>
+          <Text style={{fontFamily:'NotoSansKR-Bold', 
+                          includeFontPadding:false,
+                          color:'#000000',
+                          fontSize:18,marginTop:4}}>{name}</Text>
+        </View>
+        <View style={{flex:1.5,flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
+          <TouchableOpacity style={{width:79,height:78, backgroundColor:'#FFFFFF',marginRight:12,alignItems:'center',justifyContent:'center'}}>
+            <Image style={{width:24,height:24, marginBottom:5}} source={require('../assets/BuyLog.png')} />
+            <Text style={{marginTop:5,fontFamily:'NotoSansKR-Medium', 
+                          includeFontPadding:false,
+                          color:'#000000',
+                          fontSize:12}}>거래 내역</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={{width:79,height:78, backgroundColor:'#FFFFFF',marginLeft:12,marginRight:12,alignItems:'center',justifyContent:'center'}}>
+            <Image style={{width:24,height:24, marginBottom:5}} source={require('../assets/soldLog.png')} />
+            <Text style={{marginTop:5,fontFamily:'NotoSansKR-Medium', 
+                          includeFontPadding:false,
+                          color:'#000000',
+                          fontSize:12}}>경매 내역</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={{width:79,height:78, backgroundColor:'#FFFFFF',marginLeft:12,alignItems:'center',justifyContent:'center'}}>
+            <Image style={{width:24,height:24,marginBottom:5}} source={require('../assets/Hart.png')} />
+            <Text style={{marginTop:5,fontFamily:'NotoSansKR-Medium', 
+                          includeFontPadding:false,
+                          color:'#000000',
+                          fontSize:12}}>관심 목록</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={{flex:0.6,backgroundColor:'#E4E4E4'}}>
+
+        </View>
+        <View style={{flex:2,width:'100%',justifyContent:'center'}}>
+          <TouchableOpacity style={{height:42 ,justifyContent:'center'}}>
+            <View style={{flexDirection:'row'}}>
+              <View style={{flex:2.2,alignItems:'center'}}>
+                <Text style={{fontFamily:'NotoSansKR-Regular', 
+                            includeFontPadding:false,
+                            color:'#000000',
+                            fontSize:14,marginLeft:20}}>거래내역</Text>
+              </View>
+              <View style={{flex:6.1}}>
+
+              </View>
+              <View style={{flex:1.6,alignItems:'center'}}>
+                <Image style={{width:18,height:18}} source={require('../assets/Arrow.png')} />
               </View>
             </View>
-            <View style={styles.logView}>
-              <View style={styles.logViewIcon}>
-                <Image source={require('../assets/BuyLog.png')} />
-                <Text style={styles.logViewIconName}>구입내역</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={{height:42 ,justifyContent:'center'}}>
+            <View style={{flexDirection:'row'}}>
+              <View style={{flex:2.2,alignItems:'center'}}>
+                <Text style={{fontFamily:'NotoSansKR-Regular', 
+                            includeFontPadding:false,
+                            color:'#000000',
+                            fontSize:14,marginLeft:20}}>경매내역</Text>
               </View>
-              <View style={styles.logViewIcon}>
-                <Image source={require('../assets/soldLog.png')} />
-                <Text style={styles.logViewIconName}>판매내역</Text>
+              <View style={{flex:6.1}}>
+
               </View>
-              <View style={styles.logViewIcon}>
-                <Image source={require('../assets/Hart.png')} />
-                <Text style={styles.logViewIconName}>관심목록</Text>
+              <View style={{flex:1.6,alignItems:'center'}}>
+                <Image style={{width:18,height:18}} source={require('../assets/Arrow.png')} />
               </View>
             </View>
-          </View>
-          <View style={styles.sectionView}>
-            <View style={styles.sectionNameView}>
-              <Text style={styles.sectionTitle}>나의 활동</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={{height:42 ,justifyContent:'center'}}>
+            <View style={{flexDirection:'row'}}>
+              <View style={{flex:2.2,alignItems:'center'}}>
+                <Text style={{fontFamily:'NotoSansKR-Regular', 
+                            includeFontPadding:false,
+                            color:'#000000',
+                            fontSize:14,marginLeft:20}}>관심목록</Text>
+              </View>
+              <View style={{flex:6.1}}>
+
+              </View>
+              <View style={{flex:1.6,alignItems:'center'}}>
+                <Image style={{width:18,height:18}} source={require('../assets/Arrow.png')} />
+              </View>
             </View>
-            <Pressable style={styles.sectionNameView}>
-              <View style={styles.iconAndName}>
-                <Image source={require('../assets/Keyword.png')} />
-                <Text style={styles.sectionName}>키워드 알림</Text>
-              </View>
-              <Image source={require('../assets/GoBtn.png')} />
-            </Pressable>
-            <Pressable style={styles.sectionNameView}>
-              <View style={styles.iconAndName}>
-                <Image source={require('../assets/SeeAll.png')} />
-                <Text style={styles.sectionName}>모아보기</Text>
-              </View>
-              <Image source={require('../assets/GoBtn.png')} />
-            </Pressable>
-            <Pressable style={styles.sectionNameView}>
-              <View style={styles.iconAndName}>
-                <Image source={require('../assets/SetLocation.png')} />
-                <Text style={styles.sectionName}>지역 설정</Text>
-              </View>
-              <Image source={require('../assets/GoBtn.png')} />
-            </Pressable>
-          </View>
-          <View style={styles.sectionView}>
-            <View style={styles.sectionNameView}>
-              <Text style={styles.sectionTitle}>서비스 설정</Text>
-            </View>
-            <Pressable style={styles.sectionNameView}>
-              <View style={styles.iconAndName}>
-                <Image source={require('../assets/MyStore.png')} />
-                <Text style={styles.sectionName}>내 단골 가게</Text>
-              </View>
-              <Image source={require('../assets/GoBtn.png')} />
-            </Pressable>
-            <Pressable style={styles.sectionNameView}>
-              <View style={styles.iconAndName}>
-                <Image source={require('../assets/SavedPlant.png')} />
-                <Text style={styles.sectionName}>저장한 식물 </Text>
-              </View>
-              <Image source={require('../assets/GoBtn.png')} />
-            </Pressable>
-            <Pressable style={styles.sectionNameView}>
-              <View style={styles.iconAndName}>
-                <Image source={require('../assets/Coupon.png')} />
-                <Text style={styles.sectionName}>받은 쿠폰함</Text>
-              </View>
-              <Image source={require('../assets/GoBtn.png')} />
-            </Pressable>
-          </View>
-          <View style={styles.sectionView}>
-            <View style={styles.sectionNameView}>
-              <Text style={styles.sectionTitle}>기타</Text>
-            </View>
-            <Pressable style={styles.sectionNameView}>
-              <View style={styles.iconAndName}>
-                <Image source={require('../assets/FAQ.png')} />
-                <Text style={styles.sectionName}>FAQ</Text>
-              </View>
-              <Image source={require('../assets/GoBtn.png')} />
-            </Pressable>
-            <Pressable style={styles.sectionNameView}>
-              <View style={styles.iconAndName}>
-                <Image source={require('../assets/Question.png')} />
-                <Text style={styles.sectionName}>1:1 문의</Text>
-              </View>
-              <Image source={require('../assets/GoBtn.png')} />
-            </Pressable>
-            <Pressable style={styles.sectionNameView}>
-              <View style={styles.iconAndName}>
-                <Image source={require('../assets/Setting.png')} />
-                <Text style={styles.sectionName}>앱 설정</Text>
-              </View>
-              <Image source={require('../assets/GoBtn.png')} />
-            </Pressable>
-          </View>
-        </ScrollView>
+          </TouchableOpacity>
+        </View>
+        <View style={{flex:2.8,backgroundColor:'#E4E4E4'}}>
+
+        </View>
       </View>
-      <BottomTab style={{flex: 1}} navigation={navigation} />
+      <BottomTab style={{flex: 0.9}} navigation={navigation} />
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  iconAndName: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  sectionNameView: {
-    height: 42,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  sectionName: {
-    fontSize: 14,
-    fontFamily: 'Noto Sans KR',
-    fontWeight: '400',
-    color: '#000000',
-    paddingLeft: 6,
-  },
-  sectionTitle: {
-    fontSize: 14,
-    fontFamily: 'Noto Sans KR',
-    color: '#8E8E93',
-    fontWeight: '400',
-  },
-  logViewIconName: {
-    fontFamily: 'Noto Sans KR',
-    fontSize: 12,
-    fontWeight: '500',
-    color: '#000000',
-    marginTop: 10,
-  },
-  logViewIcon: {
-    width: '25%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 8,
-  },
-  logView: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
-    height: 70,
-    borderTopWidth: 1,
-    marginTop: 10,
-    borderTopColor: '#F4F4F4',
-  },
-  profileMyName: {
-    fontSize: 18,
-    color: '#000000',
-    fontWeight: '700',
-    fontFamily: 'Noto Sans KR',
-  },
-  tagText: {
-    fontSize: 14,
-    color: '#16D66F',
-    fontFamily: 'Noto Sans KR',
-    marginRight: 5,
-  },
-  sectionView: {
-    paddingLeft: 20,
-    paddingRight: 20,
-  },
-  profileView: {
-    width: '100%',
-    height: 300,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   SafeAreaView: {
     flex: 1,
     width: '100%',
     backgroundColor: '#FFFFFF',
   },
-  bodyView: {
-    flex: 17,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-  },
-  btnToJoin: {
-    alignItems: 'center',
-  },
-  joinInfoText: {
-    fontSize: 16,
-    color: '#8E8E93',
-    fontWeight: '400',
-  },
-  joinText: {
-    fontSize: 16,
-    color: '#16D66F',
-    fontWeight: '700',
-    marginTop: 12,
-  },
+  
+
 });
 
 export default ProfileScreen;
