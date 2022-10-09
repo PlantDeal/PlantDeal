@@ -48,17 +48,6 @@ function ProfileScreen({navigation}: any) {
               <View style={{alignItems: 'center'}}>
                 <Text style={styles.profileMyName}>{name}</Text>
               </View>
-              <View style={{flexDirection: 'row'}}>
-                <Pressable>
-                  <Text style={styles.tagText}>#태그</Text>
-                </Pressable>
-                <Pressable>
-                  <Text style={styles.tagText}>#태그</Text>
-                </Pressable>
-                <Pressable>
-                  <Text style={styles.tagText}>#태그</Text>
-                </Pressable>
-              </View>
             </View>
             <View style={styles.logView}>
               <View style={styles.logViewIcon}>

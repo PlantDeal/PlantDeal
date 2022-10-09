@@ -69,7 +69,9 @@ function SearchLocationScreen({navigation,route}: any) {
         <View style={styles.searchView}>
           <AutocompleteDropdown
             containerStyle={styles.textInput}
+            inputContainerStyle={styles.textInput2}
             rightButtonsContainerStyle={styles.searchImageView}
+            suggestionsListTextStyle={styles.textlist}
             showClear={false}
             clearOnFocus={false}
             emptyResultText={"검색된 정보가 없습니다"}
@@ -77,9 +79,9 @@ function SearchLocationScreen({navigation,route}: any) {
             dataSet={location}
             onSelectItem={async(item:any) => {
               test(item)
-            }} />
-          
-          
+            }} 
+           
+            />
         </View>
         <View style={styles.searchResultView}>
           
@@ -134,6 +136,16 @@ const styles = StyleSheet.create({
     color: '#000000',
     fontWeight: '400',
   },
+  textInput2: {
+    width: '100%',
+    height: 40,
+    borderBottomWidth: 1,
+    borderBottomColor: '#8E8E93',
+    fontSize: 16,
+    color: '#000000',
+    fontWeight: '400',
+    backgroundColor:"#FFFFFF"
+  },
   addBtn: {
     width: 230,
     height: 40,
@@ -185,6 +197,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 10,
   },
+  textlist:{
+    fontFamily:'NotoSansKR-Regular', 
+    includeFontPadding:false,
+    color:'#000000',
+    fontSize:14
+  }
 });
 
 export default SearchLocationScreen;
