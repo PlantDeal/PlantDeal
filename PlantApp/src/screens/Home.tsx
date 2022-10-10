@@ -13,7 +13,6 @@ import BottomTab from '../components/BottomTab';
 import HomeHeaderBar from '../components/HomeHeaderBar';
 import SelectDropdown from 'react-native-select-dropdown';
 import firestore from '@react-native-firebase/firestore';
-import { firebase } from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -33,6 +32,7 @@ function HomeScreen({navigation}: any) {
     const loc:any = await AsyncStorage.getItem('location')
     SetLocation(JSON.parse(loc))
   }
+  
 
   useEffect(() => {
     load()
@@ -66,8 +66,6 @@ function HomeScreen({navigation}: any) {
     if(City !== "" && Town !== "" && Village !== "" && Category !== ""){
       read()
     }
-      
-    
   },[Category,Village,City,Town])
 
   function elapsedTime(date:any) {

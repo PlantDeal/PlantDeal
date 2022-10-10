@@ -9,6 +9,7 @@ import { utils } from '@react-native-firebase/app';
 import firestore from '@react-native-firebase/firestore'
 import { firebase } from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { CommonActions } from '@react-navigation/native';
 
 
 function RegistSellScreen({navigation,route}: any) {
@@ -229,7 +230,7 @@ function RegistSellScreen({navigation,route}: any) {
         time : date
       })
       .then(() => {
-        navigation.navigate('HomeScreen')
+        navigation.dispatch(CommonActions.navigate('HomeScreen'))
       })
     })
     
