@@ -17,6 +17,7 @@ import RegistSellScreen from '../screens/RegistSell';
 import SearchLocationScreen from '../screens/SearchLocation';
 import SetLocationScreen from '../screens/SetLocation';
 import DetailScreen from '../screens/Detail';
+import UpdateProfileScreen from '../screens/UpdateProfile';
 
 const LoginStack = createNativeStackNavigator();
 const HomeStack = createNativeStackNavigator();
@@ -152,6 +153,13 @@ function NavProfile({navigation}: any) {
       <ProfileStack.Screen
         name="ProfileScreen"
         component={ProfileScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <ProfileStack.Screen
+        name="UpdateProfileScreen"
+        component={UpdateProfileScreen}
         options={{
           headerShown: false,
         }}

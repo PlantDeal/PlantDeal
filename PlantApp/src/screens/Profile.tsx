@@ -39,7 +39,7 @@ function ProfileScreen({navigation}: any) {
       <ProfileHeaderBar style={{flex: 0.5}} headerTitle={'마이페이지'} navigation={navigation}/>
       <View style={{flex:8.5}}>
         <View style={{flex:0.5 ,backgroundColor:'#FFFFFF',flexDirection:'row',justifyContent:'flex-end',alignItems:'center'}}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={()=> navigation.navigate('UpdateProfileScreen')}>
             <Text style={{fontFamily:'NotoSansKR-Regular', 
                           includeFontPadding:false,
                           color:'#C6C6C6',
