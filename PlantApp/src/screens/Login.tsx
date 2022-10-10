@@ -87,6 +87,7 @@ function LoginScreen({navigation}: {navigation: any}) {
   const loadUserInfo = async () => {
     const currentUser = firebase.auth().currentUser;
     const userEmail = currentUser?.email || 'emptyEmail';
+    console.log('✅ user info:', userEmail);
     const userData = await firebase
       .firestore()
       .collection('user')
@@ -95,6 +96,7 @@ function LoginScreen({navigation}: {navigation: any}) {
       .then(data => {
         return data.data();
       });
+    console.log(userData);
     return userData;
   };
 
