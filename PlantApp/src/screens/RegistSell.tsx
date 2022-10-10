@@ -189,6 +189,7 @@ function RegistSellScreen({navigation,route}: any) {
   },[down])
 
   async function regist(){
+    var date = new Date().toISOString().substring(0,19);
     await firestore()
     .collection('user')
     .doc(token?.email)
@@ -204,6 +205,7 @@ function RegistSellScreen({navigation,route}: any) {
       amount : amount,
       sunlight: sunlight,
       price: price,
+      time : date
     })
     .then(async() => {
       firestore()
@@ -223,7 +225,8 @@ function RegistSellScreen({navigation,route}: any) {
         amount : amount,
         sunlight: sunlight,
         price: price,
-        user: await AsyncStorage.getItem('id')
+        user: await AsyncStorage.getItem('id'),
+        time : date
       })
       .then(() => {
         navigation.navigate('HomeScreen')

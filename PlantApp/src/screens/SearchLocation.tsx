@@ -41,7 +41,8 @@ function SearchLocationScreen({navigation,route}: any) {
       .update({
         location: [city,town,village]
       })
-      .then(() => {
+      .then(async() => {
+        await AsyncStorage.setItem('location',JSON.stringify([city,town,village]))
         navigation.navigate('HomeScreen')
       })
     }

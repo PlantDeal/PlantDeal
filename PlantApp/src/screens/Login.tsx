@@ -74,7 +74,8 @@ function LoginScreen({navigation} : {navigation: any}) {
       await AsyncStorage.setItem('gender',documentSnapshot.get('gender'))
       await AsyncStorage.setItem('address',documentSnapshot.get('address'))
       await AsyncStorage.setItem('subaddress',documentSnapshot.get('subaddress'))
-      .then(() => {
+      await AsyncStorage.setItem('location',JSON.stringify(documentSnapshot.get('location')))
+      .then(async() => {
         const location = documentSnapshot.get('location')
         if(location === ''){
           navigation.navigate('SetLocationScreen');

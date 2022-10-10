@@ -14,6 +14,7 @@ import HomeHeaderBar from '../components/HomeHeaderBar';
 import SelectDropdown from 'react-native-select-dropdown';
 import firestore from '@react-native-firebase/firestore';
 import { firebase } from '@react-native-firebase/firestore';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 function HomeScreen({navigation}: any) {
@@ -25,24 +26,19 @@ function HomeScreen({navigation}: any) {
   const [Data,setData] = useState<any>(null);
   const [categorycolor,setCategoryColor] = useState('#C6C6C6')
   const [location,SetLocation] = useState<any>([])
-
-  const token:any = firebase.auth().currentUser;
   
-  useEffect(()=> {
-    firestore().
-    collection('user')
-    .doc(token?.email)
-    .get()
-    .then(documentSnapshot => {
-     const Location = documentSnapshot.get('location')
-     SetLocation(Location)
-    });
-  })
+
+
+  async function load(){
+    const loc:any = await AsyncStorage.getItem('location')
+    SetLocation(JSON.parse(loc))
+  }
 
   useEffect(() => {
-    setVillage(location[location.length-1])
-    setTown(location[location.length-2])
-    setCity(location[location.length-3])
+    load()
+    setVillage(location[2])
+    setTown(location[1])
+    setCity(location[0])
   },[location])
 
   
@@ -74,9 +70,26 @@ function HomeScreen({navigation}: any) {
     
   },[Category,Village,City,Town])
 
-  // function test(){
-  //   read()
-  // }
+  function elapsedTime(date:any) {
+    const start:any = new Date(date);
+    const end:any = new Date(); 
+    const diff = (end - start);
+    const times = [
+      {time: "분", milliSeconds: 1000 * 60},
+      {time: "시간", milliSeconds: 1000 * 60 * 60},
+      {time: "일", milliSeconds: 1000 * 60 * 60 * 24},
+      {time: "개월", milliSeconds: 1000 * 60 * 60 * 24 * 30},
+      {time: "년", milliSeconds: 1000 * 60 * 60 * 24 * 365},
+    ].reverse();
+    for (const value of times) {
+      const betweenTime = Math.floor(diff / value.milliSeconds);
+
+      if (betweenTime > 0) {
+        return `${betweenTime}${value.time} 전`;
+      }
+    }
+    return "방금 전";
+  }
 
   return (
     <SafeAreaView style={styles.SafeAreaView}>
@@ -169,7 +182,7 @@ function HomeScreen({navigation}: any) {
                         includeFontPadding: false,
                         color: '#C6C6C6',
                       }}>
-                      {item.time}
+                      {elapsedTime(item.time)}
                     </Text>
                   </View>
                   <View
@@ -183,6 +196,9 @@ function HomeScreen({navigation}: any) {
                       source={require('../assets/Arrow.png')}
                     />
                   </View>
+                </View>
+                <View>
+                  <Text></Text>
                 </View>
               </TouchableOpacity>
             </View>
