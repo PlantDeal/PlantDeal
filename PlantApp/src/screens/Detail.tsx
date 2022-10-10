@@ -34,7 +34,7 @@ function DetailScreen({navigation,route}: any) {
         <View style={{flex: 1.6}}>
           <TouchableOpacity
             style={styles.btnView}
-            onPress={() => navigation.goBack()}>
+            onPress={() => navigation.pop()}>
             <Image source={require('../assets/BackBtn.png')} />
           </TouchableOpacity>
         </View>

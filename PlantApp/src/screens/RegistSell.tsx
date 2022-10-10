@@ -193,7 +193,7 @@ function RegistSellScreen({navigation,route}: any) {
     .collection('user')
     .doc(token?.email)
     .collection('판매내역')
-    .doc('1')
+    .doc()
     .set({
       name : name,
       Category : Category,
@@ -212,7 +212,7 @@ function RegistSellScreen({navigation,route}: any) {
       .collection(Town)
       .doc(Village)
       .collection(Category)
-      .doc('2')
+      .doc()
       .set({
         name : name,
         Category : Category,

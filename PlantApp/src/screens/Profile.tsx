@@ -62,7 +62,7 @@ function ProfileScreen({navigation}: any) {
                           fontSize:18,marginTop:4}}>{name}</Text>
         </View>
         <View style={{flex:1.5,flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
-          <TouchableOpacity style={{width:79,height:78, backgroundColor:'#FFFFFF',marginRight:12,alignItems:'center',justifyContent:'center'}}>
+          <TouchableOpacity style={{width:79,height:78, backgroundColor:'#FFFFFF',marginRight:12,alignItems:'center',justifyContent:'center'}} onPress={() => navigation.navigate('SellListScreen')}>
             <Image style={{width:24,height:24, marginBottom:5}} source={require('../assets/BuyLog.png')} />
             <Text style={{marginTop:5,fontFamily:'NotoSansKR-Medium', 
                           includeFontPadding:false,
