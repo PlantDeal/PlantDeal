@@ -32,10 +32,13 @@ function HomeScreen({navigation}: any) {
     const loc:any = await AsyncStorage.getItem('location')
     SetLocation(JSON.parse(loc))
   }
+
+  useEffect(()=>{
+    load()
+  },[])
   
 
   useEffect(() => {
-    load()
     setVillage(location[2])
     setTown(location[1])
     setCity(location[0])

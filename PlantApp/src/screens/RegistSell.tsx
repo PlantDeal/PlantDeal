@@ -230,7 +230,7 @@ function RegistSellScreen({navigation,route}: any) {
         time : date
       })
       .then(() => {
-        navigation.dispatch(CommonActions.navigate('HomeScreen'))
+        navigation.dispatch(CommonActions.reset({routes:[{name:'HomeScreen'}]}))
       })
     })
     

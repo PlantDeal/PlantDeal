@@ -15,6 +15,7 @@ Feather.loadFont()
 import firestore from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { firebase } from '@react-native-firebase/firestore';
+import { CommonActions } from '@react-navigation/native';
 
 
 
@@ -43,7 +44,7 @@ function SearchLocationScreen({navigation,route}: any) {
       })
       .then(async() => {
         await AsyncStorage.setItem('location',JSON.stringify([city,town,village]))
-        navigation.navigate('HomeScreen')
+        navigation.dispatch(CommonActions.reset({routes:[{name:'HomeScreen'}]}))
       })
     }
     else{
