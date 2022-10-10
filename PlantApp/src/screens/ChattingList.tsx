@@ -14,17 +14,18 @@ function ChattingListScreen({navigation}: any) {
   const [initLoad, setInitLoad] = useState(false);
 
   function Item({owner1, owner2, recentMessage, updatedAt, navigation}: any) {
+    const reciever = userNickname == owner1 ? owner2 : owner1;
     return (
       <Pressable
         style={styles.item}
-        onPress={() => navigation.navigate('ChattingScreen')}>
+        onPress={() =>
+          navigation.navigate('ChattingScreen', {reciever: reciever})
+        }>
         <View style={{flex: 1}}>
           <Image source={require('../assets/TempProfileImage.png')} />
         </View>
         <View style={{flex: 4, justifyContent: 'space-between'}}>
-          <Text style={styles.name}>
-            {userNickname == owner1 ? owner2 : owner1}
-          </Text>
+          <Text style={styles.name}>{reciever}</Text>
           <Text style={styles.post}>{recentMessage}</Text>
         </View>
         <View style={{flex: 1, justifyContent: 'space-between'}}>
@@ -37,8 +38,7 @@ function ChattingListScreen({navigation}: any) {
     );
   }
 
-  const getChattingList = async () => {
-    // get userInfo
+  const getUserInfo = async () => {
     try {
       const email = (await AsyncStorage.getItem('userEmail')) || 'empty email';
       const nickname =
@@ -46,20 +46,26 @@ function ChattingListScreen({navigation}: any) {
       setEmail(email);
       setUserNickname(nickname);
       if (email !== null && nickname) {
-        console.log('1 get user email :', email);
-        console.log('2 get user nickName:', nickname);
+        console.log('1. get user email :', email);
+        console.log('2. get user nickName:', nickname);
       }
     } catch (e) {
       console.log('no value**');
     }
+  };
 
-    // get chatting list
+  useEffect(() => {
+    getUserInfo();
+  }, []);
+
+  const getChattingList = async () => {
     try {
       const db = firebase.firestore();
       const chattingRef = db
         .collection('user')
         .doc(userEmail)
-        .collection('chattingList');
+        .collection('chattingList')
+        .orderBy('updatedAt', 'desc');
       chattingRef.onSnapshot(data => {
         if (data.empty) {
           console.log('empty data');
@@ -81,7 +87,7 @@ function ChattingListScreen({navigation}: any) {
 
   useEffect(() => {
     getChattingList();
-  }, []);
+  }, [userEmail]);
 
   const renderItem = ({item}: any) => (
     <Item
@@ -89,6 +95,7 @@ function ChattingListScreen({navigation}: any) {
       owner2={item.chatting.owner2}
       recentMessage={item.chatting.recentMessage}
       updatedAt={item.chatting.updatedAt}
+      navigation={navigation}
     />
   );
 
