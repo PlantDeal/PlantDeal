@@ -34,7 +34,8 @@ function NavLogin({navigation}: any) {
       <LoginStack.Screen
         name="RegistScreen"
         component={RegistScreen}
-        options={{headerShown: false}}/>
+        options={{headerShown: false}}
+      />
       <LoginStack.Screen
         name="RegistInfoScreen"
         component={RegistInfoScreen}
@@ -43,7 +44,8 @@ function NavLogin({navigation}: any) {
       <LoginStack.Screen
         name="CompleteRegistScreen"
         component={CompleteRegistScreen}
-        options={{headerShown: false}}/>
+        options={{headerShown: false}}
+      />
       <LoginStack.Screen
         name="SetLocationScreen"
         component={SetLocationScreen}
