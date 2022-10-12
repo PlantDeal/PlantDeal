@@ -189,6 +189,10 @@ function ChattingTest({route, navigation}: any) {
       .set(message);
   };
 
+  const openViewMore = () => {
+    console.log('hi');
+  };
+
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <View style={styles.headerBar}>
@@ -201,7 +205,7 @@ function ChattingTest({route, navigation}: any) {
           <Text style={styles.headerBarTitleText}>{reciever}</Text>
         </View>
         <View style={styles.headerBarSide}>
-          <Pressable>
+          <Pressable onPress={() => openViewMore()}>
             <Image source={require('../assets/ViewMore.png')} />
           </Pressable>
         </View>

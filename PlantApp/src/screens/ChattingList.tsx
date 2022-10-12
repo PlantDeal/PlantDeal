@@ -1,5 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, Image, FlatList, Pressable} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  FlatList,
+  Pressable,
+  Platform,
+} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import BottomTab from '../components/BottomTab';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -180,7 +188,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
   headerBar: {
-    flex: 1,
+    height: Platform.OS == 'android' ? 60 : 45,
     flexDirection: 'row',
     width: '100%',
     borderBottomColor: '#F4F4F4',
