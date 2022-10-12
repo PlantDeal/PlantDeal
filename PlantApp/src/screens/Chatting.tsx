@@ -95,26 +95,23 @@ function ChattingTest({route, navigation}: any) {
           message: doc.data(),
         }));
         setMessages(messagesData);
-        console.log('🚀 Messages loaded!');
       }
     });
   }
 
   useEffect(() => {
     getMessages();
-  }, [userEmail]);
+  }, [messageLoadCheck]);
 
   const renderItem = ({item}: any | null) => (
     <Item text={item.message.text} messageOwner={item.message.messageOwner} />
   );
 
   const changeText = (data: any) => {
-    console.log(data);
     setInput(data);
   };
 
   const checkSpace = (data: any) => {
-    console.log(input.trim() != '');
     if (input.trim().length >= 0) {
       setDisableSendBtn(false);
     } else {
@@ -125,7 +122,6 @@ function ChattingTest({route, navigation}: any) {
   const sendInput = async () => {
     // 총 4번의 doc을 생성하거나 업데이트함. log 4개가 떠야 정상
     let inputText = input.trim();
-    console.log(inputText);
     db.collection('user')
       .doc(userEmail)
       .collection('chattingList')

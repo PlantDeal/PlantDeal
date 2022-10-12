@@ -17,9 +17,7 @@ function ChattingListScreen({navigation}: any) {
   const [userEmail, setEmail] = useState('');
   const [userNickname, setUserNickname] = useState('');
   const [chattingList, setChattingList] = useState<any>([]);
-  const [chattingListData, setChattingListData] = useState();
-  const [loadOrNot, setLoadOrNot] = useState(false);
-  const [initLoad, setInitLoad] = useState(false);
+  const [chattingListLoad, setChattingListLoad] = useState(false);
 
   function Item({
     owner1,
@@ -91,14 +89,13 @@ function ChattingListScreen({navigation}: any) {
         .orderBy('updatedAt', 'desc');
       chattingRef.onSnapshot(data => {
         if (data.empty) {
-          console.log('empty data');
+          setChattingListLoad(true);
         } else {
           let chattingListData = data.docs.map(doc => ({
             id: doc.id,
             chatting: doc.data(),
           }));
           setChattingList(chattingListData);
-          console.log(chattingListData[0]);
         }
       });
       if (chattingList[0] != undefined) {
@@ -111,7 +108,7 @@ function ChattingListScreen({navigation}: any) {
 
   useEffect(() => {
     getChattingList();
-  }, [userEmail]);
+  }, [chattingListLoad]);
 
   const renderItem = ({item}: any) => (
     <Item
