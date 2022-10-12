@@ -13,13 +13,23 @@ function ChattingListScreen({navigation}: any) {
   const [loadOrNot, setLoadOrNot] = useState(false);
   const [initLoad, setInitLoad] = useState(false);
 
-  function Item({owner1, owner2, recentMessage, updatedAt, navigation}: any) {
+  function Item({
+    owner1,
+    owner2,
+    owner2Email,
+    recentMessage,
+    updatedAt,
+    navigation,
+  }: any) {
     const reciever = userNickname == owner1 ? owner2 : owner1;
     return (
       <Pressable
         style={styles.item}
         onPress={() =>
-          navigation.navigate('ChattingScreen', {reciever: reciever})
+          navigation.navigate('ChattingScreen', {
+            reciever: reciever,
+            recieverEmail: owner2Email,
+          })
         }>
         <View style={{flex: 1}}>
           <Image source={require('../assets/TempProfileImage.png')} />
@@ -28,7 +38,12 @@ function ChattingListScreen({navigation}: any) {
           <Text style={styles.name}>{reciever}</Text>
           <Text style={styles.post}>{recentMessage}</Text>
         </View>
-        <View style={{flex: 1, justifyContent: 'space-between'}}>
+        <View
+          style={{
+            flex: 1.2,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
           <View>
             <Text style={styles.time}>{updatedAt}</Text>
           </View>
@@ -46,11 +61,11 @@ function ChattingListScreen({navigation}: any) {
       setEmail(email);
       setUserNickname(nickname);
       if (email !== null && nickname) {
-        console.log('1. get user email :', email);
+        console.log('1. get user email:', email);
         console.log('2. get user nickName:', nickname);
       }
     } catch (e) {
-      console.log('no value**');
+      console.log('ERROR: get user info');
     }
   };
 
@@ -75,6 +90,7 @@ function ChattingListScreen({navigation}: any) {
             chatting: doc.data(),
           }));
           setChattingList(chattingListData);
+          console.log(chattingListData[0]);
         }
       });
       if (chattingList[0] != undefined) {
@@ -96,6 +112,7 @@ function ChattingListScreen({navigation}: any) {
       recentMessage={item.chatting.recentMessage}
       updatedAt={item.chatting.updatedAt}
       navigation={navigation}
+      owner2Email={item.chatting.owner2Email}
     />
   );
 

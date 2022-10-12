@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import firestore from '@react-native-firebase/firestore';
 import {firebase} from '@react-native-firebase/auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   Image,
   SafeAreaView,
@@ -15,112 +16,177 @@ import {
   FlatList,
 } from 'react-native';
 
-const Item = ({text, from, loggedInUserEmail}: any) => (
-  <View
-    style={{
-      marginBottom: 24,
-      width: '100%',
-      paddingRight: 10,
-      paddingLeft: 10,
-      marginTop: 10,
-    }}>
-    <View
-      style={{
-        borderRadius: 10,
-        backgroundColor: from === loggedInUserEmail ? '#16D66F' : '#F4F4F4',
-        padding: 10,
-        width: 'auto',
-        maxWidth: '65%',
-        justifyContent: 'center',
-        alignSelf: 'flex-end',
-      }}>
-      <Text
-        style={{
-          fontSize: 14,
-          color: from === loggedInUserEmail ? '#FFFFFF' : '#00000',
-        }}>
-        {text} from: {loggedInUserEmail}
-      </Text>
-    </View>
-  </View>
-);
-
 function ChattingTest({route, navigation}: any) {
-  const [loggedInUserEmail, setLoggedInUserEmail] = useState<any | null>('');
   const [input, setInput] = useState<any>('');
   const [messages, setMessages] = useState<any | null>([]);
-  const {reciever} = route.params;
+  const {reciever, recieverEmail} = route.params;
+  const [userEmail, setEmail] = useState('');
+  const [userNickname, setUserNickname] = useState('');
+  const [disableSendBtn, setDisableSendBtn] = useState(false);
+  const db = firebase.firestore();
+  const date = new Date();
+
+  const Item = ({text, messageOwner}: any) => (
+    <View
+      style={{
+        marginBottom: 24,
+        width: '100%',
+        paddingRight: 10,
+        paddingLeft: 10,
+        marginTop: 5,
+      }}>
+      <View
+        style={{
+          borderRadius: 10,
+          backgroundColor: userNickname == messageOwner ? '#16D66F' : '#F4F4F4',
+          padding: 10,
+          width: 'auto',
+          maxWidth: '65%',
+          justifyContent: 'center',
+          alignSelf: userNickname == messageOwner ? 'flex-end' : 'flex-start',
+        }}>
+        <Text
+          style={{
+            fontSize: 14,
+            color: userNickname == messageOwner ? '#FFFFFF' : '#000000',
+          }}>
+          {text}
+        </Text>
+      </View>
+    </View>
+  );
+
+  const getUserInfo = async () => {
+    try {
+      const email = (await AsyncStorage.getItem('userEmail')) || 'empty email';
+      const nickname =
+        (await AsyncStorage.getItem('userNickname')) || 'empty nickname';
+      setEmail(email);
+      setUserNickname(nickname);
+      if (email !== null && nickname) {
+        console.log('✅ get user email :', email);
+        console.log('✅ get user nickName:', nickname);
+        console.log('🚀 Ready to send message');
+      }
+    } catch (e) {
+      console.log('❌ ERROR: get user info');
+    }
+  };
 
   useEffect(() => {
-    try {
-      const token = firebase.auth().currentUser;
-      const loggedInUserEmail = token?.email;
-      setLoggedInUserEmail(loggedInUserEmail);
-      console.log('user email:', loggedInUserEmail);
-    } catch {
-      console.log('error: loadCurrentUser ');
-    }
+    getUserInfo();
   }, []);
 
-  async function loadMessages() {
-    firestore()
+  async function getMessages() {
+    const chattingRef = db
       .collection('user')
-      .doc(loggedInUserEmail)
+      .doc(userEmail)
+      .collection('chattingList')
+      .doc(reciever)
       .collection('messages')
-      .doc('toTestUser')
-      .collection('messageLog')
-      .orderBy('createdAt')
-      .onSnapshot(snapshot => {
-        setMessages(
-          snapshot.docs.map(doc => ({id: doc.id, messages: doc.data()})),
-        );
-        console.log(messages[0]);
-      });
+      .orderBy('createdAt', 'asc');
+    chattingRef.onSnapshot(data => {
+      if (data.empty) {
+        console.log('empty data');
+      } else {
+        let messagesData = data.docs.map(doc => ({
+          id: doc.id,
+          message: doc.data(),
+        }));
+        setMessages(messagesData);
+      }
+    });
   }
-  useEffect(() => {
-    loadMessages();
-  }, []);
 
   useEffect(() => {
-    try {
-      const token = firebase.auth().currentUser;
-      const loggedInUserEmail = token?.email;
-      setLoggedInUserEmail(loggedInUserEmail);
-      console.log('user email:', loggedInUserEmail);
-    } catch {
-      console.log('error: loadCurrentUser ');
-    }
-  }, []);
+    getMessages();
+  }, [userEmail]);
 
-  const renderItem = ({item, loggedInUserEmail}: any | null) => (
-    <Item text={item.messages.text || ''} from={item.messages.from} />
+  const renderItem = ({item}: any | null) => (
+    <Item text={item.message.text} messageOwner={item.message.messageOwner} />
   );
 
   const changeText = (data: any) => {
     setInput(data);
+    console.log(data.trim);
+    if (data.trim() == '' || data.trim() == null || data.trim() == undefined) {
+      setDisableSendBtn(true);
+    } else {
+      setDisableSendBtn(false);
+    }
   };
 
   const sendInput = async () => {
-    console.log('✅ ' + input + ': send Input!');
-    setInput('');
-    let data = {
-      text: input,
-      createdAt: new Date().toString(),
-      from: loggedInUserEmail,
-      to: 'temp to ',
+    // 총 4번의 doc을 생성하거나 업데이트함. log 4개가 떠야 정상
+    let inputText = input.trim();
+    db.collection('user')
+      .doc(userEmail)
+      .collection('chattingList')
+      .doc(reciever)
+      .set(
+        {
+          recentMessage: inputText,
+          updatedAt:
+            (date.getMonth() + 1).toString() +
+            '월 ' +
+            date.getDay().toString() +
+            '일 ' +
+            date.getHours() +
+            '시 ' +
+            date.getMinutes() +
+            '분',
+        },
+        {merge: true},
+      );
+    db.collection('user')
+      .doc(recieverEmail)
+      .collection('chattingList')
+      .doc(userNickname)
+      .set(
+        {
+          recentMessage: inputText,
+          updatedAt:
+            (date.getMonth() + 1).toString() +
+            '월 ' +
+            date.getDay().toString() +
+            '일 ' +
+            date.getHours() +
+            '시 ' +
+            date.getMinutes() +
+            '분',
+          owner1: reciever,
+          owner2: userNickname,
+        },
+        {merge: true},
+      );
+    const message = {
+      text: inputText,
+      messageOwner: userNickname,
+      createdAt:
+        (date.getMonth() + 1).toString() +
+        '월 ' +
+        date.getDay().toString() +
+        '일 ' +
+        date.getHours() +
+        '시 ' +
+        date.getMinutes() +
+        '분',
     };
-    setMessages((e: any) => [...e, data]);
-    try {
-      const res = await firestore()
-        .collection(`user`)
-        .doc(loggedInUserEmail)
-        .collection('messages')
-        .doc('toTestUser')
-        .collection('messageLog')
-        .add(data);
-    } catch {
-      console.log('error: firebase store');
-    }
+    setInput('');
+    db.collection('user')
+      .doc(userEmail)
+      .collection('chattingList')
+      .doc(reciever)
+      .collection('messages')
+      .doc()
+      .set(message);
+    db.collection('user')
+      .doc(recieverEmail)
+      .collection('chattingList')
+      .doc(userNickname)
+      .collection('messages')
+      .doc()
+      .set(message);
   };
 
   return (
@@ -151,7 +217,8 @@ function ChattingTest({route, navigation}: any) {
       </View>
       <KeyboardAvoidingView
         style={styles.inputToolBar}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        keyboardVerticalOffset={10}>
         <Pressable
           style={{
             justifyContent: 'center',
@@ -188,7 +255,8 @@ function ChattingTest({route, navigation}: any) {
             justifyContent: 'center',
             alignItems: 'center',
             width: 50,
-          }}>
+          }}
+          disabled={disableSendBtn}>
           <Image source={require('../assets/Send.png')} />
         </TouchableOpacity>
       </KeyboardAvoidingView>
@@ -198,9 +266,11 @@ function ChattingTest({route, navigation}: any) {
 
 const styles = StyleSheet.create({
   inputToolBar: {
-    Height: 45,
+    felx: 1,
     flexDirection: 'row',
-    marginBottom: 5,
+    marginBottom: Platform.OS == 'android' ? 10 : 0,
+    alignContent: 'center',
+    justifyContent: 'center',
   },
   chatView: {
     flex: 16,
