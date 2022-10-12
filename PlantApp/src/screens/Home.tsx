@@ -144,7 +144,9 @@ function HomeScreen({navigation}: any) {
               category:Category,
               town:Town,
               village:Village,
-              user:item.user})}}>
+              user:item.user,
+              time:item.time,
+              key:item.key})}}>
                 <View style={{flexDirection: 'row'}}>
                   <View style={{marginLeft: 12, marginRight: 6}}>
                     <Image style={styles.imagebox} source={{uri: item.image[0]}} />

@@ -45,13 +45,33 @@ function SellListScreen({navigation}: any) {
             setData(data);
         });
     }
+    function elapsedTime(date:any) {
+      const start:any = new Date(date);
+      const end:any = new Date(); 
+      const diff = (end - start);
+      const times = [
+        {time: "분", milliSeconds: 1000 * 60},
+        {time: "시간", milliSeconds: 1000 * 60 * 60},
+        {time: "일", milliSeconds: 1000 * 60 * 60 * 24},
+        {time: "개월", milliSeconds: 1000 * 60 * 60 * 24 * 30},
+        {time: "년", milliSeconds: 1000 * 60 * 60 * 24 * 365},
+      ].reverse();
+      for (const value of times) {
+        const betweenTime = Math.floor(diff / value.milliSeconds);
+  
+        if (betweenTime > 0) {
+          return `${betweenTime}${value.time} 전`;
+        }
+      }
+      return "방금 전";
+    }
 
     useEffect(()=>{
         if(sell === '#16D66F'){
             loadSell()
         }
         else{
-            setData('');
+            setData('')
         }
     },[sell,buy])
 
@@ -100,7 +120,9 @@ function SellListScreen({navigation}: any) {
               title:item.title,
               watering:item.watering,
               explane:item.explane,
-              user:item.user})}}>
+              user:item.user,
+              time:item.time,
+              key:item.key})}}>
                 <View style={{flexDirection: 'row'}}>
                   <View style={{marginLeft: 12, marginRight: 6}}>
                     <Image style={styles.imagebox} source={{uri: item.image[0]}} />
@@ -139,7 +161,7 @@ function SellListScreen({navigation}: any) {
                         includeFontPadding: false,
                         color: '#C6C6C6',
                       }}>
-                      {item.time}
+                      {elapsedTime(item.time)}
                     </Text>
                   </View>
                   <View

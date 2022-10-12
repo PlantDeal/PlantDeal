@@ -8,14 +8,30 @@ import storage from '@react-native-firebase/storage';
 import { utils } from '@react-native-firebase/app';
 import firestore from '@react-native-firebase/firestore'
 import { firebase } from '@react-native-firebase/firestore';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
 function DetailScreen({navigation,route}: any) {
   const Width = Dimensions.get('window').width;
   const token:any = firebase.auth().currentUser;
-  const {amount, explane,image,name,price,sunlight,title,watering,category,town,village,user} = route.params;
+  const {amount, explane,image,name,price,sunlight,title,watering,category,town,village,user,time,key} = route.params;
   const [nickname,setNickname] = useState('')
+  const [heart,setHeart] = useState('#C6C6C6')
+
+  useEffect(()=>{
+    firestore()
+    .collection('user')
+    .doc(token?.email)
+    .collection('관심목록')
+    .onSnapshot((data)=>{
+      data.forEach(Iddata=>{
+        if(key === Iddata.id){
+          setHeart('#16D66F')
+        }
+      })
+    })
+  },[])
 
   useEffect(()=>{
     firestore().
@@ -26,7 +42,58 @@ function DetailScreen({navigation,route}: any) {
      const nName:any = await documentSnapshot.get('nickname')
      setNickname(nName);
     });
+    
   },[])
+
+  function elapsedTime(date:any) {
+    const start:any = new Date(date);
+    const end:any = new Date(); 
+    const diff = (end - start);
+    const times = [
+      {time: "분", milliSeconds: 1000 * 60},
+      {time: "시간", milliSeconds: 1000 * 60 * 60},
+      {time: "일", milliSeconds: 1000 * 60 * 60 * 24},
+      {time: "개월", milliSeconds: 1000 * 60 * 60 * 24 * 30},
+      {time: "년", milliSeconds: 1000 * 60 * 60 * 24 * 365},
+    ].reverse();
+    for (const value of times) {
+      const betweenTime = Math.floor(diff / value.milliSeconds);
+
+      if (betweenTime > 0) {
+        return `${betweenTime}${value.time} 전`;
+      }
+    }
+    return "방금 전";
+  }
+
+  async function likeButton(){
+    if(heart === '#C6C6C6'){
+      setHeart('#16D66F')
+      firestore()
+      .collection('user')
+      .doc(token?.email)
+      .collection('관심목록')
+      .doc(key)
+      .set({
+
+      })
+      .then(()=>{
+        console.log('up')
+      })
+    }
+    else{
+      setHeart('#C6C6C6')
+      firestore()
+      .collection('user')
+      .doc(token?.email)
+      .collection('관심목록')
+      .doc(key)
+      .delete()
+      .then(()=>{
+        console.log('delete')
+      })
+    }
+  }
 
   return (
     <SafeAreaView style={styles.SafeAreaView}>
@@ -55,17 +122,24 @@ function DetailScreen({navigation,route}: any) {
               </ScrollView>
             </View>
             <View style={{alignItems:'center'}}>
-              <View style ={{height:100, width:335, backgroundColor:'#FFFFFF', justifyContent:'center'}}>
-                <Text style={{fontSize: 24,
-                          fontFamily: 'NotoSansKR-Bold',
-                          includeFontPadding: false,
-                          color: '#000000',marginBottom:5
-                          }}>{name}</Text>
-                <Text style={{fontSize: 12,
-                          fontFamily: 'NotoSansKR-Medium',
-                          includeFontPadding: false,
-                          color: '#8E8E93',marginTop:5
-                          }}>{category} {town}구 {village}동 {nickname} </Text>
+              <View style ={{height:100, width:335, backgroundColor:'#FFFFFF', justifyContent:'center',flexDirection:'row',flex:8.7}}>
+                <View style={{justifyContent:'center',backgroundColor:'#FFFFFF'}}>
+                  <Text style={{fontSize: 24,
+                            fontFamily: 'NotoSansKR-Bold',
+                            includeFontPadding: false,
+                            color: '#000000',marginBottom:5
+                            }}>{name}</Text>
+                  <Text style={{fontSize: 12,
+                            fontFamily: 'NotoSansKR-Medium',
+                            includeFontPadding: false,
+                            color: '#8E8E93',marginTop:5
+                            }}>{category}  {town}구  {village}동  {nickname}  {elapsedTime(time)}</Text>
+                </View>
+                <View style={{justifyContent:'center',flex:1.3,alignItems:'flex-end'}}>
+                  <TouchableOpacity onPress={likeButton} style={{height:44,width:44,backgroundColor:'#F4F4F4',borderRadius:999,justifyContent:'center',alignItems:'center'}}>
+                    <Image style={{height:18,width:19.5,tintColor:heart}} source={require('../assets/heart.png')} />
+                  </TouchableOpacity>
+                </View>
               </View>
               <View style ={{height:150, width:335, backgroundColor:'#FFFFFF',justifyContent:'center'}}>
                 <View style={{height: 40, justifyContent:'center',}}>

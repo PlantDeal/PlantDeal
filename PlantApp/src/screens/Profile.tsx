@@ -88,7 +88,7 @@ function ProfileScreen({navigation}: any) {
 
         </View>
         <View style={{flex:2,width:'100%',justifyContent:'center'}}>
-          <TouchableOpacity style={{height:42 ,justifyContent:'center'}}>
+          <TouchableOpacity style={{height:42 ,justifyContent:'center'}} onPress={() => navigation.navigate('SellListScreen')}>
             <View style={{flexDirection:'row'}}>
               <View style={{flex:2.2,alignItems:'center'}}>
                 <Text style={{fontFamily:'NotoSansKR-Regular', 

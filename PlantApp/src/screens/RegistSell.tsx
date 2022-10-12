@@ -191,11 +191,12 @@ function RegistSellScreen({navigation,route}: any) {
 
   async function regist(){
     var date = new Date().toISOString().substring(0,19);
+    var docname = token?.email + date
     await firestore()
     .collection('user')
     .doc(token?.email)
     .collection('판매내역')
-    .doc()
+    .doc(docname)
     .set({
       name : name,
       Category : Category,
@@ -208,14 +209,14 @@ function RegistSellScreen({navigation,route}: any) {
       price: price,
       time : date
     })
-    .then(async() => {
+    .then(async(data) => {
       firestore()
       .collection('sell')
       .doc(City)
       .collection(Town)
       .doc(Village)
       .collection(Category)
-      .doc()
+      .doc(docname)
       .set({
         name : name,
         Category : Category,
