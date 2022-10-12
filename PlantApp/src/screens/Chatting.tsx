@@ -22,7 +22,7 @@ function ChattingTest({route, navigation}: any) {
   const {reciever, recieverEmail} = route.params;
   const [userEmail, setEmail] = useState('');
   const [userNickname, setUserNickname] = useState('');
-  const [disableSendBtn, setDisableSendBtn] = useState(false);
+  const [disableSendBtn, setDisableSendBtn] = useState(true);
   const db = firebase.firestore();
   const date = new Date();
 
@@ -108,17 +108,20 @@ function ChattingTest({route, navigation}: any) {
 
   const changeText = (data: any) => {
     setInput(data);
-    console.log(data.trim);
-    if (data.trim() == '' || data.trim() == null || data.trim() == undefined) {
-      setDisableSendBtn(true);
-    } else {
+  };
+
+  const checkSpace = (data: any) => {
+    if (input.trim() !== '') {
       setDisableSendBtn(false);
+    } else {
+      setDisableSendBtn(true);
     }
   };
 
   const sendInput = async () => {
     // 총 4번의 doc을 생성하거나 업데이트함. log 4개가 떠야 정상
     let inputText = input.trim();
+    console.log(inputText);
     db.collection('user')
       .doc(userEmail)
       .collection('chattingList')
@@ -187,6 +190,7 @@ function ChattingTest({route, navigation}: any) {
       .collection('messages')
       .doc()
       .set(message);
+    setDisableSendBtn(true);
   };
 
   const openViewMore = () => {
@@ -249,8 +253,12 @@ function ChattingTest({route, navigation}: any) {
               textAlignVertical: 'center',
             }}
             value={input}
-            onChangeText={data => changeText(data)}
+            onChangeText={data => {
+              changeText(data);
+              checkSpace(data);
+            }}
             placeholder="채팅 입력"
+            defaultValue=""
           />
         </View>
         <TouchableOpacity
