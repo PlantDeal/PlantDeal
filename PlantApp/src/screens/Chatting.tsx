@@ -23,6 +23,7 @@ function ChattingTest({route, navigation}: any) {
   const [userEmail, setEmail] = useState('');
   const [userNickname, setUserNickname] = useState('');
   const [disableSendBtn, setDisableSendBtn] = useState(true);
+  const [messageLoadCheck, setMessageLoadCheck] = useState(true);
   const db = firebase.firestore();
   const date = new Date();
 
@@ -64,8 +65,8 @@ function ChattingTest({route, navigation}: any) {
       setEmail(email);
       setUserNickname(nickname);
       if (email !== null && nickname) {
-        console.log('✅ get user email :', email);
-        console.log('✅ get user nickName:', nickname);
+        console.log('✅ Get user email :', email);
+        console.log('✅ Get user nickName:', nickname);
         console.log('🚀 Ready to send message');
       }
     } catch (e) {
@@ -87,13 +88,14 @@ function ChattingTest({route, navigation}: any) {
       .orderBy('createdAt', 'asc');
     chattingRef.onSnapshot(data => {
       if (data.empty) {
-        console.log('empty data');
+        setMessageLoadCheck(false);
       } else {
         let messagesData = data.docs.map(doc => ({
           id: doc.id,
           message: doc.data(),
         }));
         setMessages(messagesData);
+        console.log('🚀 Messages loaded!');
       }
     });
   }
@@ -107,11 +109,13 @@ function ChattingTest({route, navigation}: any) {
   );
 
   const changeText = (data: any) => {
+    console.log(data);
     setInput(data);
   };
 
   const checkSpace = (data: any) => {
-    if (input.trim() !== '') {
+    console.log(input.trim() != '');
+    if (input.trim().length >= 0) {
       setDisableSendBtn(false);
     } else {
       setDisableSendBtn(true);
@@ -137,7 +141,9 @@ function ChattingTest({route, navigation}: any) {
             date.getHours() +
             '시 ' +
             date.getMinutes() +
-            '분',
+            '분' +
+            date.getSeconds() +
+            '초',
         },
         {merge: true},
       );
@@ -156,7 +162,9 @@ function ChattingTest({route, navigation}: any) {
             date.getHours() +
             '시 ' +
             date.getMinutes() +
-            '분',
+            '분' +
+            date.getSeconds() +
+            '초',
           owner1: reciever,
           owner2: userNickname,
         },
@@ -173,7 +181,9 @@ function ChattingTest({route, navigation}: any) {
         date.getHours() +
         '시 ' +
         date.getMinutes() +
-        '분',
+        '분' +
+        date.getSeconds() +
+        '초',
     };
     setInput('');
     db.collection('user')
