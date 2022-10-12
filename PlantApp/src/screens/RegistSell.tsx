@@ -207,7 +207,10 @@ function RegistSellScreen({navigation,route}: any) {
       amount : amount,
       sunlight: sunlight,
       price: price,
-      time : date
+      time : date,
+      city : City,
+      town: Town,
+      village : Village
     })
     .then(async(data) => {
       firestore()
@@ -228,7 +231,10 @@ function RegistSellScreen({navigation,route}: any) {
         sunlight: sunlight,
         price: price,
         user: await AsyncStorage.getItem('id'),
-        time : date
+        time : date,
+        city : City,
+        town: Town,
+        village : Village
       })
       .then(() => {
         navigation.dispatch(CommonActions.reset({routes:[{name:'HomeScreen'}]}))

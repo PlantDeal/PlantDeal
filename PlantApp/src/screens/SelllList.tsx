@@ -120,9 +120,13 @@ function SellListScreen({navigation}: any) {
               title:item.title,
               watering:item.watering,
               explane:item.explane,
-              user:item.user,
               time:item.time,
-              key:item.key})}}>
+              key:item.key,
+              city:item.city,
+              town:item.town,
+              village:item.village,
+              user:token?.email,
+              category:item.Category})}}>
                 <View style={{flexDirection: 'row'}}>
                   <View style={{marginLeft: 12, marginRight: 6}}>
                     <Image style={styles.imagebox} source={{uri: item.image[0]}} />

@@ -120,7 +120,7 @@ function ProfileScreen({navigation}: any) {
               </View>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity style={{height:42 ,justifyContent:'center'}}>
+          <TouchableOpacity onPress={() => navigation.navigate('AttentionScreen')} style={{height:42 ,justifyContent:'center'}}>
             <View style={{flexDirection:'row'}}>
               <View style={{flex:2.2,alignItems:'center'}}>
                 <Text style={{fontFamily:'NotoSansKR-Regular', 

@@ -19,6 +19,7 @@ import SetLocationScreen from '../screens/SetLocation';
 import DetailScreen from '../screens/Detail';
 import UpdateProfileScreen from '../screens/UpdateProfile';
 import SellListScreen from '../screens/SelllList';
+import AttentionScreen from '../screens/Attention';
 
 const LoginStack = createNativeStackNavigator();
 const HomeStack = createNativeStackNavigator();
@@ -168,6 +169,13 @@ function NavProfile({navigation}: any) {
       <ProfileStack.Screen
         name="SellListScreen"
         component={SellListScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <ProfileStack.Screen
+        name="AttentionScreen"
+        component={AttentionScreen}
         options={{
           headerShown: false,
         }}

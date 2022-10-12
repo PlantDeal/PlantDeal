@@ -178,15 +178,35 @@ function HomeScreen({navigation}: any) {
                       }}>
                       {item.price}원
                     </Text>
-                    <Text
-                      style={{
-                        fontSize: 12,
-                        fontFamily: 'NotoSansKR-Medium',
-                        includeFontPadding: false,
-                        color: '#C6C6C6',
-                      }}>
-                      {elapsedTime(item.time)}
-                    </Text>
+                    <View style={{flexDirection:'row',marginTop:2}}>  
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          fontFamily: 'NotoSansKR-Medium',
+                          includeFontPadding: false,
+                          color: '#C6C6C6',marginRight:4
+                        }}>
+                        {Category}
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          fontFamily: 'NotoSansKR-Medium',
+                          includeFontPadding: false,
+                          color: '#C6C6C6',marginLeft:4,marginRight:4
+                        }}>
+                        {Village}
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          fontFamily: 'NotoSansKR-Medium',
+                          includeFontPadding: false,
+                          color: '#C6C6C6',marginLeft:4
+                        }}>
+                        {elapsedTime(item.time)}
+                      </Text>
+                    </View>
                   </View>
                   <View
                     style={{
