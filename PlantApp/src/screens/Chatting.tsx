@@ -1,5 +1,4 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import firestore from '@react-native-firebase/firestore';
 import {firebase} from '@react-native-firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
@@ -19,11 +18,13 @@ import {
 function ChattingTest({route, navigation}: any) {
   const [input, setInput] = useState<any>('');
   const [messages, setMessages] = useState<any | null>([]);
-  const {reciever, recieverEmail} = route.params;
   const [userEmail, setEmail] = useState('');
   const [userNickname, setUserNickname] = useState('');
   const [disableSendBtn, setDisableSendBtn] = useState(true);
   const [messageLoadCheck, setMessageLoadCheck] = useState(true);
+
+  const {receiver, receiverEmail} = route.params;
+
   const db = firebase.firestore();
   const date = new Date();
 
@@ -59,9 +60,9 @@ function ChattingTest({route, navigation}: any) {
 
   const getUserInfo = async () => {
     try {
-      const email = (await AsyncStorage.getItem('userEmail')) || 'empty email';
+      const email = (await AsyncStorage.getItem('id')) || 'empty email';
       const nickname =
-        (await AsyncStorage.getItem('userNickname')) || 'empty nickname';
+        (await AsyncStorage.getItem('nickname')) || 'empty nickname';
       setEmail(email);
       setUserNickname(nickname);
       if (email !== null && nickname) {
@@ -83,7 +84,7 @@ function ChattingTest({route, navigation}: any) {
       .collection('user')
       .doc(userEmail)
       .collection('chattingList')
-      .doc(reciever)
+      .doc(receiverEmail)
       .collection('messages')
       .orderBy('createdAt', 'asc');
     chattingRef.onSnapshot(data => {
@@ -94,6 +95,11 @@ function ChattingTest({route, navigation}: any) {
           id: doc.id,
           message: doc.data(),
         }));
+        db.collection('user')
+          .doc(userEmail)
+          .collection('chattingList')
+          .doc(receiverEmail)
+          .set({}, {merge: true});
         setMessages(messagesData);
       }
     });
@@ -122,10 +128,23 @@ function ChattingTest({route, navigation}: any) {
   const sendInput = async () => {
     // 총 4번의 doc을 생성하거나 업데이트함. log 4개가 떠야 정상
     let inputText = input.trim();
+
     db.collection('user')
       .doc(userEmail)
       .collection('chattingList')
-      .doc(reciever)
+      .doc(receiverEmail)
+      .set({}, {merge: true});
+
+    db.collection('user')
+      .doc(receiverEmail)
+      .collection('chattingList')
+      .doc(userEmail)
+      .set({}, {merge: true});
+
+    db.collection('user')
+      .doc(userEmail)
+      .collection('chattingList')
+      .doc(receiverEmail)
       .set(
         {
           recentMessage: inputText,
@@ -143,10 +162,11 @@ function ChattingTest({route, navigation}: any) {
         },
         {merge: true},
       );
+
     db.collection('user')
-      .doc(recieverEmail)
+      .doc(receiverEmail)
       .collection('chattingList')
-      .doc(userNickname)
+      .doc(userEmail)
       .set(
         {
           recentMessage: inputText,
@@ -161,7 +181,7 @@ function ChattingTest({route, navigation}: any) {
             '분' +
             date.getSeconds() +
             '초',
-          owner1: reciever,
+          owner1: receiver,
           owner2: userNickname,
         },
         {merge: true},
@@ -181,18 +201,20 @@ function ChattingTest({route, navigation}: any) {
         date.getSeconds() +
         '초',
     };
+
     setInput('');
+
     db.collection('user')
       .doc(userEmail)
       .collection('chattingList')
-      .doc(reciever)
+      .doc(receiverEmail)
       .collection('messages')
       .doc()
       .set(message);
     db.collection('user')
-      .doc(recieverEmail)
+      .doc(receiverEmail)
       .collection('chattingList')
-      .doc(userNickname)
+      .doc(userEmail)
       .collection('messages')
       .doc()
       .set(message);
@@ -212,7 +234,7 @@ function ChattingTest({route, navigation}: any) {
           </Pressable>
         </View>
         <View style={styles.headerBarTitleView}>
-          <Text style={styles.headerBarTitleText}>{reciever}</Text>
+          <Text style={styles.headerBarTitleText}>{receiver}</Text>
         </View>
         <View style={styles.headerBarSide}>
           <Pressable onPress={() => openViewMore()}>

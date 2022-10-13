@@ -27,21 +27,21 @@ function ChattingListScreen({navigation}: any) {
     updatedAt,
     navigation,
   }: any) {
-    const reciever = userNickname == owner1 ? owner2 : owner1;
+    const receiver = userNickname == owner1 ? owner2 : owner1;
     return (
       <Pressable
         style={styles.item}
         onPress={() =>
           navigation.navigate('ChattingScreen', {
-            reciever: reciever,
-            recieverEmail: owner2Email,
+            receiver: receiver,
+            receiverEmail: owner2Email,
           })
         }>
         <View style={{flex: 1}}>
           <Image source={require('../assets/TempProfileImage.png')} />
         </View>
         <View style={{flex: 4, justifyContent: 'space-between'}}>
-          <Text style={styles.name}>{reciever}</Text>
+          <Text style={styles.name}>{receiver}</Text>
           <Text style={styles.post}>{recentMessage}</Text>
         </View>
         <View
@@ -61,14 +61,14 @@ function ChattingListScreen({navigation}: any) {
 
   const getUserInfo = async () => {
     try {
-      const email = (await AsyncStorage.getItem('userEmail')) || 'empty email';
+      const email = (await AsyncStorage.getItem('id')) || 'empty email';
       const nickname =
-        (await AsyncStorage.getItem('userNickname')) || 'empty nickname';
+        (await AsyncStorage.getItem('nickname')) || 'empty nickname';
       setEmail(email);
       setUserNickname(nickname);
       if (email !== null && nickname) {
-        console.log('1. get user email:', email);
-        console.log('2. get user nickName:', nickname);
+        console.log('1. userEmail:', email);
+        console.log('2. userNickname:', nickname);
       }
     } catch (e) {
       console.log('ERROR: get user info');
@@ -96,6 +96,7 @@ function ChattingListScreen({navigation}: any) {
             chatting: doc.data(),
           }));
           setChattingList(chattingListData);
+          console.log(chattingListData[0]);
         }
       });
       if (chattingList[0] != undefined) {
