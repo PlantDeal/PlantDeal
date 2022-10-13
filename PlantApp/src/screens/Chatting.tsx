@@ -13,6 +13,8 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   FlatList,
+  Modal,
+  Alert,
 } from 'react-native';
 
 function ChattingTest({route, navigation}: any) {
@@ -221,12 +223,94 @@ function ChattingTest({route, navigation}: any) {
     setDisableSendBtn(true);
   };
 
-  const openViewMore = () => {
-    console.log('hi');
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const switchViewMore = () => {
+    setModalVisible(e => !e);
+    console.log(modalVisible);
   };
 
   return (
-    <SafeAreaView style={styles.safeAreaView}>
+    <SafeAreaView style={{backgroundColor: '#FFFFFF', flex: 1}}>
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+          setModalVisible(false);
+        }}>
+        <SafeAreaView
+          style={{
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(142,142,147,0.4)',
+            alignItems: 'center',
+            justifyContent: 'flex-end',
+            paddingBottom: Platform.OS == 'android' ? 20 : 40,
+          }}>
+          <View style={{width: 335, height: 204, alignItems: 'center'}}>
+            <TouchableOpacity
+              style={{
+                backgroundColor: '#FFFFFF',
+                width: 335,
+                height: 44,
+                borderTopLeftRadius: 10,
+                borderTopRightRadius: 10,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+              onPress={() => {
+                switchViewMore();
+              }}>
+              <Text style={{color: '#000000', fontSize: 16}}>알람 끄기</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                backgroundColor: '#FFFFFF',
+                width: 335,
+                height: 50,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+              onPress={() => {
+                switchViewMore();
+              }}>
+              <Text style={{color: '#000000', fontSize: 16}}>차단 하기</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                backgroundColor: '#FFFFFF',
+                width: 335,
+                height: 50,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+              onPress={() => {
+                switchViewMore();
+              }}>
+              <Text style={{color: '#DA1E28', fontSize: 16}}>
+                채팅방 나가기
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                backgroundColor: '#16D66F',
+                width: 335,
+                height: 50,
+                borderRadius: 10,
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginTop: 10,
+              }}
+              onPress={() => {
+                switchViewMore();
+              }}>
+              <Text style={{color: '#FFFFFF', fontSize: 16}}>취소</Text>
+            </TouchableOpacity>
+          </View>
+        </SafeAreaView>
+      </Modal>
       <View style={styles.headerBar}>
         <View style={styles.headerBarSide}>
           <Pressable onPress={() => navigation.goBack()}>
@@ -237,9 +321,9 @@ function ChattingTest({route, navigation}: any) {
           <Text style={styles.headerBarTitleText}>{receiver}</Text>
         </View>
         <View style={styles.headerBarSide}>
-          <Pressable onPress={() => openViewMore()}>
+          <TouchableOpacity onPress={() => switchViewMore()}>
             <Image source={require('../assets/ViewMore.png')} />
-          </Pressable>
+          </TouchableOpacity>
         </View>
       </View>
       <View style={styles.chatView}>
@@ -342,7 +426,6 @@ const styles = StyleSheet.create({
   },
   safeAreaView: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
   },
 });
 
