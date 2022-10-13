@@ -16,6 +16,10 @@ import LocationScreen from '../screens/Location';
 import RegistSellScreen from '../screens/RegistSell';
 import SearchLocationScreen from '../screens/SearchLocation';
 import SetLocationScreen from '../screens/SetLocation';
+import DetailScreen from '../screens/Detail';
+import UpdateProfileScreen from '../screens/UpdateProfile';
+import SellListScreen from '../screens/SelllList';
+import AttentionScreen from '../screens/Attention';
 
 const LoginStack = createNativeStackNavigator();
 const HomeStack = createNativeStackNavigator();
@@ -92,6 +96,11 @@ function NavHome({navigation}: any) {
         component={SearchLocationScreen}
         options={{headerShown: false}}
       />
+      <HomeStack.Screen
+        name="DetailScreen"
+        component={DetailScreen}
+        options={{headerShown: false}}
+      />
     </HomeStack.Navigator>
   );
 }
@@ -151,6 +160,32 @@ function NavProfile({navigation}: any) {
         options={{
           headerShown: false,
         }}
+      />
+      <ProfileStack.Screen
+        name="UpdateProfileScreen"
+        component={UpdateProfileScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <ProfileStack.Screen
+        name="SellListScreen"
+        component={SellListScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <ProfileStack.Screen
+        name="AttentionScreen"
+        component={AttentionScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <HomeStack.Screen
+        name="DetailScreen"
+        component={DetailScreen}
+        options={{headerShown: false}}
       />
     </ProfileStack.Navigator>
   );

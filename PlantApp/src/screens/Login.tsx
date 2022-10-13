@@ -8,7 +8,7 @@ import {
   Alert,
   SafeAreaView,
 } from 'react-native';
-import auth, {firebase} from '@react-native-firebase/auth';
+import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -30,15 +30,6 @@ function LoginScreen({navigation}: {navigation: any}) {
       .signInWithEmailAndPassword(email, password)
       .then(async () => {
         await logIn();
-        const userEmail = await loadUserEmail();
-        const userInfo = (await loadUserInfo()) || {};
-        const userName = userInfo.name;
-        const userAddress = userInfo.address;
-        const userNickname = userInfo.nickname;
-        await AsyncStorage.setItem('userEmail', userEmail); // local storage에 유저이메일 저장
-        await AsyncStorage.setItem('userName', userName);
-        await AsyncStorage.setItem('userAddress', userAddress);
-        await AsyncStorage.setItem('userNickname', userNickname);
       })
       .catch(error => {
         if (error.code === 'auth/user-not-found') {
@@ -68,36 +59,32 @@ function LoginScreen({navigation}: {navigation: any}) {
       .collection('user')
       .doc(email)
       .get()
-      .then(documentSnapshot => {
-        const location = documentSnapshot.get('location');
-        if (location === '') {
-          navigation.navigate('SetLocationScreen');
-        } else {
-          navigation.navigate('NavHome');
-        }
+      .then(async documentSnapshot => {
+        await AsyncStorage.setItem('id', email);
+        await AsyncStorage.setItem('name', documentSnapshot.get('name'));
+        await AsyncStorage.setItem(
+          'nickname',
+          documentSnapshot.get('nickname'),
+        );
+        await AsyncStorage.setItem('birth', documentSnapshot.get('birth'));
+        await AsyncStorage.setItem('gender', documentSnapshot.get('gender'));
+        await AsyncStorage.setItem('address', documentSnapshot.get('address'));
+        await AsyncStorage.setItem(
+          'subaddress',
+          documentSnapshot.get('subaddress'),
+        );
+        await AsyncStorage.setItem(
+          'location',
+          JSON.stringify(documentSnapshot.get('location')),
+        ).then(async () => {
+          const location = documentSnapshot.get('location');
+          if (location === '') {
+            navigation.navigate('SetLocationScreen');
+          } else {
+            navigation.navigate('NavHome');
+          }
+        });
       });
-  };
-
-  const loadUserEmail = async () => {
-    const currentUser = firebase.auth().currentUser;
-    const userEmail = currentUser?.email || 'emptyEmail';
-    return userEmail;
-  };
-
-  const loadUserInfo = async () => {
-    const currentUser = firebase.auth().currentUser;
-    const userEmail = currentUser?.email || 'emptyEmail';
-    console.log('✅ user info:', userEmail);
-    const userData = await firebase
-      .firestore()
-      .collection('user')
-      .doc(userEmail)
-      .get()
-      .then(data => {
-        return data.data();
-      });
-    console.log(userData);
-    return userData;
   };
 
   function test() {
@@ -143,11 +130,6 @@ function LoginScreen({navigation}: {navigation: any}) {
           secureTextEntry={true}
           clearButtonMode="always"
         />
-        <View>
-          <Text style={{fontSize: 14, marginBottom: 10, color: 'red'}}>
-            테스트
-          </Text>
-        </View>
       </View>
       <View style={{flex: 2.1, justifyContent: 'center'}}>
         <TouchableOpacity
