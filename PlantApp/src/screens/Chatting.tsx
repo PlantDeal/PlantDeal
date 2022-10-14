@@ -30,7 +30,7 @@ function ChattingTest({route, navigation}: any) {
   const db = firebase.firestore();
   const date = new Date();
 
-  const Item = ({text, messageOwner}: any) => (
+  const Item = ({text, messageOwner, createdAt}: any) => (
     <View
       style={{
         marginBottom: 24,
@@ -55,6 +55,23 @@ function ChattingTest({route, navigation}: any) {
             color: userNickname == messageOwner ? '#FFFFFF' : '#000000',
           }}>
           {text}
+        </Text>
+      </View>
+      <View
+        style={{
+          alignSelf: userNickname == messageOwner ? 'flex-end' : 'flex-start',
+          alignItems: userNickname == messageOwner ? 'flex-end' : 'flex-start',
+          paddingRight: userNickname == messageOwner ? 5 : 0,
+          paddingLeft: userNickname == messageOwner ? 0 : 5,
+          width: 85,
+          marginTop: 5,
+        }}>
+        <Text style={{color: '#C6C6C6'}}>
+          {createdAt.split(' ')[2] +
+            ' ' +
+            createdAt
+              .split(' ')[3]
+              .substr(0, createdAt.split(' ')[3].indexOf('분') + 1)}
         </Text>
       </View>
     </View>
@@ -112,7 +129,11 @@ function ChattingTest({route, navigation}: any) {
   }, [messageLoadCheck]);
 
   const renderItem = ({item}: any | null) => (
-    <Item text={item.message.text} messageOwner={item.message.messageOwner} />
+    <Item
+      text={item.message.text}
+      messageOwner={item.message.messageOwner}
+      createdAt={item.message.createdAt}
+    />
   );
 
   const changeText = (data: any) => {
@@ -150,7 +171,7 @@ function ChattingTest({route, navigation}: any) {
       .set(
         {
           recentMessage: inputText,
-          updatedAt:
+          createdAt:
             (date.getMonth() + 1).toString() +
             '월 ' +
             date.getDay().toString() +
@@ -172,7 +193,7 @@ function ChattingTest({route, navigation}: any) {
       .set(
         {
           recentMessage: inputText,
-          updatedAt:
+          createdAt:
             (date.getMonth() + 1).toString() +
             '월 ' +
             date.getDay().toString() +
@@ -356,6 +377,7 @@ function ChattingTest({route, navigation}: any) {
             paddingLeft: 10,
             justifyContent: 'center',
             alignItems: 'center',
+            alignSelf: 'center',
           }}>
           <TextInput
             style={{
