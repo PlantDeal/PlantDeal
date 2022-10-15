@@ -360,51 +360,60 @@ function ChattingTest({route, navigation}: any) {
         style={styles.inputToolBar}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         keyboardVerticalOffset={10}>
-        <Pressable
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            width: 50,
-          }}>
-          <Image source={require('../assets/plus.png')} />
-        </Pressable>
-        <View
-          style={{
-            backgroundColor: '#F4F4F4',
-            flex: 1,
-            height: 40,
-            borderRadius: 10,
-            paddingLeft: 10,
-            justifyContent: 'center',
-            alignItems: 'center',
-            alignSelf: 'center',
-          }}>
-          <TextInput
+        <View style={{flexDirection: 'row', flex: 1}}>
+          <Pressable
             style={{
-              width: '100%',
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: 50,
+            }}>
+            <Image source={require('../assets/plus.png')} />
+          </Pressable>
+          <View
+            style={{
+              backgroundColor: '#F4F4F4',
               flex: 1,
-              fontSize: 16,
-              textAlignVertical: 'center',
+              height: 40,
+              borderRadius: 10,
+              paddingLeft: 10,
+              justifyContent: 'center',
+              alignItems: 'center',
+              alignSelf: 'center',
+            }}>
+            <TextInput
+              style={{
+                width: '100%',
+                flex: 1,
+                fontSize: 16,
+                textAlignVertical: 'center',
+              }}
+              value={input}
+              onChangeText={data => {
+                changeText(data);
+                checkSpace(data);
+              }}
+              placeholder="채팅 입력"
+              defaultValue=""
+            />
+          </View>
+          <TouchableOpacity
+            onPress={sendInput}
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: 50,
             }}
-            value={input}
-            onChangeText={data => {
-              changeText(data);
-              checkSpace(data);
-            }}
-            placeholder="채팅 입력"
-            defaultValue=""
-          />
+            disabled={disableSendBtn}>
+            <Image source={require('../assets/Send.png')} />
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          onPress={sendInput}
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            width: 50,
-          }}
-          disabled={disableSendBtn}>
-          <Image source={require('../assets/Send.png')} />
-        </TouchableOpacity>
+        <View style={{height: 100}}>
+          <View></View>
+          <View>
+            <Pressable>{/* <Image source={require()} /> */}</Pressable>
+            <Pressable>{/* <Image source={require()} /> */}</Pressable>
+          </View>
+        </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -413,7 +422,6 @@ function ChattingTest({route, navigation}: any) {
 const styles = StyleSheet.create({
   inputToolBar: {
     felx: 1,
-    flexDirection: 'row',
     marginBottom: Platform.OS == 'android' ? 10 : 0,
     alignContent: 'center',
     justifyContent: 'center',
