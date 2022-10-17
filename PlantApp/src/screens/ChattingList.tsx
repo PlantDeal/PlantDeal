@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   View,
   Text,
@@ -12,6 +12,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import BottomTab from '../components/BottomTab';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {firebase} from '@react-native-firebase/analytics';
+import defaultIcon from 'react-native-paper/lib/typescript/components/MaterialCommunityIcon';
 
 function ChattingListScreen({navigation}: any) {
   const [userEmail, setEmail] = useState('');
@@ -55,17 +56,7 @@ function ChattingListScreen({navigation}: any) {
             alignItems: 'center',
           }}>
           <View>
-            <Text style={styles.time}>
-              {updatedAt.split(' ')[2] +
-                ' ' +
-                updatedAt
-                  .split(' ')[3]
-                  .substr(0, updatedAt.split(' ')[3].indexOf('분') + 1) +
-                ' ' +
-                updatedAt
-                  .split(' ')[3]
-                  .substr(updatedAt.split(' ')[3].indexOf('분') + 1)}
-            </Text>
+            <Text style={styles.time}></Text>
             <View style={{justifyContent: 'center', alignItems: 'center'}}>
               <Text>" "</Text>
             </View>
@@ -109,32 +100,37 @@ function ChattingListScreen({navigation}: any) {
           setChattingListLoad(true);
         } else {
           let chattingListData = data.docs.map(doc => ({
-            chatting: doc.data(),
+            owner1: doc.data().owner1,
+            owner2: doc.data().owner2,
+            owner2Email: doc.data().owner2Email,
+            recentMessage: doc.data().recentMessage,
           }));
-          setChattingList(chattingListData);
           console.log(chattingListData[0]);
+          setChattingList(chattingListData);
         }
       });
-      if (chattingList[0] != undefined) {
-        console.log(chattingList);
-      }
     } catch {
       console.log('ERROR: getChattingList');
     }
   };
 
+  const mounted = useRef(false);
+
   useEffect(() => {
-    getChattingList();
-  }, [chattingListLoad]);
+    if (!mounted.current) {
+      mounted.current = true;
+    } else {
+      getChattingList();
+    }
+  }, [userEmail]);
 
   const renderItem = ({item}: any) => (
     <Item
-      owner1={item.chatting.owner1}
-      owner2={item.chatting.owner2}
-      recentMessage={item.chatting.recentMessage}
-      updatedAt={item.chatting.updatedAt}
+      owner1={item.owner1}
+      owner2={item.owner2}
+      recentMessage={item.recentMessage}
       navigation={navigation}
-      owner2Email={item.chatting.owner2Email}
+      owner2Email={item.owner2Email}
     />
   );
 

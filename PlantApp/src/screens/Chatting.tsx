@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {firebase} from '@react-native-firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
@@ -67,13 +67,7 @@ function ChattingTest({route, navigation}: any) {
           width: 85,
           marginTop: 5,
         }}>
-        <Text style={{color: '#C6C6C6'}}>
-          {createdAt.split(' ')[2] +
-            ' ' +
-            createdAt
-              .split(' ')[3]
-              .substr(0, createdAt.split(' ')[3].indexOf('분') + 1)}
-        </Text>
+        <Text style={{color: '#C6C6C6'}}></Text>
       </View>
     </View>
   );
@@ -125,9 +119,15 @@ function ChattingTest({route, navigation}: any) {
     });
   }
 
+  const mounted = useRef(false);
+
   useEffect(() => {
-    getMessages();
-  }, [messageLoadCheck]);
+    if (!mounted.current) {
+      mounted.current = true;
+    } else {
+      getMessages();
+    }
+  }, [userEmail]);
 
   const renderItem = ({item}: any | null) => (
     <Item
@@ -152,18 +152,7 @@ function ChattingTest({route, navigation}: any) {
   const sendInput = async () => {
     // 총 4번의 doc을 생성하거나 업데이트함. log 4개가 떠야 정상
     let inputText = input.trim();
-
-    db.collection('user')
-      .doc(userEmail)
-      .collection('chattingList')
-      .doc(receiverEmail)
-      .set({}, {merge: true});
-
-    db.collection('user')
-      .doc(receiverEmail)
-      .collection('chattingList')
-      .doc(userEmail)
-      .set({}, {merge: true});
+    const date = firebase.firestore.FieldValue.serverTimestamp();
 
     db.collection('user')
       .doc(userEmail)
@@ -172,17 +161,9 @@ function ChattingTest({route, navigation}: any) {
       .set(
         {
           recentMessage: inputText,
-          createdAt:
-            (date.getMonth() + 1).toString() +
-            '월 ' +
-            date.getDay().toString() +
-            '일 ' +
-            date.getHours() +
-            '시 ' +
-            date.getMinutes() +
-            '분' +
-            date.getSeconds() +
-            '초',
+          updatedAt: date,
+          owner1: receiver,
+          owner2: userNickname,
         },
         {merge: true},
       );
@@ -194,17 +175,7 @@ function ChattingTest({route, navigation}: any) {
       .set(
         {
           recentMessage: inputText,
-          createdAt:
-            (date.getMonth() + 1).toString() +
-            '월 ' +
-            date.getDay().toString() +
-            '일 ' +
-            date.getHours() +
-            '시 ' +
-            date.getMinutes() +
-            '분' +
-            date.getSeconds() +
-            '초',
+          updatedAt: date,
           owner1: receiver,
           owner2: userNickname,
         },
@@ -213,17 +184,7 @@ function ChattingTest({route, navigation}: any) {
     const message = {
       text: inputText,
       messageOwner: userNickname,
-      createdAt:
-        (date.getMonth() + 1).toString() +
-        '월 ' +
-        date.getDay().toString() +
-        '일 ' +
-        date.getHours() +
-        '시 ' +
-        date.getMinutes() +
-        '분' +
-        date.getSeconds() +
-        '초',
+      createdAt: date,
     };
 
     setInput('');
