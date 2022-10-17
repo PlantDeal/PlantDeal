@@ -87,7 +87,8 @@ function DetailScreen({navigation,route}: any) {
         time : time,
         city : city,
         town: town,
-        village : village
+        village : village,
+        user : user
       })
       .then(()=>{
         console.log('up')
@@ -153,7 +154,7 @@ function DetailScreen({navigation,route}: any) {
                   </TouchableOpacity>
                 </View>
               </View>
-              <View style ={{height:150, width:335, backgroundColor:'#FFFFFF',justifyContent:'center'}}>
+              <View style ={{height:100, width:335, backgroundColor:'#FFFFFF',justifyContent:'center'}}>
                 <View style={{height: 40, justifyContent:'center',}}>
                   <Text style={{fontSize: 14,
                           fontFamily: 'NotoSansKR-Regular',
@@ -167,9 +168,6 @@ function DetailScreen({navigation,route}: any) {
                           includeFontPadding: false,
                           color: '#000000',marginTop:9
                           }}>{explane}</Text>
-                </View>
-                <View style={{height:50}}>
-                  <Text style={{color:'red'}}>조회 업데이트 예정</Text>
                 </View>
                 
               </View>

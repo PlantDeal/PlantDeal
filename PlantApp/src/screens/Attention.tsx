@@ -6,11 +6,6 @@ import { firebase } from '@react-native-firebase/firestore';
 
 
 function AttentionScreen({navigation}: any) {
-    const [buy,setBuy] = useState('#16D66F')
-    const [buyBot,setbuyBot] = useState('#16D66F')
-    const [sell,setSell] = useState('#C6C6C6')
-    const [settBot,setsellBot] = useState('#F4F4F4')
-    const Width = Dimensions.get('window').width;
     const token:any = firebase.auth().currentUser;
     const [user,setuser] = useState<any>()
     const [Data,setData] = useState<any>(null);
@@ -32,6 +27,9 @@ function AttentionScreen({navigation}: any) {
             setData(data);
         });
     }
+
+    
+  
     function elapsedTime(date:any) {
       const start:any = new Date(date);
       const end:any = new Date(); 
@@ -55,7 +53,6 @@ function AttentionScreen({navigation}: any) {
 
     useEffect(()=>{
         loadSell()
-        console.log('hi')
     },[])
 
 
