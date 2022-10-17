@@ -21,7 +21,7 @@ function CompleteRegistScreen({navigation}: any) {
                   marginBottom: 10,
                   borderRadius:6,
                   backgroundColor: '#16D66F'}}
-          onPress={ ()=> navigation.navigate('NavHome')}>
+          onPress={ ()=> navigation.navigate('SetLocation')}>
             <Text style={{color: 'white', fontSize:16, fontFamily:'NotoSansKR-Bold',includeFontPadding:false}}>홈으로</Text>
           </TouchableOpacity>
       </View>

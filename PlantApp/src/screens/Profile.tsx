@@ -76,7 +76,7 @@ function ProfileScreen({navigation}: any) {
                           color:'#000000',
                           fontSize:12}}>경매 내역</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{width:79,height:78, backgroundColor:'#FFFFFF',marginLeft:12,alignItems:'center',justifyContent:'center'}}>
+          <TouchableOpacity onPress={() => navigation.navigate('AttentionScreen')} style={{width:79,height:78, backgroundColor:'#FFFFFF',marginLeft:12,alignItems:'center',justifyContent:'center'}}>
             <Image style={{width:24,height:24,marginBottom:5}} source={require('../assets/Hart.png')} />
             <Text style={{marginTop:5,fontFamily:'NotoSansKR-Medium', 
                           includeFontPadding:false,

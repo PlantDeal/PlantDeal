@@ -13,7 +13,7 @@ function AttentionScreen({navigation}: any) {
     const Width = Dimensions.get('window').width;
     const token:any = firebase.auth().currentUser;
     const [user,setuser] = useState<any>()
-    const [DataSell,setData] = useState<any>(null);
+    const [Data,setData] = useState<any>(null);
 
 
     function loadSell(){
@@ -75,7 +75,118 @@ function AttentionScreen({navigation}: any) {
         <View style={{flex: 1.7}}></View>
       </View>
       <View style={{flex: 9.1}}>
-      
+      <FlatList
+          data={Data}
+          renderItem={({item}) => (
+            <View style={styles.flatbox}>
+              <TouchableOpacity
+                style={styles.flatbox}
+                onPress={() => {
+                  navigation.navigate('DetailScreen', {
+                    image: item.image,
+                    name: item.name,
+                    price: item.price,
+                    amount: item.amount,
+                    sunlight: item.sunlight,
+                    title: item.title,
+                    watering: item.watering,
+                    explane: item.explane,
+                    category:item.Category,
+                    town: item.town,
+                    village: item.village,
+                    city: item.city,
+                    user: item.user,
+                    time: item.time,
+                    key: item.key,
+                  });
+                }}>
+                <View style={{flexDirection: 'row'}}>
+                  <View style={{marginLeft: 12, marginRight: 6}}>
+                    <Image
+                      style={styles.imagebox}
+                      source={{uri: item.image[0]}}
+                    />
+                  </View>
+                  <View
+                    style={{
+                      marginLeft: 6,
+                      marginRight: 6,
+                      height: 62,
+                      width: 197,
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: 18,
+                        fontFamily: 'NotoSansKR-Bold',
+                        includeFontPadding: false,
+                        color: '#000000',
+                        marginBottom: 2,
+                      }}>
+                      {item.name}
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 14,
+                        fontFamily: 'NotoSansKR-Medium',
+                        includeFontPadding: false,
+                        color: '#16D66F',
+                        marginTop: 2,
+                      }}>
+                      {item.price}원
+                    </Text>
+                    <View style={{flexDirection: 'row', marginTop: 2}}>
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          fontFamily: 'NotoSansKR-Medium',
+                          includeFontPadding: false,
+                          color: '#C6C6C6',
+                          marginRight: 4,
+                        }}>
+                        {item.Category}
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          fontFamily: 'NotoSansKR-Medium',
+                          includeFontPadding: false,
+                          color: '#C6C6C6',
+                          marginLeft: 4,
+                          marginRight: 4,
+                        }}>
+                        {item.village}
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          fontFamily: 'NotoSansKR-Medium',
+                          includeFontPadding: false,
+                          color: '#C6C6C6',
+                          marginLeft: 4,
+                        }}>
+                        {elapsedTime(item.time)}
+                      </Text>
+                    </View>
+                  </View>
+                  <View
+                    style={{
+                      marginLeft: 6,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                    <Image
+                      style={{height: 24, width: 24}}
+                      source={require('../assets/Arrow.png')}
+                    />
+                  </View>
+                </View>
+                <View>
+                  <Text></Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          )}
+        />
       </View>
     </SafeAreaView>
   );

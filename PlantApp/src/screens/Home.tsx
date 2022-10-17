@@ -176,6 +176,7 @@ function HomeScreen({navigation}: any) {
                     category: Category,
                     town: Town,
                     village: Village,
+                    city: City,
                     user: item.user,
                     time: item.time,
                     key: item.key,

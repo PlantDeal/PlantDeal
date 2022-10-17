@@ -2,6 +2,7 @@ import React from 'react';
 import {View, Image, StyleSheet, Text, Pressable} from 'react-native';
 
 export default function HomeHeaderBar({navigation, route}: any) {
+  
   return (
     <View style={styles.headerBarView}>
       <View style={styles.leftBtnView}>
@@ -16,7 +17,7 @@ export default function HomeHeaderBar({navigation, route}: any) {
           style={{flexDirection: 'row'}}
           onPress={() => navigation.navigate('지역 설정하기',{city:route[route.length-3],town:route[route.length-2],village:route[route.length-1]})}>
           <View>
-            <Text style={styles.locationTitle}>{}</Text>
+            <Text style={styles.locationTitle}>{route[route.length-1]}</Text>
           </View>
           <View style={styles.locationDownArrow}>
             <Image source={require('../assets/DownArrow.png')} />

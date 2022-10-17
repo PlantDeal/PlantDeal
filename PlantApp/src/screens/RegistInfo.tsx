@@ -121,7 +121,7 @@ function RegistInfoScreen({navigation,route}: any) {
       nickname : nickname,
       address : address,
       subaddress : subaddress,
-      loaction: ''
+      location: ''
     })
     .then(() => {
       navigation.navigate('CompleteRegistScreen')

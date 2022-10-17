@@ -15,7 +15,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 function DetailScreen({navigation,route}: any) {
   const Width = Dimensions.get('window').width;
   const token:any = firebase.auth().currentUser;
-  const {amount, explane,image,name,price,sunlight,title,watering,category,town,village,user,time,key} = route.params;
+  const {amount, explane,image,name,price,sunlight,title,watering,category,town,village,user,time,key,city} = route.params;
   const [nickname,setNickname] = useState('')
   const [heart,setHeart] = useState('#C6C6C6')
 
@@ -75,7 +75,19 @@ function DetailScreen({navigation,route}: any) {
       .collection('관심목록')
       .doc(key)
       .set({
-
+        name : name,
+        Category : category,
+        title : title,
+        explane : explane,
+        image : image,
+        watering: watering,
+        amount : amount,
+        sunlight: sunlight,
+        price: price,
+        time : time,
+        city : city,
+        town: town,
+        village : village
       })
       .then(()=>{
         console.log('up')
