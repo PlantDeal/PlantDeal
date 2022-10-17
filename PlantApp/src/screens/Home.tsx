@@ -34,6 +34,7 @@ function HomeScreen({navigation}: any) {
 
   async function load() {
     const loc: any = await AsyncStorage.getItem('location');
+    console.log(loc);
     SetLocation(JSON.parse(loc));
   }
 

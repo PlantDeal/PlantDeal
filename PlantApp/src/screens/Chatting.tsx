@@ -24,13 +24,14 @@ function ChattingTest({route, navigation}: any) {
   const [userNickname, setUserNickname] = useState('');
   const [disableSendBtn, setDisableSendBtn] = useState(true);
   const [messageLoadCheck, setMessageLoadCheck] = useState(true);
+  const [showPLusTab, setShowPlusTab] = useState(false);
 
   const {receiver, receiverEmail} = route.params;
 
   const db = firebase.firestore();
   const date = new Date();
 
-  const Item = ({text, messageOwner}: any) => (
+  const Item = ({text, messageOwner, createdAt}: any) => (
     <View
       style={{
         marginBottom: 24,
@@ -55,6 +56,23 @@ function ChattingTest({route, navigation}: any) {
             color: userNickname == messageOwner ? '#FFFFFF' : '#000000',
           }}>
           {text}
+        </Text>
+      </View>
+      <View
+        style={{
+          alignSelf: userNickname == messageOwner ? 'flex-end' : 'flex-start',
+          alignItems: userNickname == messageOwner ? 'flex-end' : 'flex-start',
+          paddingRight: userNickname == messageOwner ? 5 : 0,
+          paddingLeft: userNickname == messageOwner ? 0 : 5,
+          width: 85,
+          marginTop: 5,
+        }}>
+        <Text style={{color: '#C6C6C6'}}>
+          {createdAt.split(' ')[2] +
+            ' ' +
+            createdAt
+              .split(' ')[3]
+              .substr(0, createdAt.split(' ')[3].indexOf('분') + 1)}
         </Text>
       </View>
     </View>
@@ -112,7 +130,11 @@ function ChattingTest({route, navigation}: any) {
   }, [messageLoadCheck]);
 
   const renderItem = ({item}: any | null) => (
-    <Item text={item.message.text} messageOwner={item.message.messageOwner} />
+    <Item
+      text={item.message.text}
+      messageOwner={item.message.messageOwner}
+      createdAt={item.message.createdAt}
+    />
   );
 
   const changeText = (data: any) => {
@@ -150,7 +172,7 @@ function ChattingTest({route, navigation}: any) {
       .set(
         {
           recentMessage: inputText,
-          updatedAt:
+          createdAt:
             (date.getMonth() + 1).toString() +
             '월 ' +
             date.getDay().toString() +
@@ -172,7 +194,7 @@ function ChattingTest({route, navigation}: any) {
       .set(
         {
           recentMessage: inputText,
-          updatedAt:
+          createdAt:
             (date.getMonth() + 1).toString() +
             '월 ' +
             date.getDay().toString() +
@@ -227,7 +249,42 @@ function ChattingTest({route, navigation}: any) {
 
   const switchViewMore = () => {
     setModalVisible(e => !e);
-    console.log(modalVisible);
+  };
+
+  const switchPlustBtn = () => {
+    setShowPlusTab(e => !e);
+    console.log('hi');
+  };
+
+  const PlusTabView = () => {
+    return (
+      <View>
+        <View
+          style={{
+            paddingLeft: 22,
+            backgroundColor: 'trasnparent',
+            height: 40,
+            justifyContent: 'flex-end',
+          }}>
+          <Text style={{paddingBottom: 10, color: '#000000'}}>메뉴</Text>
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            backgroundColor: 'transparent',
+            height: 86,
+          }}>
+          <Pressable style={{marginLeft: 20, alignItems: 'center'}}>
+            <Image source={require('../assets/Image.png')} />
+            <Text style={{marginTop: 8}}>사진</Text>
+          </Pressable>
+          <Pressable style={{marginLeft: 20, alignItems: 'center'}}>
+            <Image source={require('../assets/Camera.png')} />
+            <Text style={{marginTop: 8}}>카메라</Text>
+          </Pressable>
+        </View>
+      </View>
+    );
   };
 
   return (
@@ -237,7 +294,6 @@ function ChattingTest({route, navigation}: any) {
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
           setModalVisible(false);
         }}>
         <SafeAreaView
@@ -339,50 +395,61 @@ function ChattingTest({route, navigation}: any) {
         style={styles.inputToolBar}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         keyboardVerticalOffset={10}>
-        <Pressable
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            width: 50,
-          }}>
-          <Image source={require('../assets/plus.png')} />
-        </Pressable>
         <View
           style={{
-            backgroundColor: '#F4F4F4',
-            flex: 1,
-            height: 40,
-            borderRadius: 10,
-            paddingLeft: 10,
-            justifyContent: 'center',
-            alignItems: 'center',
+            flexDirection: 'row',
+            height: 50,
+            width: '100%',
+            backgroundColor: 'transparent',
           }}>
-          <TextInput
+          <Pressable
             style={{
-              width: '100%',
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: 50,
+            }}
+            onPress={() => switchPlustBtn()}>
+            <Image source={require('../assets/plus.png')} />
+          </Pressable>
+          <View
+            style={{
+              backgroundColor: '#F4F4F4',
               flex: 1,
-              fontSize: 16,
-              textAlignVertical: 'center',
+              height: 40,
+              borderRadius: 10,
+              paddingLeft: 10,
+              justifyContent: 'center',
+              alignItems: 'center',
+              alignSelf: 'center',
+            }}>
+            <TextInput
+              style={{
+                width: '100%',
+                flex: 1,
+                fontSize: 16,
+                textAlignVertical: 'center',
+              }}
+              value={input}
+              onChangeText={data => {
+                changeText(data);
+                checkSpace(data);
+              }}
+              placeholder="채팅 입력"
+              defaultValue=""
+            />
+          </View>
+          <TouchableOpacity
+            onPress={sendInput}
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: 50,
             }}
-            value={input}
-            onChangeText={data => {
-              changeText(data);
-              checkSpace(data);
-            }}
-            placeholder="채팅 입력"
-            defaultValue=""
-          />
+            disabled={disableSendBtn}>
+            <Image source={require('../assets/Send.png')} />
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          onPress={sendInput}
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            width: 50,
-          }}
-          disabled={disableSendBtn}>
-          <Image source={require('../assets/Send.png')} />
-        </TouchableOpacity>
+        {showPLusTab && <PlusTabView />}
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -391,10 +458,10 @@ function ChattingTest({route, navigation}: any) {
 const styles = StyleSheet.create({
   inputToolBar: {
     felx: 1,
-    flexDirection: 'row',
     marginBottom: Platform.OS == 'android' ? 10 : 0,
     alignContent: 'center',
     justifyContent: 'center',
+    backgroundColor: 'yellow;',
   },
   chatView: {
     flex: 16,

@@ -37,21 +37,38 @@ function ChattingListScreen({navigation}: any) {
             receiverEmail: owner2Email,
           })
         }>
-        <View style={{flex: 1}}>
+        <View style={{width: 55}}>
           <Image source={require('../assets/TempProfileImage.png')} />
         </View>
-        <View style={{flex: 4, justifyContent: 'space-between'}}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'space-between',
+          }}>
           <Text style={styles.name}>{receiver}</Text>
           <Text style={styles.post}>{recentMessage}</Text>
         </View>
         <View
           style={{
-            flex: 1.2,
+            width: 90,
             justifyContent: 'center',
             alignItems: 'center',
           }}>
           <View>
-            <Text style={styles.time}>{updatedAt}</Text>
+            <Text style={styles.time}>
+              {updatedAt.split(' ')[2] +
+                ' ' +
+                updatedAt
+                  .split(' ')[3]
+                  .substr(0, updatedAt.split(' ')[3].indexOf('분') + 1) +
+                ' ' +
+                updatedAt
+                  .split(' ')[3]
+                  .substr(updatedAt.split(' ')[3].indexOf('분') + 1)}
+            </Text>
+            <View style={{justifyContent: 'center', alignItems: 'center'}}>
+              <Text>" "</Text>
+            </View>
           </View>
           <View style={{alignItems: 'center'}}></View>
         </View>
@@ -92,7 +109,6 @@ function ChattingListScreen({navigation}: any) {
           setChattingListLoad(true);
         } else {
           let chattingListData = data.docs.map(doc => ({
-            id: doc.id,
             chatting: doc.data(),
           }));
           setChattingList(chattingListData);
@@ -153,6 +169,7 @@ const styles = StyleSheet.create({
   time: {
     fontSize: 10,
     color: '#C6C6C6',
+    marginBottom: 3,
   },
   item: {
     flexDirection: 'row',
