@@ -9,6 +9,7 @@ import { utils } from '@react-native-firebase/app';
 import firestore from '@react-native-firebase/firestore'
 import { firebase } from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import AverageScreen from './Average';
 
 
 
@@ -171,7 +172,7 @@ function DetailScreen({navigation,route}: any) {
                 </View>
                 
               </View>
-              <View style ={{height:180, width:335}}>
+              <View style ={{height:160, width:335}}>
                 <Text style={{fontSize: 18,
                           fontFamily: 'NotoSansKR-Bold',
                           includeFontPadding: false,
@@ -210,6 +211,7 @@ function DetailScreen({navigation,route}: any) {
                 </ScrollView>
               </View>
             </View>
+            <AverageScreen />
             
           
 
@@ -217,7 +219,7 @@ function DetailScreen({navigation,route}: any) {
       </View>
       <View style = {{flex:1, justifyContent:'center'}}>
         <TouchableOpacity 
-          
+          onPress={()=>navigation.navigate('AverageScreen')}
           style={{height: 48,
           width: 335,
           justifyContent: 'center',

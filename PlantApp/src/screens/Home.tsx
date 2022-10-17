@@ -20,9 +20,7 @@ function HomeScreen({navigation}: any) {
     '공기정화식물',
     '다육식물',
     '허브식물',
-    '선인장',
-    '희귀식물',
-    '기타',
+    '기타'
   ];
   const [City, setCity] = useState('');
   const [Town, setTown] = useState('');
