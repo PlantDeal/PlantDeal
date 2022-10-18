@@ -104,22 +104,21 @@ function SearchScreen({navigation,route}: any) {
         <View style={styles.headerBarRightView} />
       </View>
       <View style={styles.bodyView}>
-        <View style={styles.textInputView}>
-          <AutocompleteDropdown
-            containerStyle={styles.textInput}
-            inputContainerStyle={styles.textInput2}
-            rightButtonsContainerStyle={styles.searchImageView}
-            suggestionsListTextStyle={styles.textlist}
-            showClear={false}
-            clearOnFocus={false}
-            emptyResultText={"검색된 정보가 없습니다"}
-            // ChevronIconComponent={<Image source={require('../assets/Search.png')}></Image>}
-            dataSet={plant}
-            onSelectItem={async(item:any) => {
-              test(item?.title)
-            }} 
-            />
-        </View>
+        <AutocompleteDropdown
+          containerStyle={styles.textInput}
+          inputContainerStyle={styles.textInput2}
+          rightButtonsContainerStyle={styles.searchImageView}
+          suggestionsListTextStyle={styles.textlist}
+          showClear={false}
+          clearOnFocus={false}
+          emptyResultText={"검색된 정보가 없습니다"}
+          // ChevronIconComponent={<Image source={require('../assets/Search.png')}></Image>}
+          dataSet={plant}
+          onSelectItem={async(item:any) => {
+            test(item?.title)
+          }} 
+          position="absolute"
+          />
         <FlatList
           data={searchData}
           renderItem={({item}) => (
@@ -225,9 +224,6 @@ function SearchScreen({navigation,route}: any) {
                     />
                   </View>
                 </View>
-                <View>
-                  <Text></Text>
-                </View>
               </TouchableOpacity>
             </View>
           )}
@@ -259,15 +255,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     marginBottom: 20,
-  },
-  recentSearches: {
-    width: '90%',
-    justifyContent: 'flex-start',
-  },
-  popularSearches: {
-    width: '90%',
-    justifyContent: 'flex-start',
-    marginTop: 20,
   },
   headerBarTitle: {
     fontSize: 16,
@@ -302,7 +289,8 @@ const styles = StyleSheet.create({
   flatbox: {
     height: 116,
     width:335,
-    justifyContent:'center'
+    justifyContent:'center',
+    position:'relative'
   },
   imagebox: {
     height: 72,
