@@ -52,8 +52,10 @@ function HomeScreen({navigation}: any) {
       .doc(City)
       .collection(Town)
       .doc(Village)
-      .collection(Category)
-      .onSnapshot(async querySnapshot => {
+      .collection('판매물품')
+      .where('Category','==',Category)
+      .get()
+      .then(async querySnapshot => {
         const data: {key: string}[] = [];
         querySnapshot.forEach(documentSnapshot => {
           data.push({
@@ -202,7 +204,7 @@ function HomeScreen({navigation}: any) {
                         color: '#000000',
                         marginBottom: 2,
                       }}>
-                      {item.name}
+                      {item.title}
                     </Text>
                     <Text
                       style={{

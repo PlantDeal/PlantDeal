@@ -6,7 +6,7 @@ export default function HomeHeaderBar({navigation, route}: any) {
   return (
     <View style={styles.headerBarView}>
       <View style={styles.leftBtnView}>
-        <Pressable onPress={() => navigation.navigate('검색')}>
+        <Pressable onPress={() => navigation.navigate('검색',{city:route[route.length-3],town:route[route.length-2],village:route[route.length-1]})}>
           <View style={styles.leftImageView}>
             <Image source={require('../assets/Search.png')} />
           </View>

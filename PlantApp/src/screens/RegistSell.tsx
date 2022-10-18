@@ -218,10 +218,8 @@ function RegistSellScreen({navigation,route}: any) {
       .doc(City)
       .collection(Town)
       .doc(Village)
-      .collection(Category)
-      .doc(name)
-      .collection(token?.email)
-      .doc(date)
+      .collection('판매물품')
+      .doc(docname)
       .set({
         name : name,
         Category : Category,
