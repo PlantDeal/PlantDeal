@@ -12,33 +12,40 @@ import {
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import firestore from '@react-native-firebase/firestore'
+import { AutocompleteDropdown } from 'react-native-autocomplete-dropdown';
+import Feather from 'react-native-vector-icons/Feather';
+Feather.loadFont()
 
 
 function SearchScreen({navigation,route}: any) {
   const {city, town, village} = route.params;
-  const [searchInput,setInput] = useState('');
+  // const [searchInput,setInput] = useState('');
   const [searchData,setData] = useState<any>(null);
+  const [plant,setPlant] = useState<any>([{id:0,title:""}])
 
 
-  async function test(){
-    await firestore()
+  async function test(searchInput:any){
+    const pdata = await firestore()
     .collection('sell')
     .doc(city)
     .collection(town)
     .doc(village)
     .collection('판매물품')
-    .where('name','==',searchInput)
-    .get()
-    .then(async querySnapshot => {
-      const data: {key: string}[] = [];
-      querySnapshot.forEach(documentSnapshot => {
-        data.push({
-          ...documentSnapshot.data(),
-          key: documentSnapshot.id,
+    if(searchInput !== undefined){
+      pdata.where('name','==',searchInput)
+      .get()
+      .then(async querySnapshot => {
+        const data: {key: string}[] = [];
+        querySnapshot.forEach(documentSnapshot => {
+          data.push({
+            ...documentSnapshot.data(),
+            key: documentSnapshot.id,
+          });
         });
+        setData(data);
       });
-      setData(data);
-    });
+    }
+    
   }
 
   function elapsedTime(date: any) {
@@ -63,8 +70,20 @@ function SearchScreen({navigation,route}: any) {
   }
 
   useEffect(()=>{
-    setData(null);
-  },[searchInput])
+    firestore()
+    .collection('식물')
+    .doc('식물이름')
+    .get()
+    .then(data =>{
+      const pdata = data.data()?.name
+      pdata.map((Name:any) =>{
+        console.log(Name)
+        setPlant((plant:any) => {return[...plant,{id:Name,title:Name}]})
+      })
+    })
+  },[])
+
+
 
   
   
@@ -85,20 +104,21 @@ function SearchScreen({navigation,route}: any) {
         <View style={styles.headerBarRightView} />
       </View>
       <View style={styles.bodyView}>
-        <View style={styles.searchInputView}>
-          <View style={styles.textInputView}>
-            <TextInput
-              style={styles.textInput}
-              placeholder="식물 이름을 검색해 주세요"
-              onChangeText={setInput}
-              value={searchInput}
+        <View style={styles.textInputView}>
+          <AutocompleteDropdown
+            containerStyle={styles.textInput}
+            inputContainerStyle={styles.textInput2}
+            rightButtonsContainerStyle={styles.searchImageView}
+            suggestionsListTextStyle={styles.textlist}
+            showClear={false}
+            clearOnFocus={false}
+            emptyResultText={"검색된 정보가 없습니다"}
+            // ChevronIconComponent={<Image source={require('../assets/Search.png')}></Image>}
+            dataSet={plant}
+            onSelectItem={async(item:any) => {
+              test(item?.title)
+            }} 
             />
-          </View>
-          <View style={styles.searchImageView}>
-            <TouchableOpacity onPress={test}>
-              <Image source={require('../assets/Search.png')} />
-            </TouchableOpacity>
-          </View>
         </View>
         <FlatList
           data={searchData}
@@ -229,16 +249,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  textInput: {
-    padding: 10,
-    width: '90%',
-    height: 42,
-    borderRadius: 6,
-    fontSize: 16,
-    color: '#000000',
-    fontWeight: '400',
-    backgroundColor: '#F4F4F4',
-  },
   searchImageView: {
     position: 'absolute',
     left: '85%',
@@ -297,7 +307,32 @@ const styles = StyleSheet.create({
   imagebox: {
     height: 72,
     width: 72,
-  }
+  },
+  textlist:{
+    fontFamily:'NotoSansKR-Regular', 
+    includeFontPadding:false,
+    color:'#000000',
+    fontSize:14,
+  },
+  textInput2: {
+    width: '100%',
+    height: 40,
+    borderBottomWidth: 1,
+    borderBottomColor: '#8E8E93',
+    fontSize: 16,
+    color: '#000000',
+    fontWeight: '400',
+    backgroundColor:"#FFFFFF"
+  },
+  textInput: {
+    width: '90%',
+    height: 40,
+    borderBottomWidth: 1,
+    borderBottomColor: '#8E8E93',
+    fontSize: 16,
+    color: '#000000',
+    fontWeight: '400',
+  },
 });
 
 export default SearchScreen;
