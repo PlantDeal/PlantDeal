@@ -15,6 +15,12 @@ import CompleteRegistScreen from '../screens/CompleteRegist';
 import LocationScreen from '../screens/Location';
 import RegistSellScreen from '../screens/RegistSell';
 import SearchLocationScreen from '../screens/SearchLocation';
+import SetLocationScreen from '../screens/SetLocation';
+import DetailScreen from '../screens/Detail';
+import UpdateProfileScreen from '../screens/UpdateProfile';
+import SellListScreen from '../screens/SelllList';
+import AttentionScreen from '../screens/Attention';
+import AverageScreen from '../screens/Average';
 
 const LoginStack = createNativeStackNavigator();
 const HomeStack = createNativeStackNavigator();
@@ -33,7 +39,8 @@ function NavLogin({navigation}: any) {
       <LoginStack.Screen
         name="RegistScreen"
         component={RegistScreen}
-        options={{headerShown: false}}/>
+        options={{headerShown: false}}
+      />
       <LoginStack.Screen
         name="RegistInfoScreen"
         component={RegistInfoScreen}
@@ -42,7 +49,13 @@ function NavLogin({navigation}: any) {
       <LoginStack.Screen
         name="CompleteRegistScreen"
         component={CompleteRegistScreen}
-        options={{headerShown: false}}/>
+        options={{headerShown: false}}
+      />
+      <LoginStack.Screen
+        name="SetLocationScreen"
+        component={SetLocationScreen}
+        options={{headerShown: false}}
+      />
     </LoginStack.Navigator>
   );
 }
@@ -82,6 +95,16 @@ function NavHome({navigation}: any) {
       <HomeStack.Screen
         name="지역 검색하기"
         component={SearchLocationScreen}
+        options={{headerShown: false}}
+      />
+      <HomeStack.Screen
+        name="DetailScreen"
+        component={DetailScreen}
+        options={{headerShown: false}}
+      />
+      <HomeStack.Screen
+        name="AverageScreen"
+        component={AverageScreen}
         options={{headerShown: false}}
       />
     </HomeStack.Navigator>
@@ -130,7 +153,7 @@ function NavChatting() {
   );
 }
 
-function NavProfile({navigation, route}: any) {
+function NavProfile({navigation}: any) {
   return (
     <ProfileStack.Navigator
       screenOptions={{
@@ -143,6 +166,32 @@ function NavProfile({navigation, route}: any) {
         options={{
           headerShown: false,
         }}
+      />
+      <ProfileStack.Screen
+        name="UpdateProfileScreen"
+        component={UpdateProfileScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <ProfileStack.Screen
+        name="SellListScreen"
+        component={SellListScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <ProfileStack.Screen
+        name="AttentionScreen"
+        component={AttentionScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <HomeStack.Screen
+        name="DetailScreen"
+        component={DetailScreen}
+        options={{headerShown: false}}
       />
     </ProfileStack.Navigator>
   );

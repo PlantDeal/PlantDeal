@@ -1,8 +1,39 @@
-import React from 'react';
-import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
+import React,{useState,useEffect} from 'react';
+import {Image, Pressable, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import firestore from '@react-native-firebase/firestore';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-function LocationScreen({navigation}: any) {
+function LocationScreen({navigation,route}: any) {
+  const Town=["강남구","강동구","강북구","강서구","관악구","광진구","구로구","금천구","노원구","도봉구","동대문구","동작구","마포구","서대문구","서초구","성동구","성북구","송파구","양천구","영등포구","용산구","은평구","종로구","중구","중랑구"]
+  const [Data,setData] = useState<any>([{id:"0" , title:"서울시" }]);
+  let idNum = 1;
+  const [location,setLocation] = useState<any>('');
+
+
+  const {city, town, village} = route.params;
+
+  useEffect(()=>{
+    Town.map((data:any) => {
+      firestore()
+      .collection('location_서울')
+      .doc(data)
+      .get()
+      .then(documentSnapshot => {
+        const village:string[] = documentSnapshot.get('village')
+        village.map((loc:string)=>{
+          setData((Data:any) => {return [...Data, {id:String(idNum),title:"서울시 " + data + " " + loc}]})
+          idNum  += 1;
+        })
+      });
+    })
+  },[])
+  
+  
+
+
+
+
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#FFFFFF'}}>
       <View style={styles.headerBarView}>
@@ -18,11 +49,11 @@ function LocationScreen({navigation}: any) {
       </View>
       <View style={styles.bodyView}>
         <Pressable style={styles.locationBox}>
-          <Text style={styles.locationText}>수영구</Text>
+          <Text style={styles.locationText}>{town}구 {village}동</Text>
         </Pressable>
         <Pressable
           style={styles.addBtn}
-          onPress={() => navigation.navigate('지역 검색하기')}>
+          onPress={() => navigation.navigate('지역 검색하기',{location:Data})}>
           <Text style={styles.addBtnText}>+</Text>
         </Pressable>
         <View>

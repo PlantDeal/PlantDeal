@@ -1,100 +1,139 @@
-import React from 'react';
-import {View, Text, StyleSheet, Image, FlatList, Pressable} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import React, {useEffect, useRef, useState} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  FlatList,
+  Pressable,
+  Platform,
+} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import BottomTab from '../components/BottomTab';
-
-const DATA = [
-  {
-    id: '1',
-    name: '김현우',
-    post: '안녕하세요. 구매 문의 드립니다.',
-  },
-  {
-    id: '2',
-    name: '최지인',
-    post: '네!',
-  },
-  {
-    id: '3',
-    name: '김걸휘',
-    post: '궁금해서 연락드립니다.',
-  },
-  {
-    id: '4',
-    name: '김현우',
-    post: '안녕하세요. 구매 문의 드립니다.',
-  },
-  {
-    id: '5',
-    name: '최지인',
-    post: '네!',
-  },
-  {
-    id: '6',
-    name: '김걸휘',
-    post: '궁금해서 연락드립니다.',
-  },
-  {
-    id: '7',
-    name: '김현우',
-    post: '안녕하세요. 구매 문의 드립니다.',
-  },
-  {
-    id: '8',
-    name: '최지인',
-    post: '네!',
-  },
-  {
-    id: '9',
-    name: '김걸휘',
-    post: '궁금해서 연락드립니다.',
-  },
-  {
-    id: '10',
-    name: '김현우',
-    post: '안녕하세요. 구매 문의 드립니다.',
-  },
-  {
-    id: '11',
-    name: '최지인',
-    post: '네!',
-  },
-  {
-    id: '12',
-    name: '김걸휘',
-    post: '궁금해서 연락드립니다.',
-  },
-];
-
-function Item({name, post, navigation}: any) {
-  return (
-    <Pressable
-      style={styles.item}
-      onPress={() => navigation.navigate('ChattingScreen', {name: {name}})}>
-      <View style={{flex: 1}}>
-        <Image source={require('../assets/TempProfileImage.png')} />
-      </View>
-      <View style={{flex: 4, justifyContent: 'space-between'}}>
-        <Text style={styles.name}>{name}</Text>
-        <Text style={styles.post}>{post}</Text>
-      </View>
-      <View style={{flex: 1, justifyContent: 'space-between'}}>
-        <View>
-          <Text style={styles.time}>오후 12:21</Text>
-        </View>
-        <View style={{alignItems: 'center'}}>
-          <Image source={require('../assets/ChattingAlarm.png')} />
-        </View>
-      </View>
-    </Pressable>
-  );
-}
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {firebase} from '@react-native-firebase/analytics';
+import defaultIcon from 'react-native-paper/lib/typescript/components/MaterialCommunityIcon';
 
 function ChattingListScreen({navigation}: any) {
+  const [userEmail, setEmail] = useState('');
+  const [userNickname, setUserNickname] = useState('');
+  const [chattingList, setChattingList] = useState<any>([]);
+  const [chattingListLoad, setChattingListLoad] = useState(false);
+
+  function Item({
+    owner1,
+    owner2,
+    owner2Email,
+    recentMessage,
+    updatedAt,
+    navigation,
+  }: any) {
+    const receiver = userNickname == owner1 ? owner2 : owner1;
+    return (
+      <Pressable
+        style={styles.item}
+        onPress={() =>
+          navigation.navigate('ChattingScreen', {
+            receiver: receiver,
+            receiverEmail: owner2Email,
+          })
+        }>
+        <View style={{width: 55}}>
+          <Image source={require('../assets/TempProfileImage.png')} />
+        </View>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'space-between',
+          }}>
+          <Text style={styles.name}>{receiver}</Text>
+          <Text style={styles.post}>{recentMessage}</Text>
+        </View>
+        <View
+          style={{
+            width: 90,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <View>
+            <Text style={styles.time}></Text>
+            <View style={{justifyContent: 'center', alignItems: 'center'}}>
+              <Text>" "</Text>
+            </View>
+          </View>
+          <View style={{alignItems: 'center'}}></View>
+        </View>
+      </Pressable>
+    );
+  }
+
+  const getUserInfo = async () => {
+    try {
+      const email = (await AsyncStorage.getItem('id')) || 'empty email';
+      const nickname =
+        (await AsyncStorage.getItem('nickname')) || 'empty nickname';
+      setEmail(email);
+      setUserNickname(nickname);
+      if (email !== null && nickname) {
+        console.log('1. userEmail:', email);
+        console.log('2. userNickname:', nickname);
+      }
+    } catch (e) {
+      console.log('ERROR: get user info');
+    }
+  };
+
+  useEffect(() => {
+    getUserInfo();
+  }, []);
+
+  const getChattingList = async () => {
+    try {
+      const db = firebase.firestore();
+      const chattingRef = db
+        .collection('user')
+        .doc(userEmail)
+        .collection('chattingList')
+        .orderBy('updatedAt', 'desc');
+      chattingRef.onSnapshot(data => {
+        if (data.empty) {
+          setChattingListLoad(true);
+        } else {
+          let chattingListData = data.docs.map(doc => ({
+            owner1: doc.data().owner1,
+            owner2: doc.data().owner2,
+            owner2Email: doc.data().owner2Email,
+            recentMessage: doc.data().recentMessage,
+          }));
+          console.log(chattingListData[0]);
+          setChattingList(chattingListData);
+        }
+      });
+    } catch {
+      console.log('ERROR: getChattingList');
+    }
+  };
+
+  const mounted = useRef(false);
+
+  useEffect(() => {
+    if (!mounted.current) {
+      mounted.current = true;
+    } else {
+      getChattingList();
+    }
+  }, [userEmail]);
+
   const renderItem = ({item}: any) => (
-    <Item name={item.name} post={item.post} navigation={navigation} />
+    <Item
+      owner1={item.owner1}
+      owner2={item.owner2}
+      recentMessage={item.recentMessage}
+      navigation={navigation}
+      owner2Email={item.owner2Email}
+    />
   );
+
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <View style={styles.headerBar}>
@@ -108,7 +147,7 @@ function ChattingListScreen({navigation}: any) {
       </View>
       <View style={styles.bodyView}>
         <FlatList
-          data={DATA}
+          data={chattingList}
           showsVerticalScrollIndicator={false}
           renderItem={renderItem}
         />
@@ -126,6 +165,7 @@ const styles = StyleSheet.create({
   time: {
     fontSize: 10,
     color: '#C6C6C6',
+    marginBottom: 3,
   },
   item: {
     flexDirection: 'row',
@@ -159,7 +199,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
   headerBar: {
-    flex: 1,
+    height: Platform.OS == 'android' ? 60 : 45,
     flexDirection: 'row',
     width: '100%',
     borderBottomColor: '#F4F4F4',

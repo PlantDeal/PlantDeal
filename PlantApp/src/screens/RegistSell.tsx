@@ -1,14 +1,18 @@
-import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, ScrollView, Image, TextInput,Platform} from 'react-native';
+import React, {useEffect, useReducer, useState} from 'react';
+import {View, Text, StyleSheet, TouchableOpacity, ScrollView, Image, TextInput,Platform, Alert} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import BottomTab from '../components/BottomTab';
 import SelectDropdown from 'react-native-select-dropdown';
 import {Asset, launchImageLibrary} from 'react-native-image-picker';
 import storage from '@react-native-firebase/storage';
 import { utils } from '@react-native-firebase/app';
+import firestore from '@react-native-firebase/firestore'
+import { firebase } from '@react-native-firebase/firestore';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { CommonActions } from '@react-navigation/native';
 
 
-function RegistSellScreen({navigation}: any) {
+function RegistSellScreen({navigation,route}: any) {
   const [name,onChangeName] = useState('')
   const [underlinecolorname,setunderlineColorName] = useState('#8E8E93')
   const categories = ["공기정화식물", "다육식물", "허브식물", "선인장", "희귀식물", "기타"]
@@ -20,7 +24,7 @@ function RegistSellScreen({navigation}: any) {
   const [ass,setAss] = useState<any>([])
   const [reference,setReference] = useState<any>([])
   const [isShow,setIsShow] = useState(true)
-  const emptyImage = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15']
+  const emptyImage = ['1','2','3','4','5','6','7','8','9','10']
   const waterings = ['1일','3일','5일','1주','2주','3주','1개월']
   const [watering,setWatering] = useState('');
   const [wateringcolor,setWateringColor] = useState('#F4F4F4')
@@ -41,6 +45,9 @@ function RegistSellScreen({navigation}: any) {
   const [pricecolor,setPriceColor] = useState('#8E8E93')
   const [registcolor,setRegistColor] = useState('#BDE3CE')
   const [Asset,setAsset] = useState<any>([])
+  const [down,setDown] = useState<any>([])
+  const token:any = firebase.auth().currentUser;
+  const {City, Town, Village} = route.params;
 
   useEffect(()=>{
     if(name === ''){
@@ -87,7 +94,7 @@ function RegistSellScreen({navigation}: any) {
       maxWidth:60,
       maxHeight:60,
       includeBase64: Platform.OS === 'android',
-      selectionLimit: 15
+      selectionLimit: 10
       },// 여기까지 option
       (res) => {
 	      if(res.didCancel) {
@@ -95,9 +102,8 @@ function RegistSellScreen({navigation}: any) {
 	      }
 	      if(res.assets){
 	        res.assets.map(data => {
-          setAsset((Asset:any) => {return [...Asset,data]})
-          setAss((ass:any) => {return [...ass,data?.uri]})
-          setReference((reference:any) => {return [...reference,data?.fileName]})
+            setAsset((Asset:any) => {return [...Asset,data]})
+            setAss((ass:any) => {return [...ass,data?.uri]})
           });
           setIsShow(false)
 	      }
@@ -143,9 +149,12 @@ function RegistSellScreen({navigation}: any) {
     setSunlightGoodBorder('#16D66F')
     setSunlightGoodText('#FFFFFF')
   }
-  const upload = () =>{
-    Asset.map(async (data:any) => {
+  const upload = async() =>{
+    await Asset.map(async (data:any) => {
       const refer = storage().ref(`${data.fileName}`)
+      setReference((reference: any) => {
+        return [...reference, refer];
+      })
       if (Platform.OS === "android"){
         await refer.putString(data.base64,'base64',{
           contentType: data.type
@@ -159,7 +168,79 @@ function RegistSellScreen({navigation}: any) {
         console.log('upload')
       }
     })
+  }
 
+  useEffect(()=> {
+    setTimeout(()=> {
+      download();
+    },5000)
+  },[reference])
+
+  function download(){
+    reference.map(async (data:any, idx:Number)=> {
+      const url = await data?.getDownloadURL()
+      setDown((down:any) => {return [...down,url]})
+    })
+  }
+
+  useEffect(()=> {
+    if(reference.length !== 0 && reference.length === down.length){
+      regist()
+    }
+  },[down])
+
+  async function regist(){
+    var date = new Date().toISOString().substring(0,19);
+    var docname = date + token?.email
+    await firestore()
+    .collection('user')
+    .doc(token?.email)
+    .collection('판매내역')
+    .doc(docname)
+    .set({
+      name : name,
+      Category : Category,
+      title : title,
+      explane : explanation,
+      image : down,
+      watering: watering,
+      amount : amount,
+      sunlight: sunlight,
+      price: price,
+      time : date,
+      city : City,
+      town: Town,
+      village : Village
+    })
+    .then(async(data) => {
+      firestore()
+      .collection('sell')
+      .doc(City)
+      .collection(Town)
+      .doc(Village)
+      .collection('판매물품')
+      .doc(docname)
+      .set({
+        name : name,
+        Category : Category,
+        title : title,
+        explane : explanation,
+        image : down,
+        watering: watering,
+        amount : amount,
+        sunlight: sunlight,
+        price: price,
+        user: await AsyncStorage.getItem('id'),
+        time : date,
+        city : City,
+        town: Town,
+        village : Village
+      })
+      .then(() => {
+        navigation.dispatch(CommonActions.reset({routes:[{name:'HomeScreen'}]}))
+      })
+    })
+    
   }
 
   
@@ -445,6 +526,10 @@ function RegistSellScreen({navigation}: any) {
       </View>
       <View style = {{flex:1, justifyContent:'center'}}>
         <TouchableOpacity 
+          disabled={
+            underlinecolorname === '#16D66F' && underlinecolortitle === '#16D66F' 
+    && wateringcolor === '#16D66F' && amountcolor !== '#16d66F' && sunlight !== '' && pricecolor === '#16D66F' ? false : true
+          }
           style={{height: 48,
           width: 335,
           justifyContent: 'center',
@@ -455,7 +540,7 @@ function RegistSellScreen({navigation}: any) {
           <Text style={{color: 'white', fontSize:16, fontFamily:'NotoSansKR-Bold'}}>등록하기</Text>
         </TouchableOpacity>
       </View>
-      <BottomTab style={{flex: 1}} navigation={navigation}/>
+      
 
     </SafeAreaView>
     

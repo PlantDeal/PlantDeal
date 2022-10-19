@@ -26,7 +26,7 @@ export default function BottomTab({navigation}: any) {
         <View>
           <Image
             style={styles.iconImage}
-            source={require('../assets/Auction.png')}
+            source={require('../assets/Community.png')}
           />
         </View>
       </TouchableOpacity>
@@ -71,4 +71,3 @@ const styles = StyleSheet.create({
   tab: {},
   iconImage: {},
 });
-
