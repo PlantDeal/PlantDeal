@@ -191,7 +191,7 @@ function RegistSellScreen({navigation,route}: any) {
 
   async function regist(){
     var date = new Date().toISOString().substring(0,19);
-    var docname = token?.email + date
+    var docname = date + token?.email
     await firestore()
     .collection('user')
     .doc(token?.email)
@@ -218,7 +218,7 @@ function RegistSellScreen({navigation,route}: any) {
       .doc(City)
       .collection(Town)
       .doc(Village)
-      .collection(Category)
+      .collection('판매물품')
       .doc(docname)
       .set({
         name : name,

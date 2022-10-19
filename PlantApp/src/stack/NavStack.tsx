@@ -20,6 +20,7 @@ import DetailScreen from '../screens/Detail';
 import UpdateProfileScreen from '../screens/UpdateProfile';
 import SellListScreen from '../screens/SelllList';
 import AttentionScreen from '../screens/Attention';
+import AverageScreen from '../screens/Average';
 
 const LoginStack = createNativeStackNavigator();
 const HomeStack = createNativeStackNavigator();
@@ -99,6 +100,11 @@ function NavHome({navigation}: any) {
       <HomeStack.Screen
         name="DetailScreen"
         component={DetailScreen}
+        options={{headerShown: false}}
+      />
+      <HomeStack.Screen
+        name="AverageScreen"
+        component={AverageScreen}
         options={{headerShown: false}}
       />
     </HomeStack.Navigator>

@@ -20,9 +20,7 @@ function HomeScreen({navigation}: any) {
     '공기정화식물',
     '다육식물',
     '허브식물',
-    '선인장',
-    '희귀식물',
-    '기타',
+    '기타'
   ];
   const [City, setCity] = useState('');
   const [Town, setTown] = useState('');
@@ -54,8 +52,10 @@ function HomeScreen({navigation}: any) {
       .doc(City)
       .collection(Town)
       .doc(Village)
-      .collection(Category)
-      .onSnapshot(async querySnapshot => {
+      .collection('판매물품')
+      .where('Category','==',Category)
+      .get()
+      .then(async querySnapshot => {
         const data: {key: string}[] = [];
         querySnapshot.forEach(documentSnapshot => {
           data.push({
@@ -176,6 +176,7 @@ function HomeScreen({navigation}: any) {
                     category: Category,
                     town: Town,
                     village: Village,
+                    city: City,
                     user: item.user,
                     time: item.time,
                     key: item.key,
@@ -203,7 +204,7 @@ function HomeScreen({navigation}: any) {
                         color: '#000000',
                         marginBottom: 2,
                       }}>
-                      {item.name}
+                      {item.title}
                     </Text>
                     <Text
                       style={{

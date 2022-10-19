@@ -146,7 +146,7 @@ function SellListScreen({navigation}: any) {
                         color: '#000000',
                         marginBottom: 2,
                       }}>
-                      {item.name}
+                      {item.title}
                     </Text>
                     <Text
                       style={{
