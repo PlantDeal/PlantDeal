@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import {
   View,
   Text,
@@ -20,13 +20,14 @@ function ChattingListScreen({navigation}: any) {
   const [chattingList, setChattingList] = useState<any>([]);
   const [chattingListLoad, setChattingListLoad] = useState(false);
 
-  function Item({
+  const Item = React.memo(function Item({
     owner1,
     owner2,
     owner2Email,
     recentMessage,
     updatedAt,
     navigation,
+    readCheck,
   }: any) {
     const receiver = userNickname == owner1 ? owner2 : owner1;
     const hours = updatedAt.split(' ')[4].split(':')[0];
@@ -47,32 +48,51 @@ function ChattingListScreen({navigation}: any) {
           style={{
             flex: 1,
             justifyContent: 'space-between',
+            backgroundColor: 'transparent',
+            height: 42,
           }}>
-          <Text style={styles.name}>{receiver}</Text>
-          <Text style={styles.post}>{recentMessage}</Text>
+          <View style={{height: 18}}>
+            <Text style={styles.name}>{receiver}</Text>
+          </View>
+          <View style={{height: 18, marginTop: 6}}>
+            <Text style={styles.post}>{recentMessage}</Text>
+          </View>
         </View>
         <View
           style={{
-            width: 90,
-            height: '100%',
+            width: 60,
             alignItems: 'center',
+            backgroundColor: 'transparent',
           }}>
-          <View>
+          <View
+            style={{
+              justifyContent: 'center',
+              alignItems: 'flex-end',
+              width: '100%',
+            }}>
             <Text style={styles.time}>{hours + ':' + minutes}</Text>
+          </View>
+          <View
+            style={{
+              width: '100%',
+              justifyContent: 'center',
+              alignItems: 'flex-end',
+              height: 20,
+              backgroundColor: 'transparent',
+            }}>
             <View
               style={{
-                justifyContent: 'center',
-                alignItems: 'center',
-                height: 20,
-              }}>
-              <Text>" "</Text>
-            </View>
+                backgroundColor: readCheck == true ? 'transparent' : '#16D66F',
+                width: 15,
+                height: 15,
+                borderRadius: 20,
+              }}></View>
           </View>
           <View style={{alignItems: 'center'}}></View>
         </View>
       </Pressable>
     );
-  }
+  });
 
   const getUserInfo = async () => {
     try {
@@ -90,7 +110,7 @@ function ChattingListScreen({navigation}: any) {
     }
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     getUserInfo();
   }, []);
 
@@ -102,7 +122,7 @@ function ChattingListScreen({navigation}: any) {
         .doc(userEmail)
         .collection('chattingList')
         .orderBy('updatedAt', 'desc');
-      chattingRef.onSnapshot(data => {
+      chattingRef.onSnapshot({includeMetadataChanges: false}, data => {
         if (data.empty) {
           setChattingListLoad(true);
         } else {
@@ -112,9 +132,11 @@ function ChattingListScreen({navigation}: any) {
               owner2: doc.data().owner2,
               owner2Email: doc.data().owner2Email,
               recentMessage: doc.data().recentMessage,
+              readCheck: doc.data().readCheck,
               updatedAt: doc.data().updatedAt.toDate().toString(),
             }));
             setChattingList(chattingListData);
+            console.log(chattingList[0]);
           } else {
             let chattingListData = data.docs.map(doc => ({
               owner1: doc.data().owner1,
@@ -122,7 +144,9 @@ function ChattingListScreen({navigation}: any) {
               owner2Email: doc.data().owner2Email,
               recentMessage: doc.data().recentMessage,
               updatedAt: new Date().toString(),
+              readCheck: false,
             }));
+            setChattingList(chattingListData);
           }
         }
       });
@@ -133,7 +157,7 @@ function ChattingListScreen({navigation}: any) {
 
   const mounted = useRef(false);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!mounted.current) {
       mounted.current = true;
     } else {
@@ -149,6 +173,7 @@ function ChattingListScreen({navigation}: any) {
       navigation={navigation}
       owner2Email={item.owner2Email}
       updatedAt={item.updatedAt}
+      readCheck={item.readCheck}
     />
   );
 
@@ -181,7 +206,7 @@ const styles = StyleSheet.create({
     color: '#8E8E93',
   },
   time: {
-    fontSize: 10,
+    fontSize: 12,
     color: '#C6C6C6',
     marginBottom: 0,
     paddingBottom: 0,
@@ -191,13 +216,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#FFFFFF',
     marginHorizontal: 20,
-    paddingVertical: 15,
     height: 72,
+    alignItems: 'center',
   },
   name: {
     fontSize: 14,
     color: '#000000',
     fontWeight: '400',
+    paddingTop: 2,
   },
   headerBarTitleText: {
     fontSize: 16,

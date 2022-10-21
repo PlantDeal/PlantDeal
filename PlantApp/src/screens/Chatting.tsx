@@ -113,7 +113,7 @@ function ChattingTest({route, navigation}: any) {
           .doc(userEmail)
           .collection('chattingList')
           .doc(receiverEmail)
-          .set({}, {merge: true});
+          .set({readCheck: true}, {merge: true});
         setMessages(messagesData);
       }
     });
@@ -150,10 +150,10 @@ function ChattingTest({route, navigation}: any) {
   };
 
   const sendInput = async () => {
-    // 총 4번의 doc을 생성하거나 업데이트함. log 4개가 떠야 정상
     let inputText = input.trim();
     const date = firebase.firestore.FieldValue.serverTimestamp();
 
+    // 메시지를 쓰는 사람의 채팅 리스트를 업데이트한다.
     db.collection('user')
       .doc(userEmail)
       .collection('chattingList')
@@ -168,6 +168,7 @@ function ChattingTest({route, navigation}: any) {
         {merge: true},
       );
 
+    // 메시지를 받는 사람의 채팅 리스트를 업데이트한다.
     db.collection('user')
       .doc(receiverEmail)
       .collection('chattingList')
@@ -178,6 +179,7 @@ function ChattingTest({route, navigation}: any) {
           updatedAt: date,
           owner1: receiver,
           owner2: userNickname,
+          readCheck: false,
         },
         {merge: true},
       );
@@ -215,6 +217,16 @@ function ChattingTest({route, navigation}: any) {
   const switchPlustBtn = () => {
     setShowPlusTab(e => !e);
     console.log('hi');
+  };
+
+  const exitChatting = () => {
+    db.collection('user')
+      .doc(userEmail)
+      .collection('chattingList')
+      .doc(receiverEmail)
+      .delete();
+    navigation.goBack();
+    switchViewMore();
   };
 
   const PlusTabView = () => {
@@ -295,21 +307,23 @@ function ChattingTest({route, navigation}: any) {
               }}>
               <Text style={{color: '#000000', fontSize: 16}}>차단 하기</Text>
             </TouchableOpacity>
-            <TouchableOpacity
+            <Pressable
               style={{
                 backgroundColor: '#FFFFFF',
                 width: 335,
                 height: 50,
                 justifyContent: 'center',
                 alignItems: 'center',
+                borderBottomLeftRadius: 10,
+                borderBottomRightRadius: 10,
               }}
               onPress={() => {
-                switchViewMore();
+                exitChatting();
               }}>
               <Text style={{color: '#DA1E28', fontSize: 16}}>
                 채팅방 나가기
               </Text>
-            </TouchableOpacity>
+            </Pressable>
             <TouchableOpacity
               style={{
                 backgroundColor: '#16D66F',
