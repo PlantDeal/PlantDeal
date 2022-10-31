@@ -25,7 +25,6 @@ function ChattingTest({route, navigation}: any) {
   const [disableSendBtn, setDisableSendBtn] = useState(true);
   const [messageLoadCheck, setMessageLoadCheck] = useState(true);
   const [showPLusTab, setShowPlusTab] = useState(false);
-
   const {receiver, receiverEmail} = route.params;
 
   const db = firebase.firestore();
@@ -82,6 +81,8 @@ function ChattingTest({route, navigation}: any) {
       if (email !== null && nickname) {
         console.log('✅ Get user email :', email);
         console.log('✅ Get user nickName:', nickname);
+        console.log('✅ Get user receiver:', receiver);
+        console.log('✅ Get user receiverEmail:', receiverEmail);
         console.log('🚀 Ready to send message');
       }
     } catch (e) {
@@ -164,6 +165,7 @@ function ChattingTest({route, navigation}: any) {
           updatedAt: date,
           owner1: receiver,
           owner2: userNickname,
+          owner2Email: receiverEmail,
         },
         {merge: true},
       );
@@ -178,6 +180,7 @@ function ChattingTest({route, navigation}: any) {
           updatedAt: date,
           owner1: receiver,
           owner2: userNickname,
+          owner2Email: userEmail,
         },
         {merge: true},
       );
@@ -188,7 +191,8 @@ function ChattingTest({route, navigation}: any) {
     };
 
     setInput('');
-
+    console.log(userEmail);
+    console.log(receiverEmail);
     db.collection('user')
       .doc(userEmail)
       .collection('chattingList')
@@ -214,7 +218,6 @@ function ChattingTest({route, navigation}: any) {
 
   const switchPlustBtn = () => {
     setShowPlusTab(e => !e);
-    console.log('hi');
   };
 
   const PlusTabView = () => {
