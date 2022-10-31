@@ -12,7 +12,6 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import BottomTab from '../components/BottomTab';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {firebase} from '@react-native-firebase/analytics';
-import defaultIcon from 'react-native-paper/lib/typescript/components/MaterialCommunityIcon';
 
 function ChattingListScreen({navigation}: any) {
   const [userEmail, setEmail] = useState('');
