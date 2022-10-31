@@ -1,30 +1,30 @@
-import React,{useState,useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import auth from '@react-native-firebase/auth';
 import {
   NavHome,
-  NavAuction,
+  NavCommunity,
   NavChatting,
   NavProfile,
-  NavLogin
+  NavLogin,
 } from './src/stack/NavStack';
-import RNBootSplash from "react-native-bootsplash";
-import { LogBox } from 'react-native';
+import RNBootSplash from 'react-native-bootsplash';
+import {LogBox} from 'react-native';
 
 const Stack = createNativeStackNavigator();
 
-LogBox.ignoreLogs(['Did not receive response to shouldStartLoad in time, defaulting to YES']);
+LogBox.ignoreLogs([
+  'Did not receive response to shouldStartLoad in time, defaulting to YES',
+]);
 
 export default function App() {
-  
-
   const [initializing, setInitializing] = useState(true);
-  const [user,setUser] = useState('');
+  const [user, setUser] = useState('');
 
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    return subscriber; 
+    return subscriber;
   });
 
   function onAuthStateChanged(user: any) {
@@ -49,8 +49,8 @@ export default function App() {
         />
         <Stack.Screen
           options={{headerShown: false}}
-          name="NavAuction"
-          component={NavAuction}
+          name="NavCommunity"
+          component={NavCommunity}
         />
         <Stack.Screen
           options={{headerShown: false}}
