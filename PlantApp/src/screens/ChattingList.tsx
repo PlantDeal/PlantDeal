@@ -12,6 +12,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import BottomTab from '../components/BottomTab';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {firebase} from '@react-native-firebase/analytics';
+import {useIsFocused} from '@react-navigation/native';
 
 function ChattingListScreen({navigation}: any) {
   const [userEmail, setEmail] = useState('');
@@ -28,6 +29,8 @@ function ChattingListScreen({navigation}: any) {
     navigation,
   }: any) {
     const receiver = userNickname == owner1 ? owner2 : owner1;
+    const hours = updatedAt.split(' ')[4].split(':')[0];
+    const minutes = updatedAt.split(' ')[4].split(':')[1];
     return (
       <Pressable
         style={styles.item}
@@ -51,12 +54,17 @@ function ChattingListScreen({navigation}: any) {
         <View
           style={{
             width: 90,
-            justifyContent: 'center',
+            height: '100%',
             alignItems: 'center',
           }}>
           <View>
-            <Text style={styles.time}></Text>
-            <View style={{justifyContent: 'center', alignItems: 'center'}}>
+            <Text style={styles.time}>{hours + ':' + minutes}</Text>
+            <View
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: 20,
+              }}>
               <Text>" "</Text>
             </View>
           </View>
@@ -98,14 +106,24 @@ function ChattingListScreen({navigation}: any) {
         if (data.empty) {
           setChattingListLoad(true);
         } else {
-          let chattingListData = data.docs.map(doc => ({
-            owner1: doc.data().owner1,
-            owner2: doc.data().owner2,
-            owner2Email: doc.data().owner2Email,
-            recentMessage: doc.data().recentMessage,
-          }));
-          console.log(chattingListData[0]);
-          setChattingList(chattingListData);
+          if (data.docs[0].metadata.hasPendingWrites == false) {
+            let chattingListData = data.docs.map(doc => ({
+              owner1: doc.data().owner1,
+              owner2: doc.data().owner2,
+              owner2Email: doc.data().owner2Email,
+              recentMessage: doc.data().recentMessage,
+              updatedAt: doc.data().updatedAt.toDate().toString(),
+            }));
+            setChattingList(chattingListData);
+          } else {
+            let chattingListData = data.docs.map(doc => ({
+              owner1: doc.data().owner1,
+              owner2: doc.data().owner2,
+              owner2Email: doc.data().owner2Email,
+              recentMessage: doc.data().recentMessage,
+              updatedAt: new Date().toString(),
+            }));
+          }
         }
       });
     } catch {
@@ -121,7 +139,7 @@ function ChattingListScreen({navigation}: any) {
     } else {
       getChattingList();
     }
-  }, [userEmail]);
+  }, [userEmail, useIsFocused()]);
 
   const renderItem = ({item}: any) => (
     <Item
@@ -130,6 +148,7 @@ function ChattingListScreen({navigation}: any) {
       recentMessage={item.recentMessage}
       navigation={navigation}
       owner2Email={item.owner2Email}
+      updatedAt={item.updatedAt}
     />
   );
 
@@ -164,7 +183,9 @@ const styles = StyleSheet.create({
   time: {
     fontSize: 10,
     color: '#C6C6C6',
-    marginBottom: 3,
+    marginBottom: 0,
+    paddingBottom: 0,
+    height: 18,
   },
   item: {
     flexDirection: 'row',
