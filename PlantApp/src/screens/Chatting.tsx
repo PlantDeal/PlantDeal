@@ -114,7 +114,7 @@ function ChattingTest({route, navigation}: any) {
           .doc(userEmail)
           .collection('chattingList')
           .doc(receiverEmail)
-          .set({}, {merge: true});
+          .set({readCheck: true}, {merge: true});
         setMessages(messagesData);
       }
     });
@@ -181,6 +181,7 @@ function ChattingTest({route, navigation}: any) {
           owner1: receiver,
           owner2: userNickname,
           owner2Email: userEmail,
+          readCheck: false,
         },
         {merge: true},
       );
