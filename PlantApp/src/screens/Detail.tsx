@@ -393,7 +393,14 @@ function DetailScreen({navigation, route}: any) {
       </View>
       <View style={{flex: 1, justifyContent: 'center'}}>
         <TouchableOpacity
-          onPress={() => navigation.navigate('NavChatting')}
+          onPress={() =>
+            navigation.navigate('NavChatting', {
+              screen: 'ChattingScreen',
+              params: {
+                receiverEmail: user,
+              },
+            })
+          }
           style={{
             height: 48,
             width: 335,

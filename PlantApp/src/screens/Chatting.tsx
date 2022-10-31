@@ -25,7 +25,8 @@ function ChattingTest({route, navigation}: any) {
   const [disableSendBtn, setDisableSendBtn] = useState(true);
   const [messageLoadCheck, setMessageLoadCheck] = useState(true);
   const [showPLusTab, setShowPlusTab] = useState(false);
-  const {receiver, receiverEmail} = route.params;
+  const {receiverEmail} = route.params;
+  const [receiver, setReceiver] = useState('');
 
   const db = firebase.firestore();
   const date = new Date();
@@ -78,6 +79,14 @@ function ChattingTest({route, navigation}: any) {
         (await AsyncStorage.getItem('nickname')) || 'empty nickname';
       setEmail(email);
       setUserNickname(nickname);
+      const receiverDB = (
+        await db.collection('user').doc(receiverEmail).get()
+      ).data();
+      if (receiverDB) {
+        setReceiver(receiverDB.nickname || '');
+      } else {
+        console.log('No receiver Data');
+      }
       if (email !== null && nickname) {
         console.log('✅ Get user email :', email);
         console.log('✅ Get user nickName:', nickname);
