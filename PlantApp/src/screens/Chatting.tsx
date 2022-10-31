@@ -305,6 +305,8 @@ function ChattingTest({route, navigation}: any) {
                 height: 50,
                 justifyContent: 'center',
                 alignItems: 'center',
+                borderBottomLeftRadius: 10,
+                borderBottomRightRadius: 10,
               }}
               onPress={() => {
                 switchViewMore();
