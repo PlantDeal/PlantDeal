@@ -10,7 +10,6 @@ import {
   View,
   Platform,
   TextInput,
-  TouchableOpacity,
   KeyboardAvoidingView,
   FlatList,
   Modal,
@@ -25,8 +24,8 @@ function ChattingTest({route, navigation}: any) {
   const [disableSendBtn, setDisableSendBtn] = useState(true);
   const [messageLoadCheck, setMessageLoadCheck] = useState(true);
   const [showPLusTab, setShowPlusTab] = useState(false);
-
-  const {receiver, receiverEmail} = route.params;
+  const {receiverEmail} = route.params;
+  const [receiver, setReceiver] = useState('');
 
   const db = firebase.firestore();
   const date = new Date();
@@ -79,9 +78,19 @@ function ChattingTest({route, navigation}: any) {
         (await AsyncStorage.getItem('nickname')) || 'empty nickname';
       setEmail(email);
       setUserNickname(nickname);
+      const receiverDB = (
+        await db.collection('user').doc(receiverEmail).get()
+      ).data();
+      if (receiverDB) {
+        setReceiver(receiverDB.nickname || '');
+      } else {
+        console.log('No receiver Data');
+      }
       if (email !== null && nickname) {
         console.log('✅ Get user email :', email);
         console.log('✅ Get user nickName:', nickname);
+        console.log('✅ Get user receiver:', receiver);
+        console.log('✅ Get user receiverEmail:', receiverEmail);
         console.log('🚀 Ready to send message');
       }
     } catch (e) {
@@ -113,7 +122,7 @@ function ChattingTest({route, navigation}: any) {
           .doc(userEmail)
           .collection('chattingList')
           .doc(receiverEmail)
-          .set({}, {merge: true});
+          .set({readCheck: true}, {merge: true});
         setMessages(messagesData);
       }
     });
@@ -164,6 +173,7 @@ function ChattingTest({route, navigation}: any) {
           updatedAt: date,
           owner1: receiver,
           owner2: userNickname,
+          owner2Email: receiverEmail,
         },
         {merge: true},
       );
@@ -178,6 +188,8 @@ function ChattingTest({route, navigation}: any) {
           updatedAt: date,
           owner1: receiver,
           owner2: userNickname,
+          owner2Email: userEmail,
+          readCheck: false,
         },
         {merge: true},
       );
@@ -188,7 +200,8 @@ function ChattingTest({route, navigation}: any) {
     };
 
     setInput('');
-
+    console.log(userEmail);
+    console.log(receiverEmail);
     db.collection('user')
       .doc(userEmail)
       .collection('chattingList')
@@ -214,7 +227,6 @@ function ChattingTest({route, navigation}: any) {
 
   const switchPlustBtn = () => {
     setShowPlusTab(e => !e);
-    console.log('hi');
   };
 
   const PlusTabView = () => {
@@ -267,7 +279,7 @@ function ChattingTest({route, navigation}: any) {
             paddingBottom: Platform.OS == 'android' ? 20 : 40,
           }}>
           <View style={{width: 335, height: 204, alignItems: 'center'}}>
-            <TouchableOpacity
+            <Pressable
               style={{
                 backgroundColor: '#FFFFFF',
                 width: 335,
@@ -281,8 +293,8 @@ function ChattingTest({route, navigation}: any) {
                 switchViewMore();
               }}>
               <Text style={{color: '#000000', fontSize: 16}}>알람 끄기</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
+            </Pressable>
+            <Pressable
               style={{
                 backgroundColor: '#FFFFFF',
                 width: 335,
@@ -294,23 +306,30 @@ function ChattingTest({route, navigation}: any) {
                 switchViewMore();
               }}>
               <Text style={{color: '#000000', fontSize: 16}}>차단 하기</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
+            </Pressable>
+            <Pressable
               style={{
                 backgroundColor: '#FFFFFF',
                 width: 335,
                 height: 50,
                 justifyContent: 'center',
                 alignItems: 'center',
+                borderBottomLeftRadius: 10,
+                borderBottomRightRadius: 10,
               }}
               onPress={() => {
-                switchViewMore();
+                navigation.goBack();
+                db.collection('user')
+                  .doc(userEmail)
+                  .collection('chattingList')
+                  .doc(receiverEmail)
+                  .delete();
               }}>
               <Text style={{color: '#DA1E28', fontSize: 16}}>
                 채팅방 나가기
               </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
+            </Pressable>
+            <Pressable
               style={{
                 backgroundColor: '#16D66F',
                 width: 335,
@@ -324,7 +343,7 @@ function ChattingTest({route, navigation}: any) {
                 switchViewMore();
               }}>
               <Text style={{color: '#FFFFFF', fontSize: 16}}>취소</Text>
-            </TouchableOpacity>
+            </Pressable>
           </View>
         </SafeAreaView>
       </Modal>
@@ -338,9 +357,9 @@ function ChattingTest({route, navigation}: any) {
           <Text style={styles.headerBarTitleText}>{receiver}</Text>
         </View>
         <View style={styles.headerBarSide}>
-          <TouchableOpacity onPress={() => switchViewMore()}>
+          <Pressable onPress={() => switchViewMore()}>
             <Image source={require('../assets/ViewMore.png')} />
-          </TouchableOpacity>
+          </Pressable>
         </View>
       </View>
       <View style={styles.chatView}>
@@ -399,7 +418,7 @@ function ChattingTest({route, navigation}: any) {
               defaultValue=""
             />
           </View>
-          <TouchableOpacity
+          <Pressable
             onPress={sendInput}
             style={{
               justifyContent: 'center',
@@ -408,7 +427,7 @@ function ChattingTest({route, navigation}: any) {
             }}
             disabled={disableSendBtn}>
             <Image source={require('../assets/Send.png')} />
-          </TouchableOpacity>
+          </Pressable>
         </View>
         {showPLusTab && <PlusTabView />}
       </KeyboardAvoidingView>

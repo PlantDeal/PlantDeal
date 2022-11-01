@@ -22,7 +22,7 @@ export default function BottomTab({navigation}: any) {
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.tab}
-        onPress={() => navigation.navigate('NavAuction')}>
+        onPress={() => navigation.navigate('NavCommunity')}>
         <View>
           <Image
             style={styles.iconImage}

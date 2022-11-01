@@ -111,7 +111,7 @@ function NavHome({navigation}: any) {
   );
 }
 
-function NavAuction() {
+function NavCommunity() {
   return (
     <AuctionStack.Navigator
       screenOptions={{
@@ -128,6 +128,7 @@ function NavAuction() {
     </AuctionStack.Navigator>
   );
 }
+
 function NavChatting() {
   return (
     <ChattingStack.Navigator
@@ -197,4 +198,4 @@ function NavProfile({navigation}: any) {
   );
 }
 
-export {NavLogin, NavHome, NavAuction, NavChatting, NavProfile};
+export {NavLogin, NavHome, NavCommunity, NavChatting, NavProfile};

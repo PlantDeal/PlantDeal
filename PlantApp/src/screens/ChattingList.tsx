@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import {
   View,
   Text,
@@ -27,6 +27,7 @@ function ChattingListScreen({navigation}: any) {
     recentMessage,
     updatedAt,
     navigation,
+    readCheck,
   }: any) {
     const receiver = userNickname == owner1 ? owner2 : owner1;
     const hours = updatedAt.split(' ')[4].split(':')[0];
@@ -47,26 +48,45 @@ function ChattingListScreen({navigation}: any) {
           style={{
             flex: 1,
             justifyContent: 'space-between',
+            backgroundColor: '#FFFFFF',
           }}>
           <Text style={styles.name}>{receiver}</Text>
           <Text style={styles.post}>{recentMessage}</Text>
         </View>
         <View
           style={{
-            width: 90,
+            width: 60,
             height: '100%',
             alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#FFFFFF',
           }}>
-          <View>
+          <View
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: '100%',
+              backgroundColor: '#FFFFFF',
+            }}>
             <Text style={styles.time}>{hours + ':' + minutes}</Text>
+          </View>
+          <View
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: 20,
+              width: '100%',
+              backgroundColor: '#FFFFFF',
+              paddingLeft: 1,
+            }}>
             <View
               style={{
-                justifyContent: 'center',
-                alignItems: 'center',
-                height: 20,
-              }}>
-              <Text>" "</Text>
-            </View>
+                width: readCheck == false ? 12 : 0,
+                height: 12,
+                backgroundColor: '#16D66F',
+                borderRadius: 10,
+              }}
+            />
           </View>
           <View style={{alignItems: 'center'}}></View>
         </View>
@@ -113,6 +133,7 @@ function ChattingListScreen({navigation}: any) {
               owner2Email: doc.data().owner2Email,
               recentMessage: doc.data().recentMessage,
               updatedAt: doc.data().updatedAt.toDate().toString(),
+              readCheck: doc.data().readCheck,
             }));
             setChattingList(chattingListData);
           } else {
@@ -122,6 +143,7 @@ function ChattingListScreen({navigation}: any) {
               owner2Email: doc.data().owner2Email,
               recentMessage: doc.data().recentMessage,
               updatedAt: new Date().toString(),
+              readCheck: doc.data().readCheck,
             }));
           }
         }
@@ -133,7 +155,7 @@ function ChattingListScreen({navigation}: any) {
 
   const mounted = useRef(false);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!mounted.current) {
       mounted.current = true;
     } else {
@@ -149,6 +171,7 @@ function ChattingListScreen({navigation}: any) {
       navigation={navigation}
       owner2Email={item.owner2Email}
       updatedAt={item.updatedAt}
+      readCheck={item.readCheck}
     />
   );
 
