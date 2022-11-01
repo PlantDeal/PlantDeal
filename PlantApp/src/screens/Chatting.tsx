@@ -10,7 +10,6 @@ import {
   View,
   Platform,
   TextInput,
-  TouchableOpacity,
   KeyboardAvoidingView,
   FlatList,
   Modal,
@@ -280,7 +279,7 @@ function ChattingTest({route, navigation}: any) {
             paddingBottom: Platform.OS == 'android' ? 20 : 40,
           }}>
           <View style={{width: 335, height: 204, alignItems: 'center'}}>
-            <TouchableOpacity
+            <Pressable
               style={{
                 backgroundColor: '#FFFFFF',
                 width: 335,
@@ -294,8 +293,8 @@ function ChattingTest({route, navigation}: any) {
                 switchViewMore();
               }}>
               <Text style={{color: '#000000', fontSize: 16}}>알람 끄기</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
+            </Pressable>
+            <Pressable
               style={{
                 backgroundColor: '#FFFFFF',
                 width: 335,
@@ -307,8 +306,8 @@ function ChattingTest({route, navigation}: any) {
                 switchViewMore();
               }}>
               <Text style={{color: '#000000', fontSize: 16}}>차단 하기</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
+            </Pressable>
+            <Pressable
               style={{
                 backgroundColor: '#FFFFFF',
                 width: 335,
@@ -319,13 +318,18 @@ function ChattingTest({route, navigation}: any) {
                 borderBottomRightRadius: 10,
               }}
               onPress={() => {
-                switchViewMore();
+                navigation.goBack();
+                db.collection('user')
+                  .doc(userEmail)
+                  .collection('chattingList')
+                  .doc(receiverEmail)
+                  .delete();
               }}>
               <Text style={{color: '#DA1E28', fontSize: 16}}>
                 채팅방 나가기
               </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
+            </Pressable>
+            <Pressable
               style={{
                 backgroundColor: '#16D66F',
                 width: 335,
@@ -339,7 +343,7 @@ function ChattingTest({route, navigation}: any) {
                 switchViewMore();
               }}>
               <Text style={{color: '#FFFFFF', fontSize: 16}}>취소</Text>
-            </TouchableOpacity>
+            </Pressable>
           </View>
         </SafeAreaView>
       </Modal>
@@ -353,9 +357,9 @@ function ChattingTest({route, navigation}: any) {
           <Text style={styles.headerBarTitleText}>{receiver}</Text>
         </View>
         <View style={styles.headerBarSide}>
-          <TouchableOpacity onPress={() => switchViewMore()}>
+          <Pressable onPress={() => switchViewMore()}>
             <Image source={require('../assets/ViewMore.png')} />
-          </TouchableOpacity>
+          </Pressable>
         </View>
       </View>
       <View style={styles.chatView}>
@@ -414,7 +418,7 @@ function ChattingTest({route, navigation}: any) {
               defaultValue=""
             />
           </View>
-          <TouchableOpacity
+          <Pressable
             onPress={sendInput}
             style={{
               justifyContent: 'center',
@@ -423,7 +427,7 @@ function ChattingTest({route, navigation}: any) {
             }}
             disabled={disableSendBtn}>
             <Image source={require('../assets/Send.png')} />
-          </TouchableOpacity>
+          </Pressable>
         </View>
         {showPLusTab && <PlusTabView />}
       </KeyboardAvoidingView>
