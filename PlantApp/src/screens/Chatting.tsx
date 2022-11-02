@@ -189,7 +189,7 @@ function ChattingTest({route, navigation}: any) {
   };
 
   const checkSpace = (data: any) => {
-    if (input.trim().length >= 0) {
+    if (input.trim().length >= 0 && !checkBlockedUser) {
       setDisableSendBtn(false);
     } else {
       setDisableSendBtn(true);
@@ -523,7 +523,14 @@ function ChattingTest({route, navigation}: any) {
               width: 50,
             }}
             disabled={disableSendBtn}>
-            <Image source={require('../assets/Send.png')} />
+            <Image
+              style={{height: checkBlockedUser == false ? 25 : 0}}
+              source={require('../assets/Send.png')}
+            />
+            <Image
+              style={{height: checkBlockedUser == true ? 25 : 0}}
+              source={require('../assets/DisabledSend.png')}
+            />
           </Pressable>
         </View>
         {showPLusTab && <PlusTabView />}
