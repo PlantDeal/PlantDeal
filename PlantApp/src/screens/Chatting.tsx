@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import {firebase} from '@react-native-firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
@@ -13,7 +13,6 @@ import {
   KeyboardAvoidingView,
   FlatList,
   Modal,
-  Alert,
 } from 'react-native';
 
 function ChattingTest({route, navigation}: any) {
@@ -26,6 +25,8 @@ function ChattingTest({route, navigation}: any) {
   const [showPLusTab, setShowPlusTab] = useState(false);
   const {receiverEmail} = route.params;
   const [receiver, setReceiver] = useState('');
+  const [checkBlockedUser, setCheckBlockedUser] = useState(false);
+  const [checkBlock, setCheckBlock] = useState(0);
 
   const db = firebase.firestore();
   const date = new Date();
@@ -33,7 +34,7 @@ function ChattingTest({route, navigation}: any) {
   const Item = ({text, messageOwner, createdAt}: any) => (
     <View
       style={{
-        marginBottom: 24,
+        marginBottom: 5,
         width: '100%',
         paddingRight: 10,
         paddingLeft: 10,
@@ -102,6 +103,43 @@ function ChattingTest({route, navigation}: any) {
     getUserInfo();
   }, []);
 
+  const checkUserIsBlocked = async () => {
+    try {
+      const blockedUserDoc = db
+        .collection('user')
+        .doc(userEmail)
+        .collection('blockedUser');
+      blockedUserDoc.onSnapshot(data => {
+        if (data.empty) {
+          console.log('❌ No blockedUser data now.');
+          setCheckBlockedUser(false);
+        } else {
+          let blockedUserList = data.docs.map(doc => ({
+            id: doc.id,
+          }));
+          for (let i = 0; i < blockedUserList.length; i++) {
+            if (blockedUserList[i].id == receiverEmail) {
+              setCheckBlockedUser(true);
+              break;
+            } else {
+              setCheckBlock(e => e + 1);
+            }
+            if (checkBlock == blockedUserList.length) {
+              setCheckBlockedUser(false);
+            }
+          }
+        }
+      });
+    } catch {}
+  };
+
+  useLayoutEffect(() => {
+    if (userEmail != '') {
+      checkUserIsBlocked();
+      console.log('﹖ Is receiver blocked?: ', checkBlockedUser);
+    }
+  }, [checkBlockedUser, checkBlock, userEmail]);
+
   async function getMessages() {
     const chattingRef = db
       .collection('user')
@@ -151,7 +189,7 @@ function ChattingTest({route, navigation}: any) {
   };
 
   const checkSpace = (data: any) => {
-    if (input.trim().length >= 0) {
+    if (input.trim().length >= 0 && !checkBlockedUser) {
       setDisableSendBtn(false);
     } else {
       setDisableSendBtn(true);
@@ -260,6 +298,32 @@ function ChattingTest({route, navigation}: any) {
     );
   };
 
+  const blockUser = () => {
+    if (checkBlockedUser == false) {
+      try {
+        db.collection('user')
+          .doc(userEmail)
+          .collection('blockedUser')
+          .doc(receiverEmail)
+          .set({createdAt: new Date()}, {merge: true});
+        console.log('✅ block user: ', receiverEmail);
+      } catch {
+        console.log('❌ block failed!');
+      }
+    } else {
+      try {
+        db.collection('user')
+          .doc(userEmail)
+          .collection('blockedUser')
+          .doc(receiverEmail)
+          .delete();
+        console.log('✅ cancel block!');
+      } catch {
+        console.log('❌ cancel failed!');
+      }
+    }
+  };
+
   return (
     <SafeAreaView style={{backgroundColor: '#FFFFFF', flex: 1}}>
       <Modal
@@ -303,9 +367,21 @@ function ChattingTest({route, navigation}: any) {
                 alignItems: 'center',
               }}
               onPress={() => {
+                blockUser();
                 switchViewMore();
               }}>
-              <Text style={{color: '#000000', fontSize: 16}}>차단 하기</Text>
+              <View
+                style={{
+                  height: checkBlockedUser == true ? undefined : 0,
+                }}>
+                <Text style={{color: '#000000', fontSize: 16}}>차단 해제</Text>
+              </View>
+              <View
+                style={{
+                  height: checkBlockedUser == true ? 0 : undefined,
+                }}>
+                <Text style={{color: '#000000', fontSize: 16}}>차단 하기</Text>
+              </View>
             </Pressable>
             <Pressable
               style={{
@@ -360,6 +436,27 @@ function ChattingTest({route, navigation}: any) {
           <Pressable onPress={() => switchViewMore()}>
             <Image source={require('../assets/ViewMore.png')} />
           </Pressable>
+        </View>
+      </View>
+      <View
+        style={{
+          width: '100%',
+          height: checkBlockedUser == true ? 40 : 0,
+          backgroundColor: '#FFFFFF',
+          alignItems: 'center',
+        }}>
+        <View
+          style={{
+            backgroundColor: 'red',
+            width: '95%',
+            height: '100%',
+            borderRadius: 10,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+          <Text style={{fontSize: 12, color: '#FFFFFF', fontWeight: 'bold'}}>
+            이 대화 상대는 차단되었습니다.
+          </Text>
         </View>
       </View>
       <View style={styles.chatView}>
@@ -426,7 +523,14 @@ function ChattingTest({route, navigation}: any) {
               width: 50,
             }}
             disabled={disableSendBtn}>
-            <Image source={require('../assets/Send.png')} />
+            <Image
+              style={{height: checkBlockedUser == false ? 25 : 0}}
+              source={require('../assets/Send.png')}
+            />
+            <Image
+              style={{height: checkBlockedUser == true ? 25 : 0}}
+              source={require('../assets/DisabledSend.png')}
+            />
           </Pressable>
         </View>
         {showPLusTab && <PlusTabView />}
