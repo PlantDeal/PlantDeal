@@ -27,6 +27,8 @@ function ChattingTest({route, navigation}: any) {
   const [receiver, setReceiver] = useState('');
   const [checkBlockedUser, setCheckBlockedUser] = useState(false);
   const [checkBlock, setCheckBlock] = useState(0);
+  const [amIBlocked, setAmIBlocked] = useState(false);
+  const [checkIBlock, setCheckIBlock] = useState(0);
 
   const db = firebase.firestore();
   const date = new Date();
@@ -102,6 +104,45 @@ function ChattingTest({route, navigation}: any) {
   useEffect(() => {
     getUserInfo();
   }, []);
+
+  const checkAmIBlocked = async () => {
+    try {
+      const amIblockedDoc = db
+        .collection('user')
+        .doc(receiverEmail)
+        .collection('blockedUser');
+      amIblockedDoc.onSnapshot(data => {
+        if (data.empty) {
+          console.log('❌ No amIblockedDoc data now.');
+          setCheckBlockedUser(false);
+        } else {
+          let blockedUserList = data.docs.map(doc => ({
+            id: doc.id,
+          }));
+          for (let i = 0; i < blockedUserList.length; i++) {
+            console.log(userEmail, blockedUserList[i].id);
+            if (blockedUserList[i].id == userEmail) {
+              setAmIBlocked(true);
+              break;
+            } else {
+              setCheckIBlock(e => e + 1);
+            }
+          }
+          if (checkIBlock == blockedUserList.length) {
+            setAmIBlocked(false);
+            console.log('Hello!');
+          }
+        }
+      });
+    } catch {}
+  };
+
+  useLayoutEffect(() => {
+    if (userEmail != '') {
+      checkAmIBlocked();
+      console.log('﹖ Am i blocked?: ', amIBlocked);
+    }
+  }, [amIBlocked, userEmail]);
 
   const checkUserIsBlocked = async () => {
     try {
@@ -486,7 +527,10 @@ function ChattingTest({route, navigation}: any) {
               width: 50,
             }}
             onPress={() => switchPlustBtn()}>
-            <Image source={require('../assets/plus.png')} />
+            <Image
+              style={{height: 20}}
+              source={require('../assets/plus.png')}
+            />
           </Pressable>
           <View
             style={{
