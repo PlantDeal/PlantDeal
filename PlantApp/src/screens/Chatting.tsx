@@ -13,6 +13,7 @@ import {
   KeyboardAvoidingView,
   FlatList,
   Modal,
+  TouchableOpacity,
 } from 'react-native';
 
 function ChattingTest({route, navigation}: any) {
@@ -29,6 +30,7 @@ function ChattingTest({route, navigation}: any) {
   const [checkBlock, setCheckBlock] = useState(0);
   const [amIBlocked, setAmIBlocked] = useState(false);
   const [checkIBlock, setCheckIBlock] = useState(0);
+  const [checkCanInput, setCheckCanInput] = useState(true);
 
   const db = firebase.firestore();
   const date = new Date();
@@ -230,12 +232,21 @@ function ChattingTest({route, navigation}: any) {
   };
 
   const checkSpace = (data: any) => {
-    if (input.trim().length >= 0 && !checkBlockedUser) {
+    if (input.trim().length >= 0 && !checkBlockedUser && !checkAmIBlocked) {
       setDisableSendBtn(false);
     } else {
       setDisableSendBtn(true);
     }
   };
+
+  useEffect(() => {
+    if (!checkBlockedUser && !amIBlocked) {
+      setCheckCanInput(e => true);
+    } else {
+      setCheckCanInput(e => false);
+    }
+    console.log('can i send?');
+  }, [checkBlockedUser, amIBlocked, input]);
 
   const sendInput = async () => {
     // 총 4번의 doc을 생성하거나 업데이트함. log 4개가 떠야 정상
@@ -524,12 +535,31 @@ function ChattingTest({route, navigation}: any) {
             style={{
               justifyContent: 'center',
               alignItems: 'center',
-              width: 50,
+              width: checkCanInput == false ? 50 : 0,
+            }}>
+            <Image
+              style={{height: 20}}
+              source={
+                checkCanInput == false
+                  ? require('../assets/DisabledPlus.png')
+                  : undefined
+              }
+            />
+          </Pressable>
+          <Pressable
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: checkCanInput == true ? 50 : 0,
             }}
             onPress={() => switchPlustBtn()}>
             <Image
               style={{height: 20}}
-              source={require('../assets/plus.png')}
+              source={
+                checkCanInput == true
+                  ? require('../assets/plus.png')
+                  : undefined
+              }
             />
           </Pressable>
           <View
@@ -557,25 +587,27 @@ function ChattingTest({route, navigation}: any) {
               }}
               placeholder="채팅 입력"
               defaultValue=""
+              editable={checkCanInput == true ? true : false}
+              selectTextOnFocus={checkCanInput == true ? true : false}
             />
           </View>
-          <Pressable
+          <TouchableOpacity
             onPress={sendInput}
             style={{
               justifyContent: 'center',
               alignItems: 'center',
               width: 50,
             }}
-            disabled={disableSendBtn}>
+            disabled={!checkCanInput}>
             <Image
-              style={{height: checkBlockedUser == false ? 25 : 0}}
+              style={{height: checkCanInput == true ? 25 : 0}}
               source={require('../assets/Send.png')}
             />
             <Image
-              style={{height: checkBlockedUser == true ? 25 : 0}}
+              style={{height: checkCanInput == false ? 25 : 0}}
               source={require('../assets/DisabledSend.png')}
             />
-          </Pressable>
+          </TouchableOpacity>
         </View>
         {showPLusTab && <PlusTabView />}
       </KeyboardAvoidingView>
