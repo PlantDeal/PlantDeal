@@ -116,7 +116,7 @@ function ChattingTest({route, navigation}: any) {
       amIblockedDoc.onSnapshot(data => {
         if (data.empty) {
           console.log('❌ No amIblockedDoc data now.');
-          setCheckBlockedUser(false);
+          setAmIBlocked(false);
         } else {
           let blockedUserList = data.docs.map(doc => ({
             id: doc.id,
@@ -132,7 +132,6 @@ function ChattingTest({route, navigation}: any) {
           }
           if (checkIBlock == blockedUserList.length) {
             setAmIBlocked(false);
-            console.log('Hello!');
           }
         }
       });
@@ -142,7 +141,7 @@ function ChattingTest({route, navigation}: any) {
   useLayoutEffect(() => {
     if (userEmail != '') {
       checkAmIBlocked();
-      console.log('﹖ Am i blocked?: ', amIBlocked);
+      console.log('sender', userEmail, 'is blocked?:', amIBlocked);
     }
   }, [amIBlocked, userEmail]);
 
@@ -179,7 +178,7 @@ function ChattingTest({route, navigation}: any) {
   useLayoutEffect(() => {
     if (userEmail != '') {
       checkUserIsBlocked();
-      console.log('﹖ Is receiver blocked?: ', checkBlockedUser);
+      console.log('receiver', receiverEmail, 'is blocked?:', checkBlockedUser);
     }
   }, [checkBlockedUser, checkBlock, userEmail]);
 
@@ -231,13 +230,14 @@ function ChattingTest({route, navigation}: any) {
     setInput(data);
   };
 
-  const checkSpace = (data: any) => {
-    if (input.trim().length >= 0 && !checkBlockedUser && !checkAmIBlocked) {
+  useEffect(() => {
+    if (input.trim().length >= 0 && !checkBlockedUser && !amIBlocked) {
       setDisableSendBtn(false);
+      console.log('disabled?', disableSendBtn);
     } else {
       setDisableSendBtn(true);
     }
-  };
+  }, [input]);
 
   useEffect(() => {
     if (!checkBlockedUser && !amIBlocked) {
@@ -245,8 +245,7 @@ function ChattingTest({route, navigation}: any) {
     } else {
       setCheckCanInput(e => false);
     }
-    console.log('can i send?');
-  }, [checkBlockedUser, amIBlocked, input]);
+  }, [checkBlockedUser, amIBlocked]);
 
   const sendInput = async () => {
     // 총 4번의 doc을 생성하거나 업데이트함. log 4개가 떠야 정상
@@ -290,8 +289,6 @@ function ChattingTest({route, navigation}: any) {
     };
 
     setInput('');
-    console.log(userEmail);
-    console.log(receiverEmail);
     db.collection('user')
       .doc(userEmail)
       .collection('chattingList')
@@ -583,7 +580,6 @@ function ChattingTest({route, navigation}: any) {
               value={input}
               onChangeText={data => {
                 changeText(data);
-                checkSpace(data);
               }}
               placeholder="채팅 입력"
               defaultValue=""
@@ -598,7 +594,7 @@ function ChattingTest({route, navigation}: any) {
               alignItems: 'center',
               width: 50,
             }}
-            disabled={!checkCanInput}>
+            disabled={disableSendBtn}>
             <Image
               style={{height: checkCanInput == true ? 25 : 0}}
               source={require('../assets/Send.png')}
