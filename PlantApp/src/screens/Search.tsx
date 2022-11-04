@@ -112,7 +112,6 @@ function SearchScreen({navigation,route}: any) {
           showClear={false}
           clearOnFocus={false}
           emptyResultText={"검색된 정보가 없습니다"}
-          // ChevronIconComponent={<Image source={require('../assets/Search.png')}></Image>}
           dataSet={plant}
           onSelectItem={async(item:any) => {
             test(item?.title)
@@ -305,12 +304,10 @@ const styles = StyleSheet.create({
   textInput2: {
     width: '100%',
     height: 40,
-    borderBottomWidth: 1,
-    borderBottomColor: '#8E8E93',
     fontSize: 16,
     color: '#000000',
     fontWeight: '400',
-    backgroundColor:"#FFFFFF"
+    backgroundColor:'#F4F4F4'
   },
   textInput: {
     width: '90%',

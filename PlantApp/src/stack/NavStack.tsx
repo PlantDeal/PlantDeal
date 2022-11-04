@@ -21,10 +21,12 @@ import UpdateProfileScreen from '../screens/UpdateProfile';
 import SellListScreen from '../screens/SelllList';
 import AttentionScreen from '../screens/Attention';
 import AverageScreen from '../screens/Average';
+import BoardScreen from '../screens/Board';
+import RegistBoardScreen from '../screens/RegistBoard';
 
 const LoginStack = createNativeStackNavigator();
 const HomeStack = createNativeStackNavigator();
-const AuctionStack = createNativeStackNavigator();
+const CommunityStack = createNativeStackNavigator();
 const ChattingStack = createNativeStackNavigator();
 const ProfileStack = createNativeStackNavigator();
 
@@ -113,19 +115,26 @@ function NavHome({navigation}: any) {
 
 function NavCommunity() {
   return (
-    <AuctionStack.Navigator
+    <CommunityStack.Navigator
       screenOptions={{
         headerShown: true,
         animation: 'slide_from_right',
       }}>
-      <AuctionStack.Screen
-        name="AuctionScreen"
-        component={AuctionScreen}
+      <CommunityStack.Screen
+        name="BoardScreen"
+        component={BoardScreen}
         options={{
           headerShown: false,
         }}
       />
-    </AuctionStack.Navigator>
+      <CommunityStack.Screen
+        name="RegistBoardScreen"
+        component={RegistBoardScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+    </CommunityStack.Navigator>
   );
 }
 
