@@ -1,7 +1,5 @@
-import { FirebaseStorageTypes } from '@react-native-firebase/storage';
 import React, { useEffect, useState } from 'react';
 import {View, Text, SafeAreaView, StyleSheet,TouchableOpacity,ScrollView,Pressable,Image,FlatList} from 'react-native';
-import { TextInput } from 'react-native-paper';
 import BottomTab from '../components/BottomTab';
 import firestore from '@react-native-firebase/firestore';
 
@@ -15,12 +13,13 @@ function BoardScreen({navigation}: any) {
     const[qnaBottom,setQnaBottom] = useState('#F4F4F4');
     const[info,setInfo] = useState('#C6C6C6');
     const[infoBottom,setInfoBottom] = useState('#F4F4F4');
-    const[title,setTitle] = useState('게시글');
+    const[title,setTitle] = useState('오늘의 추천');
     const[Data, setData] = useState<any>(null);
     const[likedata, setLike] = useState<any>(null);
+    const[likeqna,setLikeqna] = useState<any>(null);
 
   function onclickBoard(){
-    setTitle('게시글');
+    setTitle('오늘의 추천');
     setBoard('#16D66F');
     setBoardBottom('#16D66F');
     setQna('#C6C6C6');
@@ -224,6 +223,36 @@ function BoardScreen({navigation}: any) {
     }
   }
 
+  function ShowLikeQna(){
+    if(likeqna !== null){
+        return(
+            <ScrollView horizontal={true}
+                        pagingEnabled={true}
+                        showsHorizontalScrollIndicator={false}>
+                {likeqna.slice(0,5).map((data:any) => 
+                    <TouchableOpacity key = {data.image[0]} style={{width:145,height:315,marginRight:16}}>
+                        <Image style={{width:'100%',height:182,marginBottom:3,borderRadius:12}} source={{uri: data.image[0]}}/>
+                        <View style={{width:'100%',height:50,marginTop:3,marginBottom:3}}>
+                            <Text style={{fontSize:16,fontFamily:'NotoSansKR-Bold', includeFontPadding:false,color:'#000000'}}
+                                  numberOfLines={2} ellipsizeMode='tail' >{data.Title}</Text>
+                        </View>
+                        <View style={{width:'100%',height:40,marginTop:3,marginBottom:3}}>
+                            <Text style={{fontSize:12,fontFamily:'NotoSansKR-Medium', includeFontPadding:false,color:'#8E8E93'}}
+                                numberOfLines={2} ellipsizeMode='tail' >{data.explane}</Text>
+                        </View>
+                        <View style={{width:'100%',height:30,marginTop:3}}>
+                            <Text style={{fontSize:9,fontFamily:'NotoSansKR-Medium', includeFontPadding:false,color:'#C6C6C6'}}>좋아요  {data.like}</Text>
+                        </View>
+                    </TouchableOpacity>
+                )}
+            </ScrollView>
+        )
+    }
+    else{
+        return null
+    }
+  }
+
   function elapsedTime(date: any) {
     const start: any = new Date(date);
     const end: any = new Date();
@@ -268,7 +297,7 @@ function BoardScreen({navigation}: any) {
                     <View style={{height:'100%',flexDirection:'row',width:335,alignItems:'flex-end'}}>
                         <View style={{marginRight:10,borderBottomColor:boardBottom,borderBottomWidth:1}}>
                             <TouchableOpacity onPress={onclickBoard}>
-                                <Text style={{fontSize:14,fontFamily:'NotoSansKR-Medium', includeFontPadding:false,marginBottom:6,color:board}}>정보게시판</Text>
+                                <Text style={{fontSize:14,fontFamily:'NotoSansKR-Medium', includeFontPadding:false,marginBottom:6,color:board}}>오늘의 추천</Text>
                             </TouchableOpacity>
                         </View>
                         <View style={{marginLeft:10,marginRight:10,borderBottomColor:qnaBottom,borderBottomWidth:1}}>
@@ -283,38 +312,25 @@ function BoardScreen({navigation}: any) {
                         </View>
                     </View>
                 </View>
-                <View style={{height:65,width:'100%',alignItems:'center',justifyContent:'center'}}>
-                    <TextInput style={{width:335,height:42,backgroundColor:'#F4F4F4',borderRadius:6}}
-                                placeholder="검색어를 입력하세요."
-                                placeholderTextColor="#8E8E93"
-                                autoComplete="off"
-                                autoCapitalize="none"></TextInput>
-                </View>
                 <View style={{height:80,width:'100%',justifyContent:'center',alignItems:'center',marginBottom:12}}>
                     <View style={{width:335}}>
-                        <Text style={{fontSize:28,fontFamily:'NotoSansKR-Bold', includeFontPadding:false,color:'#000000',marginBottom:3}}>TOP 5</Text>
+                        <Text style={{fontSize:28,fontFamily:'NotoSansKR-Bold', includeFontPadding:false,color:'#000000',marginBottom:3}}>일상소통 TOP 5</Text>
                         <Text style={{fontSize:12,fontFamily:'NotoSansKR-Medium', includeFontPadding:false,color:'#C6C6C6',marginTop:3}}>최근 인기 게시글 TOP 5를 만나보세요!</Text>
                     </View>
                 </View>
                 <View style={{width:335,height:355}}>
                     <ShowLikeBoard/>
                 </View>
-                <View style={{height:35,width:'100%',justifyContent:'center',alignItems:'center'}}>
-                    <View style={{width:335,flexDirection:'row',height:'100%'}}>
-                        <View style={{justifyContent:'center',flex:2}}>
-                            <Text style={{fontSize:16,fontFamily:'NotoSansKR-Bold', includeFontPadding:false,color:'#000000'}}>{title}</Text>
-                        </View>
-                        <View style={{flex:6.8}}></View>
-                        <View style={{justifyContent:'center',flex:1.2}}>
-                            <TouchableOpacity>
-                                <Text style={{fontSize:10,fontFamily:'NotoSansKR-Regular', includeFontPadding:false,color:'#C6C6C6'}}>전체보기</Text>
-                            </TouchableOpacity> 
-                        </View>
+                <View style={{height:80,width:'100%',justifyContent:'center',alignItems:'center',marginBottom:12}}>
+                    <View style={{width:335}}>
+                        <Text style={{fontSize:28,fontFamily:'NotoSansKR-Bold', includeFontPadding:false,color:'#000000',marginBottom:3}}>질문 TOP 5</Text>
+                        <Text style={{fontSize:12,fontFamily:'NotoSansKR-Medium', includeFontPadding:false,color:'#C6C6C6',marginTop:3}}>최근 인기 게시글 TOP 5를 만나보세요!</Text>
                     </View>
                 </View>
-                <View style={{height:345,width:335,justifyContent:'center',alignSelf:'center'}}>
-                    <ShowBoard/>
+                <View style={{width:335,height:355}}>
+                    <ShowLikeQna/>
                 </View>
+                
             </ScrollView>
         </View>
         <BottomTab style={{flex: 0.8}} navigation={navigation}/>
