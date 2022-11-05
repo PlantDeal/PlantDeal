@@ -12,7 +12,7 @@ function RecommendScreen({navigation}: any) {
 
     async function readlike(){
         firestore()
-        .collection('식물 추천')
+        .collection('일상 소통')
         .orderBy('like','desc')
         .get()
         .then(async querySnapshot => {
@@ -118,24 +118,26 @@ function RecommendScreen({navigation}: any) {
 
   return (
     <SafeAreaView style={styles.SafeAreaView}>
-        <View style={{height:80,width:'100%',justifyContent:'center',alignItems:'center',marginBottom:12,marginTop:12}}>
-            <View style={{width:335}}>
-                <Text style={{fontSize:28,fontFamily:'NotoSansKR-Bold', includeFontPadding:false,color:'#000000',marginBottom:3}}>일상/소통</Text>
-                <Text style={{fontSize:12,fontFamily:'NotoSansKR-Medium', includeFontPadding:false,color:'#C6C6C6',marginTop:3}}>최근 인기 게시글 TOP 5를 만나보세요!</Text>
+        <ScrollView style={{width:'100%'}} showsVerticalScrollIndicator={false}>
+            <View style={{height:80,width:'100%',justifyContent:'center',alignItems:'center',marginBottom:12,marginTop:12}}>
+                <View style={{width:335}}>
+                    <Text style={{fontSize:28,fontFamily:'NotoSansKR-Bold', includeFontPadding:false,color:'#000000',marginBottom:3}}>일상/소통</Text>
+                    <Text style={{fontSize:12,fontFamily:'NotoSansKR-Medium', includeFontPadding:false,color:'#C6C6C6',marginTop:3}}>최근 인기 게시글 TOP 5를 만나보세요!</Text>
+                </View>
             </View>
-        </View>
-        <View style={{width:335,height:330}}>
-            <ShowLikeBoard/>
-        </View>
-        <View style={{height:80,width:'100%',justifyContent:'center',alignItems:'center',marginBottom:12}}>
-            <View style={{width:335}}>
-                <Text style={{fontSize:28,fontFamily:'NotoSansKR-Bold', includeFontPadding:false,color:'#000000',marginBottom:3}}>Q&A</Text>
-                <Text style={{fontSize:12,fontFamily:'NotoSansKR-Medium', includeFontPadding:false,color:'#C6C6C6',marginTop:3}}>사람들이 많이 궁금해한 내용 TOP5를 만나보세요!</Text>
+            <View style={{width:335,height:330}}>
+                <ShowLikeBoard/>
             </View>
-        </View>
-        <View style={{width:335,height:330}}>
-            <ShowLikeQna/>
-        </View>
+            <View style={{height:80,width:'100%',justifyContent:'center',alignItems:'center',marginBottom:12}}>
+                <View style={{width:335}}>
+                    <Text style={{fontSize:28,fontFamily:'NotoSansKR-Bold', includeFontPadding:false,color:'#000000',marginBottom:3}}>Q&A</Text>
+                    <Text style={{fontSize:12,fontFamily:'NotoSansKR-Medium', includeFontPadding:false,color:'#C6C6C6',marginTop:3}}>사람들이 많이 궁금해한 내용 TOP5를 만나보세요!</Text>
+                </View>
+            </View>
+            <View style={{width:335,height:330}}>
+                <ShowLikeQna/>
+            </View>
+        </ScrollView>
     </SafeAreaView>
   );
 }

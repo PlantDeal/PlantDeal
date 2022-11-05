@@ -30,7 +30,7 @@ function RegistBoardScreen({navigation,route}: any) {
   const token:any = firebase.auth().currentUser;
 
   function setSunlightBadColor(){
-    setSunlight('식물 추천')
+    setSunlight('일상 소통')
     setSunlightBad('#16D66F')
     setSunlightBadBorder('#16D66F')
     setSunlightBadText('#FFFFFF')
@@ -199,7 +199,7 @@ function RegistBoardScreen({navigation,route}: any) {
                             alignItems:'center',
                             marginRight:4}}
                     onPress={setSunlightBadColor}>
-                    <Text style={{fontSize:12,color:sunlightbadtext,fontFamily:'NotoSansKR-Regular', includeFontPadding:false}}>일상 소통</Text>
+                    <Text style={{fontSize:12,color:sunlightbadtext,fontFamily:'NotoSansKR-Medium', includeFontPadding:false}}>일상 소통</Text>
                     </TouchableOpacity>
                     <TouchableOpacity 
                     disabled={
@@ -216,7 +216,7 @@ function RegistBoardScreen({navigation,route}: any) {
                     marginLeft:4,
                     marginRight:8}}
                     onPress={setSunlightNormalColor}>
-                    <Text style={{fontSize:12,color:sunlightnormaltext,fontFamily:'NotoSansKR-Regular', includeFontPadding:false}}>Q&A</Text>
+                    <Text style={{fontSize:12,color:sunlightnormaltext,fontFamily:'NotoSansKR-Medium', includeFontPadding:false}}>Q&A</Text>
                     </TouchableOpacity>
                 </View>
             </View>

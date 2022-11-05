@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {View, Text, SafeAreaView, StyleSheet,TouchableOpacity,ScrollView,Pressable,Image,FlatList} from 'react-native';
 import BottomTab from '../components/BottomTab';
-import firestore from '@react-native-firebase/firestore';
 import RecommendScreen from './Recommend';
 import CommunityScreen from './Community';
 
@@ -16,7 +15,6 @@ function BoardScreen({navigation}: any) {
     const[info,setInfo] = useState('#C6C6C6');
     const[infoBottom,setInfoBottom] = useState('#F4F4F4');
     const[title,setTitle] = useState('오늘의 추천');
-    const[Data, setData] = useState<any>(null);
     
 
   function onclickBoard(){
@@ -49,23 +47,6 @@ function BoardScreen({navigation}: any) {
     setInfoBottom('#16D66F');
   }
 
-//   async function read(){
-//     firestore()
-//     .collection('')
-//     .orderBy('time','desc')
-//     .get()
-//     .then(async querySnapshot => {
-//         const data: {key: string}[] = [];
-//         querySnapshot.forEach(documentSnapshot => {
-//           data.push({
-//             ...documentSnapshot.data(),
-//             key: documentSnapshot.id,
-//           });
-//         });
-//     setData(data);
-//     })
-//   }
-
   function Reg(){
     if(community === '#16D66F'){
         return(
@@ -95,31 +76,6 @@ function BoardScreen({navigation}: any) {
     }
   }
 
-  
-
-  
-
-  function elapsedTime(date: any) {
-    const start: any = new Date(date);
-    const end: any = new Date();
-    const diff = end - start;
-    const times = [
-      {time: '분', milliSeconds: 1000 * 60},
-      {time: '시간', milliSeconds: 1000 * 60 * 60},
-      {time: '일', milliSeconds: 1000 * 60 * 60 * 24},
-      {time: '개월', milliSeconds: 1000 * 60 * 60 * 24 * 30},
-      {time: '년', milliSeconds: 1000 * 60 * 60 * 24 * 365},
-    ].reverse();
-    for (const value of times) {
-      const betweenTime = Math.floor(diff / value.milliSeconds);
-
-      if (betweenTime > 0) {
-        return `${betweenTime}${value.time} 전`;
-      }
-    }
-    return '방금 전';
-  }
-
   return (
     <SafeAreaView style={styles.SafeAreaView}>
         <View style={{width:'100%',flex:0.6,flexDirection:'row',borderBottomColor:'#F4F4F4',borderBottomWidth:1}}>
@@ -135,30 +91,27 @@ function BoardScreen({navigation}: any) {
                 <Reg />
             </View>
         </View>
-        <View style={{flex:8.6}}>
-        <ScrollView style={{width:'100%'}} showsVerticalScrollIndicator={false}>
-            <View style={{height:50,width:'100%',borderBottomColor:'#F4F4F4',borderBottomWidth:1,alignItems:'center'}}>
-                <View style={{height:'100%',flexDirection:'row',width:335,alignItems:'flex-end'}}>
-                    <View style={{marginRight:10,borderBottomColor:boardBottom,borderBottomWidth:1}}>
-                        <TouchableOpacity onPress={onclickBoard}>
-                            <Text style={{fontSize:14,fontFamily:'NotoSansKR-Medium', includeFontPadding:false,marginBottom:6,color:board}}>오늘의 추천</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={{marginLeft:10,marginRight:10,borderBottomColor:communityBottom,borderBottomWidth:1}}>
-                        <TouchableOpacity onPress={onclickQNA}>
-                            <Text style={{fontSize:14,fontFamily:'NotoSansKR-Medium', includeFontPadding:false,marginBottom:6,color:community}}>커뮤니티</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={{marginLeft:10,borderBottomColor:infoBottom,borderBottomWidth:1}}>
-                        <TouchableOpacity onPress={onclickInfo}>
-                            <Text style={{fontSize:14,fontFamily:'NotoSansKR-Medium', includeFontPadding:false,marginBottom:6,color:info}}>식물위키</Text>
-                        </TouchableOpacity>
-                    </View>
+        <View style={{flex:0.7,width:'100%',borderBottomColor:'#F4F4F4',borderBottomWidth:1,alignItems:'center'}}>
+            <View style={{height:'100%',flexDirection:'row',width:335,alignItems:'flex-end'}}>
+                <View style={{marginRight:10,borderBottomColor:boardBottom,borderBottomWidth:1}}>
+                    <TouchableOpacity onPress={onclickBoard}>
+                        <Text style={{fontSize:14,fontFamily:'NotoSansKR-Medium', includeFontPadding:false,marginBottom:6,color:board}}>오늘의 추천</Text>
+                    </TouchableOpacity>
+                </View>
+                <View style={{marginLeft:10,marginRight:10,borderBottomColor:communityBottom,borderBottomWidth:1}}>
+                    <TouchableOpacity onPress={onclickQNA}>
+                        <Text style={{fontSize:14,fontFamily:'NotoSansKR-Medium', includeFontPadding:false,marginBottom:6,color:community}}>커뮤니티</Text>
+                    </TouchableOpacity>
+                </View>
+                <View style={{marginLeft:10,borderBottomColor:infoBottom,borderBottomWidth:1}}>
+                    <TouchableOpacity onPress={onclickInfo}>
+                        <Text style={{fontSize:14,fontFamily:'NotoSansKR-Medium', includeFontPadding:false,marginBottom:6,color:info}}>식물위키</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
+        </View>
+        <View style={{flex:7.9}}>
             <ChangeScreen/>
-            
-        </ScrollView>
         </View>
         <BottomTab style={{flex: 0.8}} navigation={navigation}/>
     </SafeAreaView>
