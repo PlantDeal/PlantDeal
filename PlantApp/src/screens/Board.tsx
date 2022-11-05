@@ -3,6 +3,7 @@ import {View, Text, SafeAreaView, StyleSheet,TouchableOpacity,ScrollView,Pressab
 import BottomTab from '../components/BottomTab';
 import firestore from '@react-native-firebase/firestore';
 import RecommendScreen from './Recommend';
+import CommunityScreen from './Community';
 
 
 
@@ -65,92 +66,28 @@ function BoardScreen({navigation}: any) {
 //     })
 //   }
 
-  
-
-  
-
-  
-
-
-//   function ShowBoard(){
-//     if(Data !== null){
-//         return(
-//             Data.slice(0,5).map((data:any) => 
-//             <View key = {data.image[0]} style={styles.flatbox}>
-//                 <TouchableOpacity>
-//                     <View style={{flexDirection:'row'}}>
-//                         <View style={{marginRight: 10,justifyContent:'center'}}>
-//                             <Image
-//                             style={styles.imagebox}
-//                             source={{uri: data.image[0]}}
-//                             />
-//                         </View>
-//                         <View style={{justifyContent:'space-between',width:270}}>
-//                             <Text
-//                                 style={{
-//                                     fontSize: 14,
-//                                     fontFamily: 'NotoSansKR-Regular',
-//                                     includeFontPadding: false,
-//                                     color: '#000000'
-//                                 }}
-//                                 numberOfLines={1} ellipsizeMode='tail'>
-//                                 {data.Title}
-//                             </Text>
-//                             <Text
-//                                 style={{
-//                                     fontSize: 10,
-//                                     fontFamily: 'NotoSansKR-Regular',
-//                                     includeFontPadding: false,
-//                                     color: '#C6C6C6',
-//                                 }}>
-//                                 {data.Category}
-//                             </Text>
-//                             <View style={{flexDirection:'row'}}>
-//                                 <Text
-//                                     style={{
-//                                         fontSize: 10,
-//                                         fontFamily: 'NotoSansKR-Regular',
-//                                         includeFontPadding: false,
-//                                         color: '#C6C6C6',
-//                                     }}>
-//                                     {elapsedTime(data.time)}
-//                                 </Text>
-//                                 <Text
-//                                     style={{
-//                                         fontSize: 10,
-//                                         fontFamily: 'NotoSansKR-Regular',
-//                                         includeFontPadding: false,
-//                                         color: '#C6C6C6',
-//                                     }}>
-//                                     /
-//                                 </Text>
-//                                 <Text
-//                                     style={{
-//                                         fontSize: 10,
-//                                         fontFamily: 'NotoSansKR-Regular',
-//                                         includeFontPadding: false,
-//                                         color: '#C6C6C6',
-//                                     }}>
-//                                     좋아요  {data.like}
-//                                 </Text>
-//                             </View>
-//                         </View>
-//                     </View>
-//                 </TouchableOpacity>
-//             </View>)
-//         )
-//     }
-//     else{
-//         return null
-//     }
-//   }
-
   function Reg(){
     if(community === '#16D66F'){
         return(
             <TouchableOpacity onPress={()=>{navigation.navigate('RegistBoardScreen')}}>
                 <Text style={{fontSize:14,fontFamily:'NotoSansKR-Regular', includeFontPadding:false,color:'#16D66F'}}>등록</Text>
             </TouchableOpacity>
+        )
+    }
+    else{
+        return null
+    }
+  }
+
+  function ChangeScreen(){
+    if(title === '오늘의 추천'){
+        return(
+            <RecommendScreen/>
+        )
+    }
+    else if(title === '커뮤니티'){
+        return(
+            <CommunityScreen/>
         )
     }
     else{
@@ -219,7 +156,7 @@ function BoardScreen({navigation}: any) {
                     </View>
                 </View>
             </View>
-            <RecommendScreen/>
+            <ChangeScreen/>
             
         </ScrollView>
         </View>

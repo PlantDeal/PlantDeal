@@ -23,6 +23,7 @@ import AverageScreen from '../screens/Average';
 import BoardScreen from '../screens/Board';
 import RegistBoardScreen from '../screens/RegistBoard';
 import RecommendScreen from '../screens/Recommend';
+import CommunityScreen from '../screens/Community';
 
 const LoginStack = createNativeStackNavigator();
 const HomeStack = createNativeStackNavigator();
@@ -137,6 +138,13 @@ function NavCommunity() {
       <CommunityStack.Screen
         name="RecommendScreen"
         component={RecommendScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <CommunityStack.Screen
+        name="CommunityScreen"
+        component={CommunityScreen}
         options={{
           headerShown: false,
         }}
