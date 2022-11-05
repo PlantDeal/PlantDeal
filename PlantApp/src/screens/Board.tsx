@@ -9,8 +9,8 @@ function BoardScreen({navigation}: any) {
 
     const[board,setBoard] = useState('#16D66F');
     const[boardBottom,setBoardBottom] =useState('#16D66F');
-    const[qna,setQna] = useState('#C6C6C6');
-    const[qnaBottom,setQnaBottom] = useState('#F4F4F4');
+    const[community,setCommunity] = useState('#C6C6C6');
+    const[communityBottom,setCommunityBottom] = useState('#F4F4F4');
     const[info,setInfo] = useState('#C6C6C6');
     const[infoBottom,setInfoBottom] = useState('#F4F4F4');
     const[title,setTitle] = useState('오늘의 추천');
@@ -22,47 +22,31 @@ function BoardScreen({navigation}: any) {
     setTitle('오늘의 추천');
     setBoard('#16D66F');
     setBoardBottom('#16D66F');
-    setQna('#C6C6C6');
-    setQnaBottom('#F4F4F4');
+    setCommunity('#C6C6C6');
+    setCommunityBottom('#F4F4F4');
     setInfo('#C6C6C6');
     setInfoBottom('#F4F4F4');
     read();
   }
 
   function onclickQNA(){
-    setTitle('Q&A');
+    setTitle('커뮤니티');
     setBoard('#C6C6C6');
     setBoardBottom('#F4F4F4');
-    setQna('#16D66F');
-    setQnaBottom('#16D66F');
+    setCommunity('#16D66F');
+    setCommunityBottom('#16D66F');
     setInfo('#C6C6C6');
     setInfoBottom('#F4F4F4');
   }
 
   function onclickInfo(){
-    setTitle('공식정보');
+    setTitle('식물위키');
     setBoard('#C6C6C6');
     setBoardBottom('#F4F4F4');
-    setQna('#C6C6C6');
-    setQnaBottom('#F4F4F4');
+    setCommunity('#C6C6C6');
+    setCommunityBottom('#F4F4F4');
     setInfo('#16D66F');
     setInfoBottom('#16D66F');
-  }
-
-  function regist(){
-    if(board === '#16D66F'){
-        navigation.navigate('RegistBoardScreen')
-        console.log('1')
-    }
-    else if(qna === '#16D66F'){
-        console.log('2')
-    }
-    else if(info === '#16D66F'){
-        console.log('3')
-    }
-    else{
-        console.log('error')
-    }
   }
 
   async function read(){
@@ -181,16 +165,17 @@ function BoardScreen({navigation}: any) {
     }
   }
 
-  function findname(name:string){
-    var nickname = "";
-    firestore()
-    .collection('user')
-    .doc(name)
-    .get()
-    .then(documentSnapshot => {
-        nickname = documentSnapshot.get('nickname')
-    });
-    return nickname
+  function Reg(){
+    if(community === '#16D66F'){
+        return(
+            <TouchableOpacity onPress={()=>{navigation.navigate('RegistBoardScreen')}}>
+                <Text style={{fontSize:14,fontFamily:'NotoSansKR-Regular', includeFontPadding:false,color:'#16D66F'}}>등록</Text>
+            </TouchableOpacity>
+        )
+    }
+    else{
+        return null
+    }
   }
 
   function ShowLikeBoard(){
@@ -286,9 +271,7 @@ function BoardScreen({navigation}: any) {
                 <Text style={styles.headerBarTitle}>지역 설정</Text>
             </View>
             <View style={styles.headerBarRightView}>
-                <TouchableOpacity onPress={regist}>
-                    <Text style={{fontSize:14,fontFamily:'NotoSansKR-Regular', includeFontPadding:false,color:'#16D66F'}}>등록</Text>
-                </TouchableOpacity>
+                <Reg />
             </View>
         </View>
         <View style={{flex:8.6,}}>
@@ -300,34 +283,34 @@ function BoardScreen({navigation}: any) {
                                 <Text style={{fontSize:14,fontFamily:'NotoSansKR-Medium', includeFontPadding:false,marginBottom:6,color:board}}>오늘의 추천</Text>
                             </TouchableOpacity>
                         </View>
-                        <View style={{marginLeft:10,marginRight:10,borderBottomColor:qnaBottom,borderBottomWidth:1}}>
+                        <View style={{marginLeft:10,marginRight:10,borderBottomColor:communityBottom,borderBottomWidth:1}}>
                             <TouchableOpacity onPress={onclickQNA}>
-                                <Text style={{fontSize:14,fontFamily:'NotoSansKR-Medium', includeFontPadding:false,marginBottom:6,color:qna}}>Q&A</Text>
+                                <Text style={{fontSize:14,fontFamily:'NotoSansKR-Medium', includeFontPadding:false,marginBottom:6,color:community}}>커뮤니티</Text>
                             </TouchableOpacity>
                         </View>
                         <View style={{marginLeft:10,borderBottomColor:infoBottom,borderBottomWidth:1}}>
                             <TouchableOpacity onPress={onclickInfo}>
-                                <Text style={{fontSize:14,fontFamily:'NotoSansKR-Medium', includeFontPadding:false,marginBottom:6,color:info}}>공식정보</Text>
+                                <Text style={{fontSize:14,fontFamily:'NotoSansKR-Medium', includeFontPadding:false,marginBottom:6,color:info}}>식물위키</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
                 </View>
-                <View style={{height:80,width:'100%',justifyContent:'center',alignItems:'center',marginBottom:12}}>
+                <View style={{height:80,width:'100%',justifyContent:'center',alignItems:'center',marginBottom:12,marginTop:12}}>
                     <View style={{width:335}}>
-                        <Text style={{fontSize:28,fontFamily:'NotoSansKR-Bold', includeFontPadding:false,color:'#000000',marginBottom:3}}>일상소통 TOP 5</Text>
+                        <Text style={{fontSize:28,fontFamily:'NotoSansKR-Bold', includeFontPadding:false,color:'#000000',marginBottom:3}}>일상/소통</Text>
                         <Text style={{fontSize:12,fontFamily:'NotoSansKR-Medium', includeFontPadding:false,color:'#C6C6C6',marginTop:3}}>최근 인기 게시글 TOP 5를 만나보세요!</Text>
                     </View>
                 </View>
-                <View style={{width:335,height:355}}>
+                <View style={{width:335,height:330}}>
                     <ShowLikeBoard/>
                 </View>
                 <View style={{height:80,width:'100%',justifyContent:'center',alignItems:'center',marginBottom:12}}>
                     <View style={{width:335}}>
-                        <Text style={{fontSize:28,fontFamily:'NotoSansKR-Bold', includeFontPadding:false,color:'#000000',marginBottom:3}}>질문 TOP 5</Text>
-                        <Text style={{fontSize:12,fontFamily:'NotoSansKR-Medium', includeFontPadding:false,color:'#C6C6C6',marginTop:3}}>최근 인기 게시글 TOP 5를 만나보세요!</Text>
+                        <Text style={{fontSize:28,fontFamily:'NotoSansKR-Bold', includeFontPadding:false,color:'#000000',marginBottom:3}}>Q&A</Text>
+                        <Text style={{fontSize:12,fontFamily:'NotoSansKR-Medium', includeFontPadding:false,color:'#C6C6C6',marginTop:3}}>사람들이 많이 궁금해한 내용 TOP5를 만나보세요!</Text>
                     </View>
                 </View>
-                <View style={{width:335,height:355}}>
+                <View style={{width:335,height:330}}>
                     <ShowLikeQna/>
                 </View>
                 

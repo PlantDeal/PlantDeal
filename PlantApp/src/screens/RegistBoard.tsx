@@ -27,9 +27,6 @@ function RegistBoardScreen({navigation,route}: any) {
   const [sunlightnormal,setSunlightNormal] = useState('#FFFFFF')
   const [sunlightnormalborder,setSunlightNormalBorder] = useState('#8E8E93')
   const [sunlightnormaltext,setSunlightNormalText] = useState('#8E8E93')
-  const [sunlightgood,setSunlightGood] = useState('#FFFFFF')
-  const [sunlightgoodborder,setSunlightGoodBorder] = useState('#8E8E93')
-  const [sunlightgoodtext,setSunlightGoodText] = useState('#8E8E93')
   const [registcolor,setRegistColor] = useState('#BDE3CE')
   const [Asset,setAsset] = useState<any>([])
   const [down,setDown] = useState<any>([])
@@ -43,9 +40,6 @@ function RegistBoardScreen({navigation,route}: any) {
     setSunlightNormal('#FFFFFF')
     setSunlightNormalBorder('#8E8E93')
     setSunlightNormalText('#8E8E93')
-    setSunlightGood('#FFFFFF')
-    setSunlightGoodBorder('#8E8E93')
-    setSunlightGoodText('#8E8E93')
   }
 
   function setSunlightNormalColor(){
@@ -56,22 +50,6 @@ function RegistBoardScreen({navigation,route}: any) {
     setSunlightNormal('#16D66F')
     setSunlightNormalBorder('#16D66F')
     setSunlightNormalText('#FFFFFF')
-    setSunlightGood('#FFFFFF')
-    setSunlightGoodBorder('#8E8E93')
-    setSunlightGoodText('#8E8E93')
-  }
-
-  function setSunlightGoodColor(){
-    setSunlight('식물 질병/이상 신호')
-    setSunlightBad('#FFFFFF')
-    setSunlightBadBorder('#8E8E93')
-    setSunlightBadText('#8E8E93')
-    setSunlightNormal('#FFFFFF')
-    setSunlightNormalBorder('#8E8E93')
-    setSunlightNormalText('#8E8E93')
-    setSunlightGood('#16D66F')
-    setSunlightGoodBorder('#16D66F')
-    setSunlightGoodText('#FFFFFF')
   }
 
   useEffect(()=>{
@@ -207,7 +185,7 @@ function RegistBoardScreen({navigation,route}: any) {
                 <View style={{flexDirection:'row',marginTop:12}}>
                     <TouchableOpacity 
                     disabled={
-                        sunlight === '식물 추천' ? true : false
+                        sunlight === '일상 소통' ? true : false
                     }
                     style={{width:75,
                             height:36,
@@ -219,11 +197,11 @@ function RegistBoardScreen({navigation,route}: any) {
                             alignItems:'center',
                             marginRight:4}}
                     onPress={setSunlightBadColor}>
-                    <Text style={{fontSize:12,color:sunlightbadtext,fontFamily:'NotoSansKR-Regular', includeFontPadding:false}}>식물 추천</Text>
+                    <Text style={{fontSize:12,color:sunlightbadtext,fontFamily:'NotoSansKR-Regular', includeFontPadding:false}}>일상 소통</Text>
                     </TouchableOpacity>
                     <TouchableOpacity 
                     disabled={
-                        sunlight === '식물 양육' ? true : false
+                        sunlight === 'Q&A' ? true : false
                     }
                     style={{width:75,
                     height:36,
@@ -236,23 +214,7 @@ function RegistBoardScreen({navigation,route}: any) {
                     marginLeft:4,
                     marginRight:8}}
                     onPress={setSunlightNormalColor}>
-                    <Text style={{fontSize:12,color:sunlightnormaltext,fontFamily:'NotoSansKR-Regular', includeFontPadding:false}}>식물 양육</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity 
-                    disabled={
-                        sunlight === '식물 질병/이상 신호' ? true : false
-                    }
-                    style={{width:150,
-                            height:36,
-                            borderWidth:1,
-                            borderRadius:999,
-                            borderColor:sunlightgoodborder,
-                            backgroundColor:sunlightgood,
-                            justifyContent:'center',
-                            alignItems:'center',
-                            marginRight:4}}
-                    onPress={setSunlightGoodColor}>
-                    <Text style={{fontSize:12,color:sunlightgoodtext,fontFamily:'NotoSansKR-Regular', includeFontPadding:false}}>식물 질병/이상 신호</Text>
+                    <Text style={{fontSize:12,color:sunlightnormaltext,fontFamily:'NotoSansKR-Regular', includeFontPadding:false}}>Q&A</Text>
                     </TouchableOpacity>
                 </View>
             </View>
