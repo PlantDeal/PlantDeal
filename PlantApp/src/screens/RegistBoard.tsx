@@ -1,11 +1,8 @@
 import React, {useEffect, useReducer, useState} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, ScrollView, Image, TextInput,Platform, Alert} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import BottomTab from '../components/BottomTab';
-import SelectDropdown from 'react-native-select-dropdown';
-import {Asset, launchImageLibrary} from 'react-native-image-picker';
+import {launchImageLibrary} from 'react-native-image-picker';
 import storage from '@react-native-firebase/storage';
-import { utils } from '@react-native-firebase/app';
 import firestore from '@react-native-firebase/firestore'
 import { firebase } from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -43,7 +40,7 @@ function RegistBoardScreen({navigation,route}: any) {
   }
 
   function setSunlightNormalColor(){
-    setSunlight('식물 양육')
+    setSunlight('Q&A')
     setSunlightBad('#FFFFFF')
     setSunlightBadBorder('#8E8E93')
     setSunlightBadText('#8E8E93')
@@ -62,7 +59,7 @@ function RegistBoardScreen({navigation,route}: any) {
   },[title])
 
   useEffect(() => {
-    if(underlinecolortitle === '#16D66F' && sunlight !== '' && explanation !== '' && ass.length >= 1){
+    if(underlinecolortitle === '#16D66F' && sunlight !== '' && explanation !== ''){
       setRegistColor('#16D66F')
     }
     else{
@@ -99,24 +96,29 @@ function RegistBoardScreen({navigation,route}: any) {
 
   
   const upload = async() =>{
-    await Asset.map(async (data:any) => {
-      const refer = storage().ref(`${data.fileName}`)
-      setReference((reference: any) => {
-        return [...reference, refer];
+    if(Asset.length < 1){
+      regist();
+    }
+    else{
+      await Asset.map(async (data:any) => {
+        const refer = storage().ref(`${data.fileName}`)
+        setReference((reference: any) => {
+          return [...reference, refer];
+        })
+        if (Platform.OS === "android"){
+          await refer.putString(data.base64,'base64',{
+            contentType: data.type
+          });
+          console.log('upload')
+        }
+        else{
+          await refer.putFile(data.uri, {
+            contentType: data.type
+          });
+          console.log('upload')
+        }
       })
-      if (Platform.OS === "android"){
-        await refer.putString(data.base64,'base64',{
-          contentType: data.type
-        });
-        console.log('upload')
-      }
-      else{
-        await refer.putFile(data.uri, {
-          contentType: data.type
-        });
-        console.log('upload')
-      }
-    })
+    }
   }
 
   useEffect(()=> {
@@ -142,16 +144,16 @@ function RegistBoardScreen({navigation,route}: any) {
     var date = new Date().toISOString().substring(0,19);
     var docname = date + token?.email
     await firestore()
-    .collection('게시글')
+    .collection(sunlight)
     .doc(docname)
     .set({
-        Category: sunlight,
         Title : title,
         explane : explanation,
         image : down,
         user: await AsyncStorage.getItem('id'),
         time : date,
-        like : 0
+        like : 0,
+        view : 0
     })
     .then(()=>{
         navigation.dispatch(CommonActions.reset({routes:[{name:'BoardScreen'}]}))
@@ -281,7 +283,7 @@ function RegistBoardScreen({navigation,route}: any) {
       <View style = {{flex:1, justifyContent:'center'}}>
         <TouchableOpacity 
           disabled={
-            underlinecolortitle !== '#16D66F' && sunlight === '' && explanation === '' && ass.length < 1
+            underlinecolortitle !== '#16D66F' && sunlight === '' && explanation === ''
           }
           style={{height: 48,
           width: 335,

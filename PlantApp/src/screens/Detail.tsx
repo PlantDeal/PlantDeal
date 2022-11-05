@@ -1,4 +1,4 @@
-import React, {useEffect, useReducer, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -6,20 +6,11 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
-  TextInput,
-  Platform,
-  Alert,
   Dimensions,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import BottomTab from '../components/BottomTab';
-import SelectDropdown from 'react-native-select-dropdown';
-import {Asset, launchImageLibrary} from 'react-native-image-picker';
-import storage from '@react-native-firebase/storage';
-import {utils} from '@react-native-firebase/app';
 import firestore from '@react-native-firebase/firestore';
 import {firebase} from '@react-native-firebase/firestore';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import AverageScreen from './Average';
 
 function DetailScreen({navigation, route}: any) {

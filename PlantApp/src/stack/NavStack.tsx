@@ -2,7 +2,6 @@ import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import HomeScreen from '../screens/Home';
-import AuctionScreen from '../screens/Auction';
 import ChattingListScreen from '../screens/ChattingList';
 import ChattingScreen from '../screens/Chatting';
 import ProfileScreen from '../screens/Profile';
@@ -23,6 +22,7 @@ import AttentionScreen from '../screens/Attention';
 import AverageScreen from '../screens/Average';
 import BoardScreen from '../screens/Board';
 import RegistBoardScreen from '../screens/RegistBoard';
+import RecommendScreen from '../screens/Recommend';
 
 const LoginStack = createNativeStackNavigator();
 const HomeStack = createNativeStackNavigator();
@@ -130,6 +130,13 @@ function NavCommunity() {
       <CommunityStack.Screen
         name="RegistBoardScreen"
         component={RegistBoardScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <CommunityStack.Screen
+        name="RecommendScreen"
+        component={RecommendScreen}
         options={{
           headerShown: false,
         }}
