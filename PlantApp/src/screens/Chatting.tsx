@@ -13,6 +13,7 @@ import {
   KeyboardAvoidingView,
   FlatList,
   Modal,
+  TouchableOpacity,
 } from 'react-native';
 
 function ChattingTest({route, navigation}: any) {
@@ -27,6 +28,9 @@ function ChattingTest({route, navigation}: any) {
   const [receiver, setReceiver] = useState('');
   const [checkBlockedUser, setCheckBlockedUser] = useState(false);
   const [checkBlock, setCheckBlock] = useState(0);
+  const [amIBlocked, setAmIBlocked] = useState(false);
+  const [checkIBlock, setCheckIBlock] = useState(0);
+  const [checkCanInput, setCheckCanInput] = useState(true);
 
   const db = firebase.firestore();
   const date = new Date();
@@ -103,6 +107,44 @@ function ChattingTest({route, navigation}: any) {
     getUserInfo();
   }, []);
 
+  const checkAmIBlocked = async () => {
+    try {
+      const amIblockedDoc = db
+        .collection('user')
+        .doc(receiverEmail)
+        .collection('blockedUser');
+      amIblockedDoc.onSnapshot(data => {
+        if (data.empty) {
+          console.log('❌ No amIblockedDoc data now.');
+          setAmIBlocked(false);
+        } else {
+          let blockedUserList = data.docs.map(doc => ({
+            id: doc.id,
+          }));
+          for (let i = 0; i < blockedUserList.length; i++) {
+            console.log(userEmail, blockedUserList[i].id);
+            if (blockedUserList[i].id == userEmail) {
+              setAmIBlocked(true);
+              break;
+            } else {
+              setCheckIBlock(e => e + 1);
+            }
+          }
+          if (checkIBlock == blockedUserList.length) {
+            setAmIBlocked(false);
+          }
+        }
+      });
+    } catch {}
+  };
+
+  useLayoutEffect(() => {
+    if (userEmail != '') {
+      checkAmIBlocked();
+      console.log('sender', userEmail, 'is blocked?:', amIBlocked);
+    }
+  }, [amIBlocked, userEmail]);
+
   const checkUserIsBlocked = async () => {
     try {
       const blockedUserDoc = db
@@ -136,7 +178,7 @@ function ChattingTest({route, navigation}: any) {
   useLayoutEffect(() => {
     if (userEmail != '') {
       checkUserIsBlocked();
-      console.log('﹖ Is receiver blocked?: ', checkBlockedUser);
+      console.log('receiver', receiverEmail, 'is blocked?:', checkBlockedUser);
     }
   }, [checkBlockedUser, checkBlock, userEmail]);
 
@@ -188,13 +230,22 @@ function ChattingTest({route, navigation}: any) {
     setInput(data);
   };
 
-  const checkSpace = (data: any) => {
-    if (input.trim().length >= 0 && !checkBlockedUser) {
+  useEffect(() => {
+    if (input.trim().length >= 0 && !checkBlockedUser && !amIBlocked) {
       setDisableSendBtn(false);
+      console.log('disabled?', disableSendBtn);
     } else {
       setDisableSendBtn(true);
     }
-  };
+  }, [input]);
+
+  useEffect(() => {
+    if (!checkBlockedUser && !amIBlocked) {
+      setCheckCanInput(e => true);
+    } else {
+      setCheckCanInput(e => false);
+    }
+  }, [checkBlockedUser, amIBlocked]);
 
   const sendInput = async () => {
     // 총 4번의 doc을 생성하거나 업데이트함. log 4개가 떠야 정상
@@ -238,8 +289,6 @@ function ChattingTest({route, navigation}: any) {
     };
 
     setInput('');
-    console.log(userEmail);
-    console.log(receiverEmail);
     db.collection('user')
       .doc(userEmail)
       .collection('chattingList')
@@ -483,10 +532,32 @@ function ChattingTest({route, navigation}: any) {
             style={{
               justifyContent: 'center',
               alignItems: 'center',
-              width: 50,
+              width: checkCanInput == false ? 50 : 0,
+            }}>
+            <Image
+              style={{height: 20}}
+              source={
+                checkCanInput == false
+                  ? require('../assets/DisabledPlus.png')
+                  : undefined
+              }
+            />
+          </Pressable>
+          <Pressable
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: checkCanInput == true ? 50 : 0,
             }}
             onPress={() => switchPlustBtn()}>
-            <Image source={require('../assets/plus.png')} />
+            <Image
+              style={{height: 20}}
+              source={
+                checkCanInput == true
+                  ? require('../assets/plus.png')
+                  : undefined
+              }
+            />
           </Pressable>
           <View
             style={{
@@ -509,13 +580,14 @@ function ChattingTest({route, navigation}: any) {
               value={input}
               onChangeText={data => {
                 changeText(data);
-                checkSpace(data);
               }}
               placeholder="채팅 입력"
               defaultValue=""
+              editable={checkCanInput == true ? true : false}
+              selectTextOnFocus={checkCanInput == true ? true : false}
             />
           </View>
-          <Pressable
+          <TouchableOpacity
             onPress={sendInput}
             style={{
               justifyContent: 'center',
@@ -524,14 +596,14 @@ function ChattingTest({route, navigation}: any) {
             }}
             disabled={disableSendBtn}>
             <Image
-              style={{height: checkBlockedUser == false ? 25 : 0}}
+              style={{height: checkCanInput == true ? 25 : 0}}
               source={require('../assets/Send.png')}
             />
             <Image
-              style={{height: checkBlockedUser == true ? 25 : 0}}
+              style={{height: checkCanInput == false ? 25 : 0}}
               source={require('../assets/DisabledSend.png')}
             />
-          </Pressable>
+          </TouchableOpacity>
         </View>
         {showPLusTab && <PlusTabView />}
       </KeyboardAvoidingView>

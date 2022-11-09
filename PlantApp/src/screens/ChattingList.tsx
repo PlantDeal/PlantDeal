@@ -145,6 +145,7 @@ function ChattingListScreen({navigation}: any) {
               updatedAt: new Date().toString(),
               readCheck: doc.data().readCheck,
             }));
+            setChattingList(chattingListData);
           }
         }
       });
