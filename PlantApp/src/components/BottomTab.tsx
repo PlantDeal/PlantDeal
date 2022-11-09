@@ -68,6 +68,12 @@ const styles = StyleSheet.create({
     borderTopColor: '#FFFFFF',
     backgroundColor: '#FFFFFF',
   },
-  tab: {},
+  tab: {
+    backgroundColor: 'transparent',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '20%',
+    height: '100%',
+  },
   iconImage: {},
 });

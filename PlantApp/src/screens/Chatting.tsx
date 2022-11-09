@@ -206,6 +206,8 @@ function ChattingTest({route, navigation}: any) {
         setMessages(messagesData);
       }
     });
+
+    console.log('⏰ From:', userEmail, 'get messages.');
   }
 
   const mounted = useRef(false);
@@ -231,9 +233,8 @@ function ChattingTest({route, navigation}: any) {
   };
 
   useEffect(() => {
-    if (input.trim().length >= 0 && !checkBlockedUser && !amIBlocked) {
+    if (input.trim().length > 0 && !checkBlockedUser && !amIBlocked) {
       setDisableSendBtn(false);
-      console.log('disabled?', disableSendBtn);
     } else {
       setDisableSendBtn(true);
     }
@@ -505,6 +506,27 @@ function ChattingTest({route, navigation}: any) {
           }}>
           <Text style={{fontSize: 12, color: '#FFFFFF', fontWeight: 'bold'}}>
             이 대화 상대는 차단되었습니다.
+          </Text>
+        </View>
+      </View>
+      <View
+        style={{
+          width: '100%',
+          height: amIBlocked == true ? 40 : 0,
+          backgroundColor: '#FFFFFF',
+          alignItems: 'center',
+        }}>
+        <View
+          style={{
+            backgroundColor: '#ffd400',
+            width: '95%',
+            height: '100%',
+            borderRadius: 10,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+          <Text style={{fontSize: 12, color: '#000000', fontWeight: 'bold'}}>
+            이 채팅방은 더 이상 사용할 수 없습니다.
           </Text>
         </View>
       </View>

@@ -42,7 +42,10 @@ function ChattingListScreen({navigation}: any) {
           })
         }>
         <View style={{width: 55}}>
-          <Image source={require('../assets/TempProfileImage.png')} />
+          <Image
+            defaultSource={require('../assets/TempProfileImage.png')}
+            source={require('../assets/TempProfileImage.png')}
+          />
         </View>
         <View
           style={{
