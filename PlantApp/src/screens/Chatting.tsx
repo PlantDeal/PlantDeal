@@ -22,7 +22,6 @@ function ChattingTest({route, navigation}: any) {
   const [userEmail, setEmail] = useState('');
   const [userNickname, setUserNickname] = useState('');
   const [disableSendBtn, setDisableSendBtn] = useState(true);
-  const [messageLoadCheck, setMessageLoadCheck] = useState(true);
   const [showPLusTab, setShowPlusTab] = useState(false);
   const {receiverEmail} = route.params;
   const [receiver, setReceiver] = useState('');
@@ -38,12 +37,28 @@ function ChattingTest({route, navigation}: any) {
   const Item = ({text, messageOwner, createdAt}: any) => (
     <View
       style={{
-        marginBottom: 5,
+        marginBottom: 10,
         width: '100%',
         paddingRight: 10,
         paddingLeft: 10,
         marginTop: 5,
+        flexDirection: 'row',
+        justifyContent:
+          userNickname == messageOwner ? 'flex-end' : 'flex-start',
+        alignItems: 'flex-end',
       }}>
+      <View
+        style={{
+          height: 20,
+          width: userNickname == messageOwner ? 50 : 0,
+          alignItems: 'center',
+          justifyContent: 'flex-end',
+        }}>
+        <Text style={{color: '#C6C6C6'}}>
+          {createdAt.split(' ')[4].split(':')[0]}:
+          {createdAt.split(' ')[4].split(':')[1]}
+        </Text>
+      </View>
       <View
         style={{
           borderRadius: 10,
@@ -51,8 +66,6 @@ function ChattingTest({route, navigation}: any) {
           padding: 10,
           width: 'auto',
           maxWidth: '65%',
-          justifyContent: 'center',
-          alignSelf: userNickname == messageOwner ? 'flex-end' : 'flex-start',
         }}>
         <Text
           style={{
@@ -64,14 +77,15 @@ function ChattingTest({route, navigation}: any) {
       </View>
       <View
         style={{
-          alignSelf: userNickname == messageOwner ? 'flex-end' : 'flex-start',
-          alignItems: userNickname == messageOwner ? 'flex-end' : 'flex-start',
-          paddingRight: userNickname == messageOwner ? 5 : 0,
-          paddingLeft: userNickname == messageOwner ? 0 : 5,
-          width: 85,
-          marginTop: 5,
+          height: 20,
+          width: userNickname == messageOwner ? 0 : 50,
+          alignItems: 'center',
+          justifyContent: 'flex-end',
         }}>
-        <Text style={{color: '#C6C6C6'}}></Text>
+        <Text style={{color: '#C6C6C6'}}>
+          {createdAt.split(' ')[4].split(':')[0]}:
+          {createdAt.split(' ')[4].split(':')[1]}
+        </Text>
       </View>
     </View>
   );
@@ -192,7 +206,6 @@ function ChattingTest({route, navigation}: any) {
       .orderBy('createdAt', 'asc');
     chattingRef.onSnapshot(data => {
       if (data.empty) {
-        setMessageLoadCheck(false);
       } else {
         let messagesData = data.docs.map(doc => ({
           id: doc.id,
@@ -224,7 +237,7 @@ function ChattingTest({route, navigation}: any) {
     <Item
       text={item.message.text}
       messageOwner={item.message.messageOwner}
-      createdAt={item.message.createdAt}
+      createdAt={item.message.createdAt.toDate().toString()}
     />
   );
 
