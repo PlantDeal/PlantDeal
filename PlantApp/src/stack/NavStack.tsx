@@ -24,6 +24,7 @@ import BoardScreen from '../screens/Board';
 import RegistBoardScreen from '../screens/RegistBoard';
 import RecommendScreen from '../screens/Recommend';
 import CommunityScreen from '../screens/Community';
+import {useRoute} from '@react-navigation/native';
 
 const LoginStack = createNativeStackNavigator();
 const HomeStack = createNativeStackNavigator();

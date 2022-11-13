@@ -15,6 +15,7 @@ import {
   Modal,
   TouchableOpacity,
 } from 'react-native';
+import {useIsFocused, useRoute} from '@react-navigation/native';
 
 function ChattingTest({route, navigation}: any) {
   const [input, setInput] = useState<any>('');
@@ -23,17 +24,17 @@ function ChattingTest({route, navigation}: any) {
   const [userNickname, setUserNickname] = useState('');
   const [disableSendBtn, setDisableSendBtn] = useState(true);
   const [showPLusTab, setShowPlusTab] = useState(false);
-  const {receiverEmail} = route.params;
+  const {receiverEmail, unplug} = route.params;
   const [receiver, setReceiver] = useState('');
   const [checkBlockedUser, setCheckBlockedUser] = useState(false);
   const [checkBlock, setCheckBlock] = useState(0);
   const [amIBlocked, setAmIBlocked] = useState(false);
   const [checkIBlock, setCheckIBlock] = useState(0);
   const [checkCanInput, setCheckCanInput] = useState(true);
+  const unplugMessageLoad = useRef(false);
+  const date = firebase.firestore.FieldValue.serverTimestamp();
 
   const db = firebase.firestore();
-  const date = new Date();
-
   const Item = ({text, messageOwner, createdAt}: any) => (
     <View
       style={{
@@ -196,6 +197,7 @@ function ChattingTest({route, navigation}: any) {
     }
   }, [checkBlockedUser, checkBlock, userEmail]);
 
+  // GET MESSAGES
   async function getMessages() {
     const chattingRef = db
       .collection('user')
@@ -204,23 +206,24 @@ function ChattingTest({route, navigation}: any) {
       .doc(receiverEmail)
       .collection('messages')
       .orderBy('createdAt', 'desc');
-    chattingRef.onSnapshot(data => {
-      if (data.empty) {
-      } else {
-        let messagesData = data.docs.map(doc => ({
-          id: doc.id,
-          message: doc.data(),
-        }));
-        db.collection('user')
-          .doc(userEmail)
-          .collection('chattingList')
-          .doc(receiverEmail)
-          .set({readCheck: true}, {merge: true});
-        setMessages(messagesData);
+    const loadMessage = chattingRef.onSnapshot(data => {
+      if (data.metadata.hasPendingWrites == false) {
+        if (data.empty) {
+        } else {
+          let messagesData = data.docs.map(doc => ({
+            id: doc.id,
+            text: doc.data().text,
+            messageOwner: doc.data().messageOwner,
+            createdAt: doc.data().createdAt,
+          }));
+          setMessages(messagesData);
+        }
       }
     });
-
-    console.log('⏰ From:', userEmail, 'get messages.');
+    if (unplugMessageLoad.current) {
+      console.log('UNPLUGED!');
+      loadMessage();
+    }
   }
 
   const mounted = useRef(false);
@@ -231,13 +234,13 @@ function ChattingTest({route, navigation}: any) {
     } else {
       getMessages();
     }
-  }, [userEmail]);
+  }, [userEmail, unplugMessageLoad]);
 
   const renderItem = ({item}: any | null) => (
     <Item
-      text={item.message.text}
-      messageOwner={item.message.messageOwner}
-      createdAt={item.message.createdAt.toDate().toString()}
+      text={item.text}
+      messageOwner={item.messageOwner}
+      createdAt={item.createdAt.toDate().toString()}
     />
   );
 
@@ -263,8 +266,14 @@ function ChattingTest({route, navigation}: any) {
 
   const sendInput = async () => {
     // 총 4번의 doc을 생성하거나 업데이트함. log 4개가 떠야 정상
+
     let inputText = input.trim();
-    const date = firebase.firestore.FieldValue.serverTimestamp();
+    const message = {
+      text: inputText,
+      messageOwner: userNickname,
+      createdAt: date,
+    };
+    setInput('');
 
     db.collection('user')
       .doc(userEmail)
@@ -296,13 +305,7 @@ function ChattingTest({route, navigation}: any) {
         },
         {merge: true},
       );
-    const message = {
-      text: inputText,
-      messageOwner: userNickname,
-      createdAt: date,
-    };
 
-    setInput('');
     db.collection('user')
       .doc(userEmail)
       .collection('chattingList')
@@ -310,6 +313,7 @@ function ChattingTest({route, navigation}: any) {
       .collection('messages')
       .doc()
       .set(message);
+
     db.collection('user')
       .doc(receiverEmail)
       .collection('chattingList')
@@ -317,6 +321,7 @@ function ChattingTest({route, navigation}: any) {
       .collection('messages')
       .doc()
       .set(message);
+
     setDisableSendBtn(true);
   };
 
@@ -385,6 +390,10 @@ function ChattingTest({route, navigation}: any) {
         console.log('❌ cancel failed!');
       }
     }
+  };
+
+  const unplugLoad = () => {
+    console.log(unplugMessageLoad);
   };
 
   return (
@@ -488,7 +497,12 @@ function ChattingTest({route, navigation}: any) {
       </Modal>
       <View style={styles.headerBar}>
         <View style={styles.headerBarSide}>
-          <Pressable onPress={() => navigation.goBack()}>
+          <Pressable
+            onPress={() => {
+              unplugMessageLoad.current = true;
+              getMessages();
+              navigation.goBack();
+            }}>
             <Image source={require('../assets/BackBtn.png')} />
           </Pressable>
         </View>
@@ -584,7 +598,9 @@ function ChattingTest({route, navigation}: any) {
               alignItems: 'center',
               width: checkCanInput == true ? 50 : 0,
             }}
-            onPress={() => switchPlustBtn()}>
+            onPress={() => {
+              switchPlustBtn();
+            }}>
             <Image
               style={{height: 20}}
               source={
