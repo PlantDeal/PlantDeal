@@ -203,7 +203,7 @@ function ChattingTest({route, navigation}: any) {
       .collection('chattingList')
       .doc(receiverEmail)
       .collection('messages')
-      .orderBy('createdAt', 'asc');
+      .orderBy('createdAt', 'desc');
     chattingRef.onSnapshot(data => {
       if (data.empty) {
       } else {
@@ -545,7 +545,7 @@ function ChattingTest({route, navigation}: any) {
       </View>
       <View style={styles.chatView}>
         <FlatList
-          data={[...messages].reverse()}
+          data={[...messages]}
           renderItem={renderItem}
           keyExtractor={item => item.id}
           style={{width: '100%'}}
