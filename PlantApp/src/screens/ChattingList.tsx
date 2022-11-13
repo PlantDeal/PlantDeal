@@ -35,12 +35,20 @@ function ChattingListScreen({navigation}: any) {
     return (
       <Pressable
         style={styles.item}
-        onPress={() =>
+        onPress={() => {
+          firebase
+            .firestore()
+            .collection('user')
+            .doc(userEmail)
+            .collection('chattingList')
+            .doc(owner2Email)
+            .set({readCheck: true}, {merge: true});
           navigation.navigate('ChattingScreen', {
             receiver: receiver,
             receiverEmail: owner2Email,
-          })
-        }>
+            unplug: false,
+          });
+        }}>
         <View style={{width: 55}}>
           <Image
             defaultSource={require('../assets/TempProfileImage.png')}
